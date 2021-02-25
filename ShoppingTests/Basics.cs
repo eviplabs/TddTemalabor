@@ -13,7 +13,7 @@ namespace ShoppingTests
         [Fact]
         public void Instantiation()
         {
-            var pc = new PriceCalculator();
+            var pc = new Shop();
             Assert.NotNull(pc);
         }
     }
