@@ -22,8 +22,21 @@ namespace ShoppingTests
         {
             var s = new Shop();
             s.RegisterProduct("A", 10); //szerintem ez véletlen volt char
-            var price = s.GetPrice("A");
-            Assert.Equal(10, price);
+            s.RegisterProduct("C", 20);
+            s.RegisterProduct("E", 50);
+            var price = s.GetPrice("AACEE");
+            Assert.Equal(140, price);
+        }
+
+        [Fact]
+        public void AmountDiscount()
+        {
+            var s = new Shop();
+            s.RegisterProduct("A", 10);
+            s.RegisterProduct("B", 100);
+            s.RegisterAmountDiscount("A", 5, 0.9);  //Piros
+            var price = s.GetPrice("AAAAAAB");
+            Assert.Equal(154, price);
         }
     }
 }

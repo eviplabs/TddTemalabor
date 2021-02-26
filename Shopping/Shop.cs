@@ -13,7 +13,18 @@ namespace Shopping
         }
         public int GetPrice(string name)
         {
-            return products[name];
+            char[] elements = name.ToCharArray();
+            int price = 0;
+            foreach (var item in elements)
+            {
+                price += products[item.ToString()];
+            }
+            return price;
+        }
+
+        public void RegisterAmountDiscount(string v1, int v2, double v3)
+        {
+            throw new NotImplementedException();
         }
     }
 }
