@@ -21,7 +21,7 @@ namespace ShoppingTests
         public void ProductRegistration()
         {
             var s = new Shop();
-            s.RegisterProduct('A', 10);
+            s.RegisterProduct("A", 10);
             var price = s.GetPrice("A");
             Assert.Equal(10, price);
         }
