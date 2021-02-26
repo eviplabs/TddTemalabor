@@ -25,6 +25,7 @@ namespace ShoppingTests
             var price = s.GetPrice("A");
             Assert.Equal(10, price);
         }
+
         [Fact]
         public void ProductRegistration2()
         {
@@ -32,6 +33,15 @@ namespace ShoppingTests
             s.RegisterProduct("B", 20);
             var price = s.GetPrice("B");
             Assert.Equal(20, price);
+        }
+
+        [Fact]
+        public void ProductRegistration3()
+        {
+            var s = new Shop();
+            s.RegisterProduct("C", 40);
+            var price = s.GetPrice("C");
+            Assert.Equal(40, price);
         }
     }
 }
