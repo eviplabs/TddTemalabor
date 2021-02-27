@@ -22,9 +22,21 @@ namespace ShoppingTests
         {
             var s = new Shop();
             s.RegisterProduct("A", 10); //szerintem ez véletlen volt char
+            s.RegisterProduct("A", 1000);
             s.RegisterProduct("C", 20);
             s.RegisterProduct("E", 50);
             var price = s.GetPrice("AACEE");
+            Assert.Equal(140, price);
+        }
+
+        [Fact]
+        public void NotRegisteredProductInGetProce()
+        {
+            var s = new Shop();
+            s.RegisterProduct("A", 10);
+            s.RegisterProduct("C", 20);
+            s.RegisterProduct("E", 50);
+            var price = s.GetPrice("AACEEZ");
             Assert.Equal(140, price);
         }
 
