@@ -13,10 +13,9 @@ namespace Shopping
         }
         public int GetPrice(string name)
         {
-            char[] elements = name.ToCharArray();
             // Megszamoljuk, hogy az egyes termekek hanyszor szereplnek
             Dictionary<string, int> productCounts = new Dictionary<string, int>();
-            foreach (char item in elements)
+            foreach (char item in name)
             {
                 if (!productCounts.ContainsKey(item.ToString()))
                 {
