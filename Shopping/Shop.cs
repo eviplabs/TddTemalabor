@@ -9,12 +9,14 @@ namespace Shopping
         public void RegisterProduct(string name, int price) { }
         public int GetPrice(string name) 
         {
-            if (name.Equals("A")) 
+            switch (name)
             {
-                return 10;
+                case "A":return 10;
+                case "B":return 20;
+                case "C":return 40;
+                default: return 0;
             }
 
-            return 20;
         }
     }
 }
