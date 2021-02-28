@@ -38,7 +38,10 @@ namespace Shopping
                 }
                 else
                 {
-                    price += products[product] * count;
+                    if (products.ContainsKey(product))
+                    {
+                        price += products[product] * count;
+                    }
                 }
             }
             return price;
