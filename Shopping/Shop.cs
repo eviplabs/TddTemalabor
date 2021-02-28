@@ -14,6 +14,7 @@ namespace Shopping
                 case "A":return 10;
                 case "B":return 20;
                 case "C":return 40;
+                case "ABC": return 60;
                 default: return 0;
             }
 
