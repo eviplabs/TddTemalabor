@@ -7,6 +7,7 @@ namespace Shopping
     public class Shop
     {
         private Dictionary<string, int> products = new Dictionary<string, int>();
+        private List<AmountDiscount> amountDiscounts = new List<AmountDiscount>();
         public void RegisterProduct(string name, int price)
         {
             products.Add(name, price);
@@ -30,15 +31,25 @@ namespace Shopping
             /* osszeadjuk a termekek arat a darabszamukat-, es az erre vonatkozo
             esetleges kedvezmenyeket figyelembe veve */
             int price = 0;
+            bool discounted = false;
             foreach ((string product, int count) in productCounts)
             {
-                if (product == "A" && count >= 5)
+                if (products.ContainsKey(product))
                 {
-                    price += (int)(products["A"] * count * 0.9);
-                }
-                else
-                {
-                    if (products.ContainsKey(product))
+                    if (amountDiscounts != null)
+                    {
+                        foreach (var discount in amountDiscounts)
+                        {
+                            if (product.Equals(discount.ProductName) && count >= discount.Amount)
+                            {
+                                price += (int)(products[product] * count * discount.Factor);
+                                discounted = true;
+                            }
+                        }
+                        if (discounted == false) { price += products[product] * count; }
+                        discounted = false;
+                    }
+                    else
                     {
                         price += products[product] * count;
                     }
@@ -49,7 +60,7 @@ namespace Shopping
 
         public void RegisterAmountDiscount(string v1, int v2, double v3)
         {
-            //throw new NotImplementedException();
+            amountDiscounts.Add(new AmountDiscount(v1,v2,v3));
         }
     }
 }
