@@ -79,5 +79,18 @@ namespace ShoppingTests
             var price = s.GetPrice("ABCDE");
             Assert.Equal(150, price);
         }
+
+        [Fact]
+        public void RegisterAmountDiscount1()
+        {
+            var Shop = new Shop();
+            Shop.RegisterProduct("A", 10);
+            Shop.RegisterProduct("B", 100);
+            Shop.RegisterAmountDiscount("A", 5, 0.9);
+            var price = Shop.GetPrice("AAAAAAB");
+            Assert.Equal(154, price);
+            
+
+        }
     }
 }
