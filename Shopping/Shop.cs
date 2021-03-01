@@ -6,14 +6,14 @@ namespace Shopping
 {
     public class Shop
     {
-        private Dictionary<string, int> Products;
-        private Dictionary<string, (int, double)> Discounts;
+        private Dictionary<char, int> Products;
+        private Dictionary<char, (int, double)> Discounts;
         public Shop()
         {
-            Products= new Dictionary<string, int>();
-            Discounts = new Dictionary<string, (int, double)>();
+            Products= new Dictionary<char, int>();
+            Discounts = new Dictionary<char, (int, double)>();
         }
-        public void RegisterProduct(string name, int price) 
+        public void RegisterProduct(char name, int price) 
         {
             Products[name] = price;
         }
@@ -37,29 +37,29 @@ namespace Shopping
             }
 
 
-            foreach(var key in ProductCount.Keys)
+            foreach (var key in ProductCount.Keys)
             {
-                if (Discounts.ContainsKey(key.ToString()))
+                if (Discounts.ContainsKey(key))
                 {
-                    if (ProductCount[key] >= Discounts[key.ToString()].Item1)
+                    if (ProductCount[key] >= Discounts[key].Item1)
                     {
-                        price += ProductCount[key] * Discounts[key.ToString()].Item2 * Products[key.ToString()];
+                        price += ProductCount[key] * Discounts[key].Item2 * Products[key];
                     }
                     else
                     {
-                        price += ProductCount[key] * Products[key.ToString()];
+                        price += ProductCount[key] * Products[key];
                     }
                 }
                 else
                 {
-                    price+=ProductCount[key] * Products[key.ToString()];
+                    price+=ProductCount[key] * Products[key];
                 }
             }
 
             return price;
         }
 
-        public void RegisterAmountDiscount(string name,int amount,double percent) 
+        public void RegisterAmountDiscount(char name,int amount,double percent) 
         {
             Discounts[name] = (amount, percent);
         }
