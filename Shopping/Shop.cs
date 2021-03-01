@@ -14,7 +14,7 @@ namespace Shopping
         }
         public int GetPrice(string name)
         {
-            // Megszamoljuk, hogy az egyes termekek hanyszor szereplnek
+            // Megszamoljuk, hogy az egyes termekek hanyszor szerepelnek
             Dictionary<string, int> productCounts = new Dictionary<string, int>();
             foreach (char item in name)
             {
@@ -44,10 +44,11 @@ namespace Shopping
                             {
                                 price += (int)(products[product] * count * discount.Factor);
                                 discounted = true;
+                                break;
                             }
                         }
                         if (discounted == false) { price += products[product] * count; }
-                        discounted = false;
+                        discounted = false; //Discount resetelése a következő termék számára az iterációban.
                     }
                     else
                     {
@@ -58,9 +59,14 @@ namespace Shopping
             return price;
         }
 
-        public void RegisterAmountDiscount(string v1, int v2, double v3)
+        public void RegisterAmountDiscount(string name, int amount, double factor)
         {
-            amountDiscounts.Add(new AmountDiscount(v1,v2,v3));
+            amountDiscounts.Add(new AmountDiscount(name,amount,factor));
+        }
+
+        public void RegisterCountDiscount(string name, int amountToPay, int amountToGet)
+        {
+            //A következő teszt zöldítéséhez implementálandó.
         }
     }
 }
