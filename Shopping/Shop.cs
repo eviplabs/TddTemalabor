@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Shopping
 {
-    public class PriceCalculator
+    public class Shop
     {
     }
 }
