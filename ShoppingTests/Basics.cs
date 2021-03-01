@@ -1,4 +1,4 @@
-using Shopping;
+﻿using Shopping;
 using System;
 using Xunit;
 
@@ -101,6 +101,19 @@ namespace ShoppingTests
             Shop.RegisterAmountDiscount("B", 3, 0.8);
             var price = Shop.GetPrice("AAAABBBB");
             Assert.Equal(360, price);
+        }
+
+        [Fact]
+        public void RegisterCountDiscount1()
+        {
+            var Shop = new Shop();
+            Shop.RegisterProduct("A", 10);​
+            Shop.RegisterProduct("E", 50);​
+            Shop.RegisterCountDiscount('A', 3, 4);​
+            // 3 áráért 4-et vihet​
+            var price = Shop.GetPrice("AAAAAEEE");​
+            // 5*10+3*50 helyett 4*10+3*50​
+            Assert.Equal(140, price);
         }
     }
 }
