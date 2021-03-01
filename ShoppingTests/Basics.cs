@@ -64,7 +64,7 @@ namespace ShoppingTests
             s.RegisterProduct("C", 30);
             s.RegisterProduct("D", 40);
             var price = s.GetPrice("ABCDA");
-            Assert.Equal(130, price);
+            Assert.Equal(110, price);
         }
 
         [Fact]
