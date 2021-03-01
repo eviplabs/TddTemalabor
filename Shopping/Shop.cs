@@ -21,7 +21,6 @@ namespace Shopping
 
         public double GetPrice(string name) 
         {
-            if (name.Equals("AAAAAEEE")) return 140;
             double price = 0;
 
             Dictionary<char, int> ProductCount = name.GroupBy(c => c)
@@ -45,11 +44,6 @@ namespace Shopping
         public void RegisterAmountDiscount(char name,int amount,double percent) 
         {
             Discounts[name] = (amount, percent);
-        }
-
-        public void RegisterCountDiscount(char name,int count,int bonus)
-        { 
-            
         }
     }
 }
