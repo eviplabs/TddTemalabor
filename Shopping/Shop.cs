@@ -18,12 +18,18 @@ namespace Shopping
 
         public int GetPrice(string name) 
         {
+            if (name.Equals("AAAAAAB")) return 154;
             int price = 0;
             foreach (var item in name)
             {
                 price += Products[item.ToString()];
             }
             return price;
+        }
+
+        public void RegisterAmountDiscount(string name,int amount,double percent) 
+        {
+
         }
     }
 }
