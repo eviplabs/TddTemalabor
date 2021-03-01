@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Shopping
@@ -22,40 +23,21 @@ namespace Shopping
         {
             double price = 0;
 
-            Dictionary<char, int> ProductCount = new Dictionary<char, int>();
-
-            foreach(char c in name)
-            {
-                if (ProductCount.ContainsKey(c))
-                {
-                    ProductCount[c]++;
-                }
-                else
-                {
-                    ProductCount[c] = 1;
-                }
-            }
-
+            Dictionary<char, int> ProductCount = name.GroupBy(c => c)
+                .Select(c => new { c.Key, Count = c.Count() })
+                .ToDictionary(t => t.Key, t => t.Count);
 
             foreach (var key in ProductCount.Keys)
             {
-                if (Discounts.ContainsKey(key))
+                if (Discounts.ContainsKey(key) && ProductCount[key] >= Discounts[key].Item1)
                 {
-                    if (ProductCount[key] >= Discounts[key].Item1)
-                    {
-                        price += ProductCount[key] * Discounts[key].Item2 * Products[key];
-                    }
-                    else
-                    {
-                        price += ProductCount[key] * Products[key];
-                    }
+                    price += ProductCount[key] * Discounts[key].Item2 * Products[key];
                 }
                 else
                 {
                     price+=ProductCount[key] * Products[key];
                 }
             }
-
             return price;
         }
 
