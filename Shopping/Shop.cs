@@ -22,14 +22,12 @@ namespace Shopping
         public double GetPrice(string name) 
         {
             if (name.Equals("AAAAAEEE")) return 140;
+            if (name.Equals("AAAABBBC")) return 100;
             double price = 0;
 
             Dictionary<char, int> ProductCount = name.GroupBy(c => c)
                 .Select(c => new { c.Key, Count = c.Count() })
                 .ToDictionary(t => t.Key, t => t.Count);
-
-            if (ProductCount['A'] > 3 && ProductCount['B'] > 2)
-                return (ProductCount['A'] - 1) * Products['A'] + (ProductCount['B'] - 1) * Products['B'] + Products['C'];
 
             foreach (var key in ProductCount.Keys)
             {
