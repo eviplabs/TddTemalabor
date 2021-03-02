@@ -108,5 +108,10 @@ namespace Shopping
             // Ez a megoldás nem veszi figyelembe, ha később lesz több amountdiscount/countdiscount ugyan azon a terméken
             return price;
         }
+        public void RegisterComboDiscount(string combo, int comboprice)
+        {
+            throw new NotImplementedException();
+            // Következő játékos Implementálandó része
+        }
     }
 }
