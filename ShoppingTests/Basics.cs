@@ -129,5 +129,18 @@ namespace ShoppingTests
             // 4*10 + 3​*20 + 30 --> 3*10 + 2*20 + 30
             Assert.Equal(100, price);
         }
+
+        [Fact]
+        public void RegisterCountDiscount3()
+        {
+            var Shop = new Shop();
+            Shop.RegisterProduct('A', 10);
+            Shop.RegisterProduct('B', 20);
+            Shop.RegisterProduct('C', 30);
+            Shop.RegisterCountDiscount('A', 3, 5);
+            Shop.RegisterCountDiscount('B', 2, 4);
+            var price = Shop.GetPrice("AAAAABBBBCC");
+            Assert.Equal(130, price);
+        }
     }
 }
