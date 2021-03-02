@@ -83,7 +83,7 @@ namespace ShoppingTests
             s.RegisterComboDiscount("EFG", 165);
             s.RegisterComboDiscount("DGA", 99);
             var price =  s.GetPrice("ABCDEFG");
-            Assert.Equal(price, 259);//mert a (ABC + D + EFG = 260) kisebb, mint a (DGA + B + C + E + F = 259)
+            Assert.Equal(price, 259);//mert a (ABC + D + EFG = 260) nagyobb, mint a (DGA + B + C + E + F = 259)
         }
     }
 }
