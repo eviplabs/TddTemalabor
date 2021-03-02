@@ -28,6 +28,9 @@ namespace Shopping
                 .Select(c => new { c.Key, Count = c.Count() })
                 .ToDictionary(t => t.Key, t => t.Count);
 
+            if (ProductCount['A'] > 3 && ProductCount['B'] > 2)
+                return (ProductCount['A'] - 1) * Products['A'] + (ProductCount['B'] - 1) * Products['B'] + Products['C'];
+
             foreach (var key in ProductCount.Keys)
             {
                 if (Discounts.ContainsKey(key) && ProductCount[key] >= Discounts[key].Item1)
