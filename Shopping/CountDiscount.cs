@@ -6,10 +6,10 @@ namespace Shopping
 {
     class CountDiscount
     {
-        public string ProductName { get; set; }
+        public char ProductName { get; set; }
         public int Buy { get; set; } 
         public int Get { get; set; } //Buy-t fizet Get-et vihet
-        public CountDiscount(string productName, int buy, int get)
+        public CountDiscount(char productName, int buy, int get)
         {
             this.ProductName = productName;
             this.Buy = buy;
