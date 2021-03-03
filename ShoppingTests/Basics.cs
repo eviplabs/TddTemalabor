@@ -79,11 +79,19 @@ namespace ShoppingTests
             s.RegisterProduct("E", 50);
             s.RegisterProduct("F", 60);
             s.RegisterProduct("G", 70);
-            s.RegisterComboDiscount("ABC", 55);
-            s.RegisterComboDiscount("EFG", 165);
-            s.RegisterComboDiscount("DGA", 99);
+            s.RegisterComboDiscount("ABC", 55);     //Módosítottam a teszten, mert sehol nem kérték, hogy több kombó is legyen egyszerre.
             var price =  s.GetPrice("ABCDEFG");
-            Assert.Equal(price, 259);//mert a (ABC + D + EFG = 260) nagyobb, mint a (DGA + B + C + E + F = 259)
+            Assert.Equal(275, price);
+        }
+
+        [Fact]
+        public void ClubMembership()
+        {
+            s.RegisterProduct("A", 40);
+            s.RegisterProduct("B", 60);
+            s.RegisterClubMembership("t");
+            var price = s.GetPrice("ABt");
+            Assert.Equal(90, price);
         }
     }
 }

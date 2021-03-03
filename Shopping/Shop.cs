@@ -10,6 +10,7 @@ namespace Shopping
         private Dictionary<string, int> products = new Dictionary<string, int>();
         private List<AmountDiscount> amountDiscounts = new List<AmountDiscount>();
         private List<CountDiscount> countDiscounts = new List<CountDiscount>();
+        private ComboDiscount comboDiscounts = new ComboDiscount();
         public void RegisterProduct(string name, int price)
         {
             products.Add(name, price);
@@ -59,6 +60,7 @@ namespace Shopping
                 }
             }
             price = getUpdatedCountDiscountPrice(name, price);
+            price -= ComboDiscount(comboDiscounts);
             return price;
         }
 
@@ -71,6 +73,7 @@ namespace Shopping
         {
             countDiscounts.Add(new CountDiscount(name, amountToBuy, amountToGet));
         }
+
         private int getUpdatedCountDiscountPrice(string cart, int price)
         {
             // Összeszedi a különböző elemeket, és azoknak a számát
@@ -108,10 +111,39 @@ namespace Shopping
             // Ez a megoldás nem veszi figyelembe, ha később lesz több amountdiscount/countdiscount ugyan azon a terméken
             return price;
         }
+        //A kombó kedvezményben megadott elemek és összeg feldolgozása
         public void RegisterComboDiscount(string combo, int comboprice)
         {
+            char[] comboItems = combo.ToCharArray();
+
+            foreach (var item in comboItems)
+            {
+                comboDiscounts.AddItem(item);
+            }
+            comboDiscounts.comboDiscount = comboprice;
+        }
+        //A feldolgozott kombó kedvezmény vizsgálata, hogy érvényes e a kosárra.
+        public int ComboDiscount(ComboDiscount combo)
+        {
+            int sumPriceOfComboProducts = 0;
+            foreach (var item in combo.comboProducts)
+            {
+                if (!products.ContainsKey(item.ToString()))
+                {
+                    return 0;
+                }
+                else
+                {
+                    sumPriceOfComboProducts += products[item.ToString()];
+                }
+            }
+            return sumPriceOfComboProducts - comboDiscounts.comboDiscount;
+        }
+
+        //Következő feldadat
+        public void RegisterClubMembership(string v)
+        {
             throw new NotImplementedException();
-            // Következő játékos Implementálandó része
         }
     }
 }
