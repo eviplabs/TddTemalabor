@@ -63,9 +63,9 @@ namespace ShoppingTests
         {
             s.RegisterProduct('C', 20);
             s.RegisterProduct('E', 50);
-            s.RegisterCountDiscount('E', 2, 3);
+            s.RegisterCountDiscount('E', 2, 4);
             var price = s.GetPrice("CCEEEE");
-            Assert.Equal(190, price);
+            Assert.Equal(140, price);
 
         }
         [Fact]
