@@ -84,7 +84,7 @@ namespace ShoppingTests
             Assert.Equal(275, price);
         }
 
-        [Fact(Skip = "reason")] // atmenetileg kikapcsolva
+        [Fact]
         public void ClubMembership()
         {
             s.RegisterProduct('A', 40);
