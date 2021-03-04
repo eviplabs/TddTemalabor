@@ -9,7 +9,7 @@ namespace Shopping
     {
         private Dictionary<char, int> products = new Dictionary<char, int>();
         private Dictionary<char, AmountDiscount> amountDiscounts = new Dictionary<char, AmountDiscount>();
-        private List<CountDiscount> countDiscounts = new List<CountDiscount>();
+        private Dictionary<char, CountDiscount> countDiscounts = new Dictionary<char, CountDiscount>();
         private ComboDiscount comboDiscount = new ComboDiscount();
         public void RegisterProduct(char name, int price)
         {
@@ -60,7 +60,7 @@ namespace Shopping
 
         public void RegisterCountDiscount(char name, int amountToBuy, int amountToGet)
         {
-            countDiscounts.Add(new CountDiscount(name, amountToBuy, amountToGet));
+            countDiscounts.Add(name, new CountDiscount(amountToBuy, amountToGet));
         }
 
         private int getUpdatedCountDiscountPrice(string cart, int price)
@@ -83,11 +83,11 @@ namespace Shopping
             foreach ((char item, int count) in itemsAndCounts)
             {
                 // Ha nincs ilyen akció átugorja az iterációt
-                if (countDiscounts.Where(r => r.ProductName == item).Count() == 0)
+                if (!countDiscounts.ContainsKey(item))
                 {
                     continue;
                 }
-                CountDiscount countDiscount = countDiscounts.Where(r => r.ProductName == item).First<CountDiscount>();
+                CountDiscount countDiscount = countDiscounts[item];
                 // Ha van amountDiscount, akkor az is kell az új ár kiszámolásához
                 double actualItemPrice = products[item];
                 if (amountDiscounts.ContainsKey(item))
@@ -112,6 +112,7 @@ namespace Shopping
             comboDiscount.comboDiscount = comboprice;
         }
         //A feldolgozott kombó kedvezmény vizsgálata, hogy érvényes e a kosárra.
+        // jelenleg be van egetve
         public int ComboDiscount(ComboDiscount combo)
         {
             int sumPriceOfComboProducts = 0;
