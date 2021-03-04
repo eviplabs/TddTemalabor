@@ -113,7 +113,7 @@ namespace ShoppingTests
             // 3 áráért 4-et vihet​
             var price = Shop.GetPrice("AAAAAEEE");
             // 5*10+3*50 helyett 4*10+3*50​
-            Assert.Equal(140, price);
+            Assert.Equal(190, price);
         }
 
         [Fact]

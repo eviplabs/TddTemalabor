@@ -8,11 +8,13 @@ namespace Shopping
     public class Shop
     {
         private Dictionary<char, int> Products;
-        private Dictionary<char, (int, double)> Discounts;
+        private Dictionary<char, (int, double)> ADiscounts;
+        private Dictionary<char, (int, int)> CDiscounts;
         public Shop()
         {
             Products= new Dictionary<char, int>();
-            Discounts = new Dictionary<char, (int, double)>();
+            ADiscounts = new Dictionary<char, (int, double)>();
+            CDiscounts = new Dictionary<char, (int, int)>();
         }
         public void RegisterProduct(char name, int price) 
         {
@@ -21,19 +23,31 @@ namespace Shopping
 
         public double GetPrice(string name) 
         {
-            if (name.Equals("AAAAAEEE")) return 140;
-            if (name.Equals("AAAABBBC")) return 100;
             double price = 0;
 
             Dictionary<char, int> ProductCount = name.GroupBy(c => c)
                 .Select(c => new { c.Key, Count = c.Count() })
                 .ToDictionary(t => t.Key, t => t.Count);
 
+            Dictionary<char, int> forfor = new Dictionary<char, int>(ProductCount);
+
+            foreach (var key in forfor.Keys)
+            {
+                if (CDiscounts.ContainsKey(key) && ProductCount[key] >= CDiscounts[key].Item2)
+                {
+                    int pc = ProductCount[key];
+                    int a = CDiscounts[key].Item1;
+                    int b = CDiscounts[key].Item2;
+                    int final = pc - (pc / b) * (b - a);
+                    ProductCount[key] = final;
+                }
+            }
+
             foreach (var key in ProductCount.Keys)
             {
-                if (Discounts.ContainsKey(key) && ProductCount[key] >= Discounts[key].Item1)
+                if (ADiscounts.ContainsKey(key) && ProductCount[key] >= ADiscounts[key].Item1)
                 {
-                    price += ProductCount[key] * Discounts[key].Item2 * Products[key];
+                    price += ProductCount[key] * ADiscounts[key].Item2 * Products[key];
                 }
                 else
                 {
@@ -45,12 +59,12 @@ namespace Shopping
 
         public void RegisterAmountDiscount(char name,int amount,double percent) 
         {
-            Discounts[name] = (amount, percent);
+            ADiscounts[name] = (amount, percent);
         }
 
         public void RegisterCountDiscount(char name, int count, int bonus)
-        { 
-            
+        {
+            CDiscounts[name] = (count, bonus);
         }
     }
 }
