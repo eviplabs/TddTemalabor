@@ -169,7 +169,7 @@ namespace ShoppingTests
             Shop.RegisterComboDiscount("BBB", 40);
             var price = Shop.GetPrice("CAAAABBBB");
             // ABC+AAAB -> 60+3*10+20​
-            Assert.Equal(110, price);
+            Assert.Equal(130, price);
         }
 
 

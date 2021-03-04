@@ -73,9 +73,7 @@ namespace Shopping
                 {
                     price += item.Value;
                 }
-                
             }
-
             return price;
         }
 
