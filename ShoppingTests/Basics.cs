@@ -151,11 +151,13 @@ namespace ShoppingTests
             Shop.RegisterProduct('B', 20);
             Shop.RegisterProduct('C', 50);
             Shop.RegisterProduct('D', 100);
-            //Shop.RegisterComboDiscount("ABC", 60);​
+            Shop.RegisterComboDiscount("ABC", 60);
             var price = Shop.GetPrice("CAAAABB");
             // ABC+AAAB -> 60+3*10+20​
             Assert.Equal(110, price);
         }
+
+
 
 
     }
