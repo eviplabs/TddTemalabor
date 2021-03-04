@@ -55,7 +55,7 @@ namespace Shopping
 
         public void RegisterAmountDiscount(char name, int amount, double factor)
         {
-            amountDiscounts.Add(name ,new AmountDiscount(amount, factor));
+            amountDiscounts.Add(name, new AmountDiscount(amount, factor));
         }
 
         public void RegisterCountDiscount(char name, int amountToBuy, int amountToGet)
@@ -94,9 +94,10 @@ namespace Shopping
                 {
                     actualItemPrice *= amountDiscounts[item].Factor;
                 }
-                price -= (int)(actualItemPrice / (double)(countDiscount.Get - countDiscount.Buy)); //példányosított egyet fizet egyet vihet akció esetén nullával osztás fordul elő
+                // (count / countDiscount.Get): ennyiszer tudjuk a jelenlegi kosarunknal kihasznalni a 3-at fizet 4-et vihet tipusu akciot
+                // countDiscount.Get-countDiscount.Buy: minden egyes alkalommal amikor kihasznalasra kerül, ennyi termek arat kell levonni
+                price -= (int)(actualItemPrice * ((int)(count / countDiscount.Get) * (countDiscount.Get - countDiscount.Buy)));
             }
-            // Ez a megoldás nem veszi figyelembe, ha később lesz több amountdiscount/countdiscount ugyan azon a terméken
             return price;
         }
         //A kombó kedvezményben megadott elemek és összeg feldolgozása
