@@ -8,7 +8,7 @@ namespace Shopping
     public class Shop
     {
         private Dictionary<char, int> products = new Dictionary<char, int>();
-        private List<AmountDiscount> amountDiscounts = new List<AmountDiscount>();
+        private Dictionary<char, AmountDiscount> amountDiscounts = new Dictionary<char, AmountDiscount>();
         private List<CountDiscount> countDiscounts = new List<CountDiscount>();
         private ComboDiscount comboDiscount = new ComboDiscount();
         public void RegisterProduct(char name, int price)
@@ -36,28 +36,18 @@ namespace Shopping
             /* osszeadjuk a termekek arat a darabszamukat-, es az erre vonatkozo
             esetleges kedvezmenyeket figyelembe veve */
             int price = 0;
-            bool discounted = false;
             foreach ((char product, int count) in productCounts)
-            {                
-                if (amountDiscounts != null)
+            {
+                if (amountDiscounts.ContainsKey(product) && count >= amountDiscounts[product].Amount)
                 {
-                    foreach (var discount in amountDiscounts)
-                    {
-                        if (product.Equals(discount.ProductName) && count >= discount.Amount)
-                        {
-                            price += (int)(products[product] * count * discount.Factor);
-                            discounted = true;
-                            break;
-                        }
-                    }
-                    if (discounted == false) { price += products[product] * count; }
-                    discounted = false; //Discount resetelése a következő termék számára az iterációban.
+                    price += (int)(products[product] * count * amountDiscounts[product].Factor);
                 }
                 else
                 {
                     price += products[product] * count;
-                }                
+                }
             }
+
             price = getUpdatedCountDiscountPrice(name, price);
             price -= ComboDiscount(comboDiscount);
             return price;
@@ -65,7 +55,7 @@ namespace Shopping
 
         public void RegisterAmountDiscount(char name, int amount, double factor)
         {
-            amountDiscounts.Add(new AmountDiscount(name,amount,factor));
+            amountDiscounts.Add(name ,new AmountDiscount(amount, factor));
         }
 
         public void RegisterCountDiscount(char name, int amountToBuy, int amountToGet)
@@ -90,7 +80,7 @@ namespace Shopping
             }
             // Az egyes termékeknek ha van CountDiscount akciója, akkor elosztja maradéktalanul a termékek
             // számát a m-el (az n-t fizet m-t vihetből), és kivonja a termék árát az eredmény szorzatával az egészből
-            foreach((char item, int count) in itemsAndCounts)
+            foreach ((char item, int count) in itemsAndCounts)
             {
                 // Ha nincs ilyen akció átugorja az iterációt
                 if (countDiscounts.Where(r => r.ProductName == item).Count() == 0)
@@ -100,9 +90,9 @@ namespace Shopping
                 CountDiscount countDiscount = countDiscounts.Where(r => r.ProductName == item).First<CountDiscount>();
                 // Ha van amountDiscount, akkor az is kell az új ár kiszámolásához
                 double actualItemPrice = products[item];
-                if (amountDiscounts.Where(r => r.ProductName == item).Count() != 0)
+                if (amountDiscounts.ContainsKey(item))
                 {
-                    actualItemPrice *= amountDiscounts.Where(r => r.ProductName == item).First<AmountDiscount>().Factor;
+                    actualItemPrice *= amountDiscounts[item].Factor;
                 }
                 price -= (int)(actualItemPrice / (double)(countDiscount.Get - countDiscount.Buy)); //példányosított egyet fizet egyet vihet akció esetén nullával osztás fordul elő
             }

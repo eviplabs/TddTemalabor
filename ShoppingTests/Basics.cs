@@ -21,7 +21,7 @@ namespace ShoppingTests
         [Fact]
         public void ProductRegistration()
         {
-            s.RegisterProduct('A', 10); //szerintem ez véletlen volt char
+            s.RegisterProduct('A', 10); //szerintem ez vï¿½letlen volt char
             s.RegisterProduct('C', 20);
             s.RegisterProduct('E', 50);
             var price = s.GetPrice("AACEE");
@@ -53,7 +53,7 @@ namespace ShoppingTests
         {
             s.RegisterProduct('A', 10);
             s.RegisterProduct('B', 100);
-            s.RegisterAmountDiscount('A', 3, 0.7);  //Piros - jelenleg az 5 darab és 10% kedvezmény beégetett, a RegisterAmountDiscount értéke nincs használva
+            s.RegisterAmountDiscount('A', 3, 0.7);  //Piros - jelenleg az 5 darab ï¿½s 10% kedvezmï¿½ny beï¿½getett, a RegisterAmountDiscount ï¿½rtï¿½ke nincs hasznï¿½lva
             var price = s.GetPrice("AAAABB");
             Assert.Equal(228, price);
         }
@@ -79,7 +79,7 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
-            s.RegisterComboDiscount("ABC", 55);     //Módosítottam a teszten, mert sehol nem kérték, hogy több kombó is legyen egyszerre.
+            s.RegisterComboDiscount("ABC", 55);     //Mï¿½dosï¿½tottam a teszten, mert sehol nem kï¿½rtï¿½k, hogy tï¿½bb kombï¿½ is legyen egyszerre.
             var price =  s.GetPrice("ABCDEFG");
             Assert.Equal(275, price);
         }
