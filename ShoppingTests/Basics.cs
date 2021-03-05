@@ -186,5 +186,17 @@ namespace ShoppingTests
             Assert.Equal(120, price);
         }
 
+        [Fact]
+        public void RegisterClubMembership()
+        {
+            var Shop = new Shop();
+            Shop.RegisterProduct('A', 10);
+            Shop.RegisterProduct('B', 20);
+            Shop.RegisterProduct('C', 50);
+            Shop.RegisterProduct('D', 100);
+            var price = Shop.GetPrice("ABCDt");
+            //(10+20+50+100)*0.9 = 162
+            Assert.Equal(162, price);
+        }
     }
 }
