@@ -59,21 +59,30 @@ namespace Shopping
             }
 
             string comboString;
+            int count = CountDiscount(Products, ComboDiscounts, name);
 
-            foreach (var item in ComboDiscounts){
+            foreach (var item in ComboDiscounts)
+            {
                 comboString = new string(name);
                 int combo = 0;
-                foreach (var c in item.Key)
+                for (int i = 0; i < count; i++)
                 {
-                    comboString = comboString.Remove(comboString.IndexOf(c), c.ToString().Length);
-                    price -= Products[c];
-                    combo++;
+                    combo = 0;
+                    foreach (var c in item.Key)
+                    {
+                        comboString = comboString.Remove(comboString.IndexOf(c), c.ToString().Length);
+                        price -= Products[c];
+                        combo++;
+                    }
                 }
-                if(combo == item.Key.Length)
+                if (combo == item.Key.Length)
                 {
-                    price += item.Value;
+                    price += item.Value * count;
                 }
+
             }
+
+
             return price;
         }
 
@@ -90,6 +99,40 @@ namespace Shopping
         public void RegisterComboDiscount(string name, int newprice)
         {
             ComboDiscounts[name] = newprice;
+        }
+
+        public int CountDiscount(Dictionary<char, int> products, Dictionary<string, int> combos, string name) 
+        {
+            Dictionary<char, int> path = new Dictionary<char, int>();
+            foreach (var item in products.Keys)
+            {
+                path.Add(item, 0);
+            }
+
+            foreach (var item in combos.Keys)
+            {
+                foreach (var c in item)
+                {
+                    var count = name.Count(x => x == c);
+                    path[c] = count;
+                }
+            }
+            int min = int.MaxValue;
+            foreach (var item in path.Keys)
+            {
+                if (path[item] == 0)
+                {
+                    path.Remove(item);
+                }
+            }
+            foreach (var item in path.Keys)
+            {
+                if (path[item] < min)
+                {
+                    min = path[item];
+                }
+            }
+            return min;
         }
     }
 }
