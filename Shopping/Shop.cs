@@ -10,7 +10,7 @@ namespace Shopping
         private Dictionary<char, int> products = new Dictionary<char, int>();
         private Dictionary<char, AmountDiscount> amountDiscounts = new Dictionary<char, AmountDiscount>();
         private Dictionary<char, CountDiscount> countDiscounts = new Dictionary<char, CountDiscount>();
-        private ComboDiscount comboDiscount = new ComboDiscount();
+        private List<ComboDiscount> comboDiscounts = new List<ComboDiscount>();
         public void RegisterProduct(char name, int price)
         {
             products.Add(name, price);
@@ -19,8 +19,10 @@ namespace Shopping
         {
             // Megszamoljuk, hogy az egyes termekek hanyszor szerepelnek
             Dictionary<char, int> productCounts = new Dictionary<char, int>();
+            bool clubMemberCart = false;
             foreach (char item in name)
             {
+                if (item.Equals('t')) { clubMemberCart = true; }
                 if (!products.ContainsKey(item)) continue;
 
                 if (!productCounts.ContainsKey(item))
@@ -39,7 +41,8 @@ namespace Shopping
             price = GetAmountDiscountPrice(productCounts, price);
 
             price = getUpdatedCountDiscountPrice(productCounts, price);
-            price -= ComboDiscount(comboDiscount);
+
+            price -= ComboDiscount(GetRelevantComboDiscount(productCounts), clubMemberCart);
 
             price = GetUpdatedClubMembershipPrice(name, price);
 
@@ -104,40 +107,40 @@ namespace Shopping
             return price;
         }
         //A kombó kedvezményben megadott elemek és összeg feldolgozása
-        public void RegisterComboDiscount(string combo, int comboprice, bool onlyforClubMembership = false)
+        public void RegisterComboDiscount(string combo, int comboprice, bool onlyforClubMembership)
         {
-            char[] comboItems = combo.ToCharArray();
+            comboDiscounts.Add(new ComboDiscount(combo, comboprice, onlyforClubMembership));
+        }
 
-            foreach (var item in comboItems)
+        public ComboDiscount GetRelevantComboDiscount(Dictionary<char,int> cart)
+        {
+            if (comboDiscounts != null)
             {
-                comboDiscount.AddItem(item);
+                foreach( var combo in comboDiscounts)
+                {
+                    int charCount = combo.ComboProducts.Count();
+                    int matches = 0;
+                    foreach(char character in combo.ComboProducts)
+                    {
+                        if(products.ContainsKey(character) && cart.ContainsKey(character)) { matches++; }
+                    }
+                    if (matches == charCount) { return combo; }
+                }
             }
-            comboDiscount.comboDiscount = comboprice;
+            return null;
         }
         //A feldolgozott kombó kedvezmény vizsgálata, hogy érvényes e a kosárra.
         // jelenleg be van egetve
-        public int ComboDiscount(ComboDiscount combo)
+        public int ComboDiscount(ComboDiscount combo, bool membershipBased)
         {
+            if (combo == null||(membershipBased==false && combo.ClubOnly)) { return 0; }
             int sumPriceOfComboProducts = 0;
-            foreach (var item in combo.comboProducts)
+            foreach (var item in combo.ComboProducts)
             {
-                if (!products.ContainsKey(item))
-                {
-                    return 0;
-                }
-                else
-                {
-                    sumPriceOfComboProducts += products[item];
-                }
+                sumPriceOfComboProducts += products[item];
             }
-            return sumPriceOfComboProducts - comboDiscount.comboDiscount;
+            return sumPriceOfComboProducts - combo.ComboPrice;
         }
 
-        //Következő feldadat
-        //Törölhető metódus refactornál
-        public void RegisterClubMembership(string v)
-        {
-            //ClubMembership-et nem kell regisztrálni értelmezésem szerint, hanem ha a kosár tartalmazza a t betűt, akkor automatikusan aktiválódik.
-        }
     }
 }

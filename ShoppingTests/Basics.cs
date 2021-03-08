@@ -80,7 +80,7 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
-            s.RegisterComboDiscount("ABC", 55);     //Módosítottam a teszten, mert sehol nem kérték, hogy több kombó is legyen egyszerre.
+            s.RegisterComboDiscount("ABC", 55, false);     //Módosítottam a teszten, mert sehol nem kérték, hogy több kombó is legyen egyszerre.
             var price = s.GetPrice("ABCDEFG");
             Assert.Equal(275, price);
         }
@@ -90,7 +90,6 @@ namespace ShoppingTests
         {
             s.RegisterProduct('A', 40);
             s.RegisterProduct('B', 60);
-            s.RegisterClubMembership("t");
             var price = s.GetPrice("ABt");
             Assert.Equal(90, price);
         }
