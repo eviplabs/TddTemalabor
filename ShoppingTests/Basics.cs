@@ -53,7 +53,7 @@ namespace ShoppingTests
             Assert.Equal(10, sh.GetPrice("A"));
         }
 
-        [Fact(Skip ="A GetPrice még nem jó teljesen :)")]
+        [Fact]
         public void RegisterAmountDiscount()
         {
             sh.RegisterProduct('A', 10);
