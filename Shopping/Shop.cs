@@ -36,19 +36,9 @@ namespace Shopping
             /* osszeadjuk a termekek arat a darabszamukat-, es az erre vonatkozo
             esetleges kedvezmenyeket figyelembe veve */
             int price = 0;
-            foreach ((char product, int count) in productCounts)
-            {
-                if (amountDiscounts.ContainsKey(product) && count >= amountDiscounts[product].Amount)
-                {
-                    price += (int)(products[product] * count * amountDiscounts[product].Factor);
-                }
-                else
-                {
-                    price += products[product] * count;
-                }
-            }
+            price = GetAmountDiscountPrice(productCounts, price);
 
-            price = getUpdatedCountDiscountPrice(name, price);
+            price = getUpdatedCountDiscountPrice(productCounts, price);
             price -= ComboDiscount(comboDiscount);
 
             price = GetUpdatedClubMembershipPrice(name, price);
@@ -74,25 +64,26 @@ namespace Shopping
         {
             countDiscounts.Add(name, new CountDiscount(amountToBuy, amountToGet));
         }
-
-        private int getUpdatedCountDiscountPrice(string cart, int price)
+        private int GetAmountDiscountPrice(Dictionary<char,int> cart, int price)
         {
-            // Összeszedi a különböző elemeket, és azoknak a számát
-            Dictionary<char, int> itemsAndCounts = new Dictionary<char, int>();
-            foreach (char item in cart)
+            foreach ((char product, int count) in cart)
             {
-                if (itemsAndCounts.ContainsKey(item))
+                if (amountDiscounts.ContainsKey(product) && count >= amountDiscounts[product].Amount)
                 {
-                    itemsAndCounts[item]++;
+                    price += (int)(products[product] * count * amountDiscounts[product].Factor);
                 }
                 else
                 {
-                    itemsAndCounts.Add(item, 1);
+                    price += products[product] * count;
                 }
             }
+            return price;
+        }
+        private int getUpdatedCountDiscountPrice(Dictionary<char, int> cart, int price)
+        {
             // Az egyes termékeknek ha van CountDiscount akciója, akkor elosztja maradéktalanul a termékek
             // számát a m-el (az n-t fizet m-t vihetből), és kivonja a termék árát az eredmény szorzatával az egészből
-            foreach ((char item, int count) in itemsAndCounts)
+            foreach ((char item, int count) in cart)
             {
                 // Ha nincs ilyen akció átugorja az iterációt
                 if (!countDiscounts.ContainsKey(item))
