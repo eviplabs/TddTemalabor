@@ -50,6 +50,18 @@ namespace Shopping
 
             price = getUpdatedCountDiscountPrice(name, price);
             price -= ComboDiscount(comboDiscount);
+
+            price = GetUpdatedClubMembershipPrice(name, price);
+
+            return price;
+        }
+
+        private int GetUpdatedClubMembershipPrice(string name, int price)
+        {
+            if (name.Contains("t"))
+            {
+                return (int)(price * 0.9);
+            }
             return price;
         }
 
@@ -131,9 +143,10 @@ namespace Shopping
         }
 
         //Következő feldadat
+        //Törölhető metódus refactornál
         public void RegisterClubMembership(string v)
         {
-            throw new NotImplementedException();
+            //ClubMembership-et nem kell regisztrálni értelmezésem szerint, hanem ha a kosár tartalmazza a t betűt, akkor automatikusan aktiválódik.
         }
     }
 }
