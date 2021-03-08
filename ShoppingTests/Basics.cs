@@ -43,7 +43,7 @@ namespace ShoppingTests
             sh.RegisterProduct('A', 20);
             sh.RegisterProduct('G', 30);
             sh.RegisterProduct('E', 60);
-            Assert.Equal(120, sh.GetPrice("AGGGEE"));
+            Assert.Equal(230, sh.GetPrice("AGGGEE"));
         }
 
         [Fact]

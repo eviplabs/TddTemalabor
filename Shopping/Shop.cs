@@ -6,32 +6,24 @@ namespace Shopping
 {
     public class Shop
     {
-        private Dictionary<char, Product> products;
+        private Dictionary<char, int> products;
 
         public Shop() 
         {
-            products = new Dictionary<char, Product>();
+            products = new Dictionary<char, int>();
         }
         public void RegisterProduct(char name, int price)
         {
-            products.Add(Char.ToUpper(name), new Product(name, price));
+            products.Add(Char.ToUpper(name), price);
         }
         public int GetPrice(string shopping_cart) 
         {
             int price = 0;
             foreach (var item in shopping_cart)
             {
-                if (item=='A')
+                if (products.ContainsKey(item))
                 {
-                    price += 10;
-                }
-                if (item == 'B')
-                {
-                    price += 20;
-                }
-                if (item == 'C' )
-                {
-                    price += 50;
+                    price += products[item];
                 }
             }
             return price;
