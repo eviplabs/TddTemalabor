@@ -25,10 +25,5 @@ namespace Shopping
 
         }
 
-        public void AddItem(char item)
-        {
-            ComboProducts.Add(item);
-        }
-
     }
 }

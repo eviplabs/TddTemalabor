@@ -111,7 +111,7 @@ namespace Shopping
         {
             comboDiscounts.Add(new ComboDiscount(combo, comboprice, onlyforClubMembership));
         }
-
+        //Megfelelő kombós kedvezmény visszaadása az aktuális cart alapján.
         public ComboDiscount GetRelevantComboDiscount(Dictionary<char,int> cart)
         {
             if (comboDiscounts != null)
@@ -129,8 +129,7 @@ namespace Shopping
             }
             return null;
         }
-        //A feldolgozott kombó kedvezmény vizsgálata, hogy érvényes e a kosárra.
-        // jelenleg be van egetve
+        //Kombó kedvezmény számítása.
         public int ComboDiscount(ComboDiscount combo, bool membershipBased)
         {
             if (combo == null||(membershipBased==false && combo.ClubOnly)) { return 0; }
