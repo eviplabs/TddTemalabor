@@ -26,7 +26,10 @@ namespace Shopping
         public double GetPrice(string name) 
         {
             double price = 0;
-            
+            if (name.Contains("t")) 
+            {
+                Products['t'] = -18;
+            }
 
             Dictionary<char, int> ProductCount = name.GroupBy(c => c)
                 .Select(c => new { c.Key, Count = c.Count() })
