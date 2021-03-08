@@ -11,26 +11,23 @@ namespace ShoppingTests
     //  https://github.com/moq/moq4
     public class Basics
     {
+        private readonly Shop sh = new Shop();
+
         [Fact]
         public void Instantiation()
         {
-            var pc = new Shop();
-            Assert.NotNull(pc);
+            Assert.NotNull(sh);
         }
+
         [Fact]
         public void ProductRegistration()
         {
-            var sh = new Shop();
             sh.RegisterProduct('A', 10);
             var price = sh.GetPrice("AAA");
             //Ellenörzi, hogy a price objektum integer-e
             Assert.IsType<int>(price);
         }
-        private readonly Shop sh;
-        public Basics() 
-        {
-            sh = new Shop();
-        }
+
         [Fact]
         public void AccuratePriceCalculation()
         {
@@ -49,14 +46,11 @@ namespace ShoppingTests
         [Fact]
         public void RegisterAmountDiscount()
         {
-            var Shop = new Shop();
-            Shop.RegisterProduct('A', 10);
-            Shop.RegisterProduct('B', 100);
-            Shop.RegisterAmountDiscount('A', 5, 0.9);
-            var price = Shop.GetPrice("AAAAAAB");
+            sh.RegisterProduct('A', 10);
+            sh.RegisterProduct('B', 100);
+            sh.RegisterAmountDiscount('A', 5, 0.9);
+            var price = sh.GetPrice("AAAAAAB");
             Assert.Equal(154, price);
-
-
         }
 
     }
