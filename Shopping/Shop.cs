@@ -113,7 +113,7 @@ namespace Shopping
             return price;
         }
         //A kombó kedvezményben megadott elemek és összeg feldolgozása
-        public void RegisterComboDiscount(string combo, int comboprice)
+        public void RegisterComboDiscount(string combo, int comboprice, bool onlyforClubMembership = false)
         {
             char[] comboItems = combo.ToCharArray();
 

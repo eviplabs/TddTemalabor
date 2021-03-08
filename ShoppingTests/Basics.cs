@@ -68,6 +68,7 @@ namespace ShoppingTests
             Assert.Equal(140, price);
 
         }
+
         [Fact]
         public void ComboDiscount()
         {
@@ -92,6 +93,22 @@ namespace ShoppingTests
             s.RegisterClubMembership("t");
             var price = s.GetPrice("ABt");
             Assert.Equal(90, price);
+        }
+
+        [Fact]
+        public void ComboDiscountForClubMembership()
+        {
+            var s = new Shop();
+            s.RegisterProduct('A', 10);
+            s.RegisterProduct('B', 20);
+            s.RegisterProduct('C', 30);
+            s.RegisterProduct('D', 40);
+            s.RegisterProduct('E', 50);
+            s.RegisterProduct('F', 60);
+            s.RegisterProduct('G', 70);
+            s.RegisterComboDiscount("ABC", 55, true);     //Módosítottam a teszten, mert sehol nem kérték, hogy több kombó is legyen egyszerre.
+            var price = s.GetPrice("ABCDEFG");
+            Assert.Equal(280, price);
         }
     }
 }
