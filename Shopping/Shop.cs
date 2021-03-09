@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Shopping
 {
@@ -10,6 +11,7 @@ namespace Shopping
         private Dictionary<char, int> products = new Dictionary<char, int>();
         private Dictionary<char, AmountDiscount> amountDiscounts = new Dictionary<char, AmountDiscount>();
         private Dictionary<char, CountDiscount> countDiscounts = new Dictionary<char, CountDiscount>();
+        private Dictionary<int, int> supershopPoints = new Dictionary<int, int>(); // (userid, gyűjtött pontok) párok
         private List<ComboDiscount> comboDiscounts = new List<ComboDiscount>();
         public void RegisterProduct(char name, int price)
         {
@@ -45,6 +47,10 @@ namespace Shopping
             price -= ComboDiscount(GetRelevantComboDiscount(productCounts), clubMemberCart);
 
             price = GetUpdatedClubMembershipPrice(name, price);
+
+            checkAndAddSupershopPoints(name, price);
+
+            price = getSupershopAppliedPrice(name, price);
 
             return price;
         }
@@ -140,6 +146,36 @@ namespace Shopping
             }
             return sumPriceOfComboProducts - combo.ComboPrice;
         }
-
+        //Supershop pontok gyűjtése
+        private void checkAndAddSupershopPoints(string name, int price)
+        {
+            var result = new Regex(@"(\d+)").Match(name);
+            if (result.Success)
+            {
+                int userid = int.Parse(result.Value);
+                if (!supershopPoints.ContainsKey(userid))
+                {
+                    supershopPoints.Add(userid, 0);
+                }
+                supershopPoints[userid] += price / 100;
+            }
+        }
+        private int getSupershopAppliedPrice(string name, int price)
+        {
+            var result = new Regex(@"(\d+)").Match(name);
+            if (!name.Contains('p'))
+            {
+                return price; //A vevő nem szeretne szupershoppal fizetni 
+            }
+            int userid = int.Parse(result.Value);
+            if (supershopPoints[userid] > price)
+            {
+                supershopPoints[userid] -= price;
+                return 0; //A vevőnek több pontja van, mint a kosár ára, ezért csak a pontjaival fizet
+            }
+            price -= supershopPoints[userid]; //Ha van a vevőnek pontja levonja, ha nincs akkor nem csinál semmit.
+            supershopPoints[userid] = 0; //Volt a vevőnek pontja, nullázza, ha nem akkor nem csinál semmit.
+            return price; //A vevő pontjaival frissített ár
+        }
     }
 }
