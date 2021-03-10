@@ -225,5 +225,25 @@ namespace ShoppingTests
             Assert.Equal(189, price);
         }
 
+        [Fact]
+        public void Register_Club_Membership_Exclusive_Combo_Discount()
+        {
+            var Shop = new Shop();
+            Shop.RegisterProduct('A', 20);
+            Shop.RegisterProduct('B', 20);
+            Shop.RegisterProduct('C', 30);
+            Shop.RegisterProduct('D', 150);
+            //A RegisterComboDiscount 3. paramétere lenne, hogy csak tagok használhatják-e
+            Shop.RegisterComboDiscount("ABC", 60, true);
+            //(60)*0.9 = 54
+            var price = Shop.GetPrice("ABCt");
+            Assert.Equal(54, price);
+
+            //20+20+30 = 70
+            price = Shop.GetPrice("ABC");
+            Assert.Equal(70, price);
+
+        }
+
     }
 }
