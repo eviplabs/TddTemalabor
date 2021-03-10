@@ -63,5 +63,14 @@ namespace ShoppingTests
             Assert.Equal(154, price);
         }
 
+        [Fact]
+        public void RegisterAmountDiscount2()
+        {
+            sh.RegisterProduct('E', 10);
+            sh.RegisterProduct('G', 100);
+            sh.RegisterAmountDiscount('E', 5, 0.9);
+            var price = sh.GetPrice("EEEEEG");
+            Assert.Equal(154, price);
+        }
     }
 }
