@@ -25,11 +25,12 @@ namespace Shopping
 
         public double GetPrice(string name) 
         {
-
+            bool discounted = false;
             double price = 0;
             if (name.Contains("t")) 
             {
-                Products['t'] = -18;
+                discounted = true;
+                Products['t'] = 0;
                 name = name.Replace("t", "");
                 name += "t";
             }
@@ -88,8 +89,14 @@ namespace Shopping
 
             }
 
-
-            return price;
+            if (discounted)
+            {
+                return price *= 0.9;
+            }
+            else
+            {
+                return price;
+            }
         }
 
         public void RegisterAmountDiscount(char name,int amount,double percent) 
