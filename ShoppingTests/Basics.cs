@@ -69,7 +69,7 @@ namespace ShoppingTests
             sh.RegisterProduct('E', 10);
             sh.RegisterProduct('G', 100);
             sh.RegisterAmountDiscount('E', 5, 0.9);
-            var price = sh.GetPrice("EEEEEG");
+            var price = sh.GetPrice("EEEEEEG");
             Assert.Equal(154, price);
         }
     }
