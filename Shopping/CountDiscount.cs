@@ -16,7 +16,7 @@ namespace Shopping
         }
         public override double getDiscount(string shpping_cart, string item, int price)
         {
-            return (getRelevantItemsFromCart(shpping_cart, char.Parse(item)) / required) * price;
+            return (getRelevantItemsFromCart(shpping_cart, char.Parse(item)) / freeItem) * (freeItem - required) * price;
         }
     }
 }
