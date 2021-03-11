@@ -27,6 +27,10 @@ namespace Shopping
         {
             discounts.Add(Char.ToUpper(name), new Discount(amount, discount));
         }
+        public void RegisterCountDiscount(char name, int amount, int discount)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         public int GetPrice(string shopping_cart) 
