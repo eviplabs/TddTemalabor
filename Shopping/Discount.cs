@@ -7,7 +7,7 @@ namespace Shopping
 {
     public abstract class Discount
     {
-        public abstract double getDiscount(string shpping_cart, char item, int price);
+        public abstract double getDiscount(string shpping_cart, string items, int prices);
         protected int getRelevantItemsFromCart(string shopping_cart, char item)
         {
             return shopping_cart.ToCharArray().Count(c => c == item);

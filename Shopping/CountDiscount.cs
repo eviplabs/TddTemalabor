@@ -14,9 +14,9 @@ namespace Shopping
             this.required = required;
             this.freeItem = freeItem;
         }
-        public override double getDiscount(string shpping_cart, char item, int price)
+        public override double getDiscount(string shpping_cart, string item, int price)
         {
-            return (getRelevantItemsFromCart(shpping_cart, item) / required) * price;
+            return (getRelevantItemsFromCart(shpping_cart, char.Parse(item)) / required) * price;
         }
     }
 }

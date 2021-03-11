@@ -58,7 +58,7 @@ namespace ShoppingTests
         {
             sh.RegisterProduct('A', 10);
             sh.RegisterProduct('B', 100);
-            sh.RegisterAmountDiscount('A', 5, 0.9);
+            sh.RegisterAmountDiscount("A", 5, 0.9);
             var price = sh.GetPrice("AAAAAAB");
             Assert.Equal(154, price);
         }
@@ -77,7 +77,7 @@ namespace ShoppingTests
         {
             sh.RegisterProduct('A', 10);
             sh.RegisterProduct('B', 100);
-            sh.RegisterAmountDiscount('B', 5, 0.9);
+            sh.RegisterAmountDiscount("B", 5, 0.9);
             var price = sh.GetPrice("AAAAAAB");
             Assert.Equal(160, price);
         }
@@ -87,7 +87,7 @@ namespace ShoppingTests
         {
             sh.RegisterProduct('E', 10);
             sh.RegisterProduct('G', 100);
-            sh.RegisterAmountDiscount('E', 5, 0.9);
+            sh.RegisterAmountDiscount("E", 5, 0.9);
             var price = sh.GetPrice("EEEEEEG");
             Assert.Equal(154, price);
         }
@@ -96,7 +96,7 @@ namespace ShoppingTests
         {
             sh.RegisterProduct('A', 10);
             sh.RegisterProduct('B', 100);
-            sh.RegisterCountDiscount('A',2,3);
+            sh.RegisterCountDiscount("A",2,3);
             Assert.Equal(120, sh.GetPrice("AAAB"));
         }
         [Fact]
@@ -107,13 +107,13 @@ namespace ShoppingTests
             sh.RegisterProduct('C', 50);
             sh.RegisterProduct('D', 100);
             sh.RegisterComboDiscount("ABC", 60);
-            Assert.Equal(154, sh.GetPrice("CAAAABB"));
+            Assert.Equal(110, sh.GetPrice("CAAAABB"));
         }
         [Fact]
         public void RoundingGetPrice()
         {
             sh.RegisterProduct('A', 5);
-            sh.RegisterAmountDiscount('A', 5, 0.9);
+            sh.RegisterAmountDiscount("A", 5, 0.9);
             Assert.Equal(23, sh.GetPrice("AAAAA"));
         }
     }

@@ -9,13 +9,13 @@ namespace Shopping
     {
         #region Variables
         private Dictionary<char, int> products;
-        private Dictionary<char, Discount> discounts;
+        private Dictionary<string, Discount> discounts;
         #endregion
 
         public Shop() 
         {
             products = new Dictionary<char, int>();
-            discounts = new Dictionary<char, Discount>();
+            discounts = new Dictionary<string, Discount>();
         }
 
         #region Registration
@@ -23,26 +23,33 @@ namespace Shopping
         {
             products.Add(Char.ToUpper(name), price);
         }
-        public void RegisterAmountDiscount(char name, int amount, double discount)
+        public void RegisterAmountDiscount(string name, int amount, double discount)
         {
-            discounts.Add(Char.ToUpper(name), new AmountDiscount(amount, discount));
+            discounts.Add(name.ToUpper(), new AmountDiscount(amount, discount));
         }
-        public void RegisterCountDiscount(char name, int required, int freeItem)
+        public void RegisterCountDiscount(string name, int required, int freeItem)
         {
-            discounts.Add(Char.ToUpper(name), new CountDiscount(required, freeItem));
+            discounts.Add(name.ToUpper(), new CountDiscount(required, freeItem));
         }
-        public void RegisterComboDiscount(string name, int required)
+        public void RegisterComboDiscount(string name, int newPrice)
         {
-            throw new NotImplementedException();
+            discounts.Add(name.ToUpper(), new ComboDiscount(newPrice));
         }
         #endregion
 
         public int GetPrice(string shopping_cart) 
         {
-            double price = 0;
-            foreach (var item in shopping_cart) price += products[item];
-            foreach (var item in discounts) price -= item.Value.getDiscount(shopping_cart, item.Key, products[item.Key]);
+            double price = GetPriceWithoutDiscounts(shopping_cart);
+            //double price = 0;
+            //foreach (var item in shopping_cart) price += products[item];
+            foreach (var item in discounts) price -= item.Value.getDiscount(shopping_cart, item.Key, GetPriceWithoutDiscounts(item.Key));
             return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
+        }
+
+        private int GetPriceWithoutDiscounts(string shopping_cart) {
+            int price = 0;
+            foreach (var item in shopping_cart) price += products[item];
+            return price;
         }
     }
 }
