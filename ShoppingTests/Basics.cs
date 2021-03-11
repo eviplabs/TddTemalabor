@@ -100,6 +100,16 @@ namespace ShoppingTests
             Assert.Equal(120, sh.GetPrice("AAAB"));
         }
         [Fact]
+        public void RegisterComboDiscount()
+        {
+            sh.RegisterProduct('A', 10);
+            sh.RegisterProduct('B', 20);
+            sh.RegisterProduct('C', 50);
+            sh.RegisterProduct('D', 100);
+            sh.RegisterComboDiscount("ABC", 60);
+            Assert.Equal(154, sh.GetPrice("CAAAABB"));
+        }
+        [Fact]
         public void RoundingGetPrice()
         {
             sh.RegisterProduct('A', 5);

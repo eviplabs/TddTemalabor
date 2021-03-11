@@ -25,9 +25,13 @@ namespace Shopping
         }
         public void RegisterAmountDiscount(char name, int amount, double discount)
         {
-            discounts.Add(Char.ToUpper(name), new Discount(amount, discount));
+            discounts.Add(Char.ToUpper(name), new AmountDiscount(amount, discount));
         }
-        public void RegisterCountDiscount(char name, int amount, int discount)
+        public void RegisterCountDiscount(char name, int required, int freeItem)
+        {
+            discounts.Add(Char.ToUpper(name), new CountDiscount(required, freeItem));
+        }
+        public void RegisterComboDiscount(string name, int required)
         {
             throw new NotImplementedException();
         }
@@ -36,21 +40,8 @@ namespace Shopping
         public int GetPrice(string shopping_cart) 
         {
             double price = 0;
-
-            foreach (var item in shopping_cart)
-            {
-                if (products.ContainsKey(item))
-                {
-                    if (discounts.ContainsKey(item) && discounts[item].AreEnoughEligibleItems(shopping_cart, item))
-                    { 
-                            price += products[item] * discounts[item].multiplier;
-                    }
-                    else
-                    {
-                        price += products[item];
-                    }
-                }
-            }
+            foreach (var item in shopping_cart) price += products[item];
+            foreach (var item in discounts) price -= item.Value.getDiscount(shopping_cart, item.Key, products[item.Key]);
             return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
         }
     }
