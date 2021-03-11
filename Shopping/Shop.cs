@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Shopping
@@ -30,18 +31,16 @@ namespace Shopping
 
         public int GetPrice(string shopping_cart) 
         {
-            int price = 0;
+            double price = 0;
 
             foreach (var item in shopping_cart)
             {
                 if (products.ContainsKey(item))
                 {
                     //még nem vizsgál semmit az amount-ra
-                    if (discounts != null && discounts.ContainsKey(item))
-                    {
-                        //mivel a pricenak elvileg egésznek kell lennie
-                        //TODO: majd egy teszt a kerekitésre + kerekítés megírása ha kell
-                        price += Convert.ToInt32(products[item] * 0.9); 
+                    if (discounts != null && discounts.ContainsKey(item) && AreEnoughEligibleItems(shopping_cart, item))
+                    { 
+                            price += products[item] * discounts[item].multiplier;
                     }
                     else
                     {
@@ -49,7 +48,11 @@ namespace Shopping
                     }
                 }
             }
-            return price;
+            return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
+        }
+        public bool AreEnoughEligibleItems(string shopping_cart, char item)
+        {
+            return (shopping_cart.ToCharArray().Count(c => c == item) >= discounts[item].amount) ? true : false;
         }
     }
 }

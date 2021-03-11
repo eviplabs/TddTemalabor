@@ -6,8 +6,8 @@ namespace Shopping
 {
     public class Discount
     {
-        private int amount;
-        private double multiplier;
+        public int amount { get; set; }
+        public double multiplier { get; set; }
         public Discount(int amount, double multiplier)
         {
             this.amount = amount;
