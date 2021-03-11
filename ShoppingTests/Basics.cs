@@ -82,7 +82,7 @@ namespace ShoppingTests
             Assert.Equal(160, price);
         }
 
-        [Fact(Skip = "elöreszaladtam")]
+        [Fact]
         public void RegisterAmountDiscountWithDifferentCharacters()
         {
             sh.RegisterProduct('E', 10);
