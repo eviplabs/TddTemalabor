@@ -10,13 +10,13 @@ namespace Shopping
         private Dictionary<char, int> Products;
         private Dictionary<char, (int, double)> ADiscounts;
         private Dictionary<char, (int, int)> CDiscounts;
-        private Dictionary<string, int> ComboDiscounts;
+        private Dictionary<string, (int, bool)> ComboDiscounts;
         public Shop()
         {
             Products= new Dictionary<char, int>();
             ADiscounts = new Dictionary<char, (int, double)>();
             CDiscounts = new Dictionary<char, (int, int)>();
-            ComboDiscounts = new Dictionary<string, int>();
+            ComboDiscounts = new Dictionary<string, (int,bool)>();
         }
         public void RegisterProduct(char name, int price) 
         {
@@ -70,23 +70,26 @@ namespace Shopping
 
             foreach (var item in ComboDiscounts)
             {
-                comboString = new string(name);
-                int combo = 0;
-                for (int i = 0; i < count; i++)
+                
+                if (item.Value.Item2 == false || (item.Value.Item2 == true && name.Contains("t")))
                 {
-                    combo = 0;
-                    foreach (var c in item.Key)
+                    comboString = new string(name);
+                    int combo = 0;
+                    for (int i = 0; i < count; i++)
                     {
-                        comboString = comboString.Remove(comboString.IndexOf(c), c.ToString().Length);
-                        price -= Products[c];
-                        combo++;
+                        combo = 0;
+                        foreach (var c in item.Key)
+                        {
+                            comboString = comboString.Remove(comboString.IndexOf(c), c.ToString().Length);
+                            price -= Products[c];
+                            combo++;
+                        }
+                    }
+                    if (combo == item.Key.Length)
+                    {
+                        price += item.Value.Item1 * count;
                     }
                 }
-                if (combo == item.Key.Length)
-                {
-                    price += item.Value * count;
-                }
-
             }
 
             if (discounted)
@@ -109,12 +112,12 @@ namespace Shopping
             CDiscounts[name] = (count, bonus);
         }
 
-        public void RegisterComboDiscount(string name, int newprice)
+        public void RegisterComboDiscount(string name, int newprice, bool clubMembership=false)
         {
-            ComboDiscounts[name] = newprice;
+            ComboDiscounts[name] = (newprice,clubMembership);
         }
 
-        public int CountDiscount(Dictionary<char, int> products, Dictionary<string, int> combos, string name) 
+        public int CountDiscount(Dictionary<char, int> products, Dictionary<string, (int,bool)> combos, string name) 
         {
             Dictionary<char, int> path = new Dictionary<char, int>();
             foreach (var item in products.Keys)
