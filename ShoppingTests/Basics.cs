@@ -242,8 +242,19 @@ namespace ShoppingTests
             //20+20+30 = 70
             price = Shop.GetPrice("ABC");
             Assert.Equal(70, price);
-
         }
 
+        [Fact]
+        public void AddPointsToSupershopCard()
+        {
+            var Shop = new Shop();
+            Shop.RegisterProduct('A', 20);
+            Shop.RegisterProduct('B', 30);
+            Shop.RegisterProduct('C', 50);
+
+            var price = Shop.GetPrice("ABC1");
+            var points = Shop.GetSupershopPoints();
+            Assert.Equal(1,points);
+        }
     }
 }
