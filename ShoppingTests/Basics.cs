@@ -100,6 +100,14 @@ namespace ShoppingTests
             Assert.Equal(120, sh.GetPrice("AAAB"));
         }
         [Fact]
+        public void RegisterCountDiscountWithoutClaimingFreeProducts1()
+        {
+            sh.RegisterProduct('A', 10);
+            sh.RegisterProduct('B', 100);
+            sh.RegisterCountDiscount("A", 2, 3);
+            Assert.Equal(120, sh.GetPrice("AAB"));
+        }
+        [Fact]
         public void RegisterComboDiscount()
         {
             sh.RegisterProduct('A', 10);
@@ -108,6 +116,26 @@ namespace ShoppingTests
             sh.RegisterProduct('D', 100);
             sh.RegisterComboDiscount("ABC", 60);
             Assert.Equal(110, sh.GetPrice("CAAAABB"));
+        }
+        [Fact]
+        public void RegisterComboDiscountWithFalseDiscount()
+        {
+            sh.RegisterProduct('A', 10);
+            sh.RegisterProduct('B', 20);
+            sh.RegisterProduct('C', 50);
+            sh.RegisterProduct('D', 100);
+            sh.RegisterComboDiscount("ABCD", 60);
+            Assert.Equal(130, sh.GetPrice("CAAAABB"));
+        }
+        [Fact]
+        public void RegisterComboDiscountWitDiscountX2()
+        {
+            sh.RegisterProduct('A', 10);
+            sh.RegisterProduct('B', 20);
+            sh.RegisterProduct('C', 50);
+            sh.RegisterProduct('D', 100);
+            sh.RegisterComboDiscount("ABC", 60);
+            Assert.Equal(130, sh.GetPrice("AABBCCA"));
         }
         [Fact]
         public void RoundingGetPrice()
