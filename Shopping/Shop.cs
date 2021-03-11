@@ -37,8 +37,7 @@ namespace Shopping
             {
                 if (products.ContainsKey(item))
                 {
-                    //még nem vizsgál semmit az amount-ra
-                    if (discounts != null && discounts.ContainsKey(item) && AreEnoughEligibleItems(shopping_cart, item))
+                    if (discounts.ContainsKey(item) && discounts[item].AreEnoughEligibleItems(shopping_cart, item))
                     { 
                             price += products[item] * discounts[item].multiplier;
                     }
@@ -49,10 +48,6 @@ namespace Shopping
                 }
             }
             return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
-        }
-        public bool AreEnoughEligibleItems(string shopping_cart, char item)
-        {
-            return (shopping_cart.ToCharArray().Count(c => c == item) >= discounts[item].amount) ? true : false;
         }
     }
 }
