@@ -11,12 +11,14 @@ namespace Shopping
         private Dictionary<char, (int, double)> ADiscounts;
         private Dictionary<char, (int, int)> CDiscounts;
         private Dictionary<string, (int, bool)> ComboDiscounts;
+        private Dictionary<int, double> SupershopPoints;
         public Shop()
         {
             Products= new Dictionary<char, int>();
             ADiscounts = new Dictionary<char, (int, double)>();
             CDiscounts = new Dictionary<char, (int, int)>();
             ComboDiscounts = new Dictionary<string, (int,bool)>();
+            SupershopPoints = new Dictionary<int, double>();
         }
         public void RegisterProduct(char name, int price) 
         {
@@ -33,6 +35,13 @@ namespace Shopping
                 Products['t'] = 0;
                 name = name.Replace("t", "");
                 name += "t";
+            }
+
+            int id = 0;
+            if (name.Any(char.IsDigit))
+            {
+                id = (int)Char.GetNumericValue(name[name.Length-1]);
+                name = name.Replace(id.ToString(), "");
             }
 
             Dictionary<char, int> ProductCount = name.GroupBy(c => c)
@@ -92,6 +101,11 @@ namespace Shopping
                 }
             }
 
+            if (SupershopPoints.Count > 0)
+            {
+                SupershopPoints.Add(id, GetSupershopPoints(price));
+            }
+
             if (discounted)
             {
                 return price *= 0.9;
@@ -115,6 +129,10 @@ namespace Shopping
         public void RegisterComboDiscount(string name, int newprice, bool clubMembership=false)
         {
             ComboDiscounts[name] = (newprice,clubMembership);
+        }
+
+        public double GetSupershopPoints(double price) {
+            return price * 0.01;
         }
 
         public int CountDiscount(Dictionary<char, int> products, Dictionary<string, (int,bool)> combos, string name) 
