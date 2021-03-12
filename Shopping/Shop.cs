@@ -51,12 +51,8 @@ namespace Shopping
             foreach (var key in forfor.Keys)
             {
                 if (CDiscounts.ContainsKey(key) && ProductCount[key] >= CDiscounts[key].Item2)
-                {
-                    int pc = ProductCount[key];
-                    int a = CDiscounts[key].Item1;
-                    int b = CDiscounts[key].Item2;
-                    int final = pc - (pc / b) * (b - a);
-                    ProductCount[key] = final;
+                { 
+                    ProductCount[key] = CountDiscountCalculator(key,ProductCount);
                 }
             }
 
@@ -104,14 +100,7 @@ namespace Shopping
                 SupershopPoints.Add(id, GetSupershopPoints(price));
             }
 
-            if (clubmember)
-            {
-                return price *= 0.9;
-            }
-            else
-            {
-                return price;
-            }
+            return clubmember ? price * 0.9 : price; 
         }
 
         public void RegisterAmountDiscount(char name,int amount,double percent) 
@@ -165,6 +154,13 @@ namespace Shopping
                 }
             }
             return min;
+        }
+        private int CountDiscountCalculator(char ProductID, Dictionary<char, int> ProductCount)
+        {
+            int pc = ProductCount[ProductID];
+            int a = CDiscounts[ProductID].Item1;
+            int b = CDiscounts[ProductID].Item2;
+            return pc - (pc / b) * (b - a);
         }
     }
 }
