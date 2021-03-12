@@ -27,14 +27,12 @@ namespace Shopping
 
         public double GetPrice(string name) 
         {
-            bool discounted = false;
+            bool clubmember = false;
             double price = 0;
             if (name.Contains("t")) 
             {
-                discounted = true;
-                Products['t'] = 0;
-                name = name.Replace("t", "");
-                name += "t";
+                clubmember = true; 
+                name = name.Replace("t", "");               
             }
 
             int id = 0;
@@ -80,7 +78,7 @@ namespace Shopping
             foreach (var item in ComboDiscounts)
             {
                 
-                if (item.Value.Item2 == false || (item.Value.Item2 == true && name.Contains("t")))
+                if (item.Value.Item2 == false || (item.Value.Item2 == true && clubmember))
                 {
                     comboString = new string(name);
                     int combo = 0;
@@ -106,7 +104,7 @@ namespace Shopping
                 SupershopPoints.Add(id, GetSupershopPoints(price));
             }
 
-            if (discounted)
+            if (clubmember)
             {
                 return price *= 0.9;
             }
