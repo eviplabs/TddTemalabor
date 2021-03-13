@@ -73,6 +73,17 @@ namespace ShoppingTests
         }
 
         [Fact]
+        public void InvalidAmountDiscountRegistration()
+        {
+            s.RegisterProduct('A', 10);            
+            Assert.False(s.RegisterAmountDiscount('A', 1, 0.9));
+            Assert.False(s.RegisterAmountDiscount('A', 0, 0.9));
+            Assert.False(s.RegisterAmountDiscount('A', -1, 0.9));
+            var price = s.GetPrice("AAA");
+            Assert.Equal(30, price);
+        }
+
+        [Fact]
         public void AmountWithRegisteredDiscount()
         {
             s.RegisterProduct('A', 10);
