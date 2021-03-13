@@ -36,6 +36,13 @@ namespace ShoppingTests
         }
 
         [Fact]
+        public void RegistrationOfProductWithInvalidPrice()
+        {
+            Assert.False(s.RegisterProduct('A', 0));
+            Assert.False(s.RegisterProduct('B', -1));
+        }
+
+        [Fact]
         public void NotRegisteredProductInGetProce()
         {
             s.RegisterProduct('A', 10);
