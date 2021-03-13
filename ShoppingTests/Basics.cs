@@ -29,7 +29,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegistrationOfInvalidProduct()
+        public void RegistrationOfProductWithInvalidName()
         {
             Assert.False(s.RegisterProduct('@', 10)); //'@'='A'-1            
             Assert.False(s.RegisterProduct('[', 10)); //'['='Z'+1            

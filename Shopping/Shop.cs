@@ -20,14 +20,14 @@ namespace Shopping
             products.Add(name, price);
             return true;
         }
-        public int GetPrice(string name)
+        public int GetPrice(string cart)
         {
             // Megszamoljuk, hogy az egyes termekek hanyszor szerepelnek
             Dictionary<char, int> productCounts = new Dictionary<char, int>();
-            bool clubMemberCart = false;
-            foreach (char item in name)
+            bool clubMemberCard = false;
+            foreach (char item in cart)
             {
-                if (item.Equals('t')) { clubMemberCart = true; }
+                if (item.Equals('t')) { clubMemberCard = true; }
                 if (!products.ContainsKey(item)) continue;
 
                 if (!productCounts.ContainsKey(item))
@@ -47,13 +47,13 @@ namespace Shopping
 
             price = getUpdatedCountDiscountPrice(productCounts, price);
 
-            price -= ComboDiscount(GetRelevantComboDiscount(productCounts), clubMemberCart);
+            price -= ComboDiscount(GetRelevantComboDiscount(productCounts), clubMemberCard);
 
-            price = GetUpdatedClubMembershipPrice(name, price);
+            price = GetUpdatedClubMembershipPrice(cart, price);
 
-            checkAndAddSupershopPoints(name, price);
+            checkAndAddSupershopPoints(cart, price);
 
-            price = getSupershopAppliedPrice(name, price);
+            price = getSupershopAppliedPrice(cart, price);
 
             return price;
         }
