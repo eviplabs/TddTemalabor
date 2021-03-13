@@ -15,7 +15,7 @@ namespace Shopping
         private List<ComboDiscount> comboDiscounts = new List<ComboDiscount>();
         public bool RegisterProduct(char name, int price)
         {
-            if (name < 'A' || name > 'Z') return false;
+            if ((name < 'A' || name > 'Z') || price <= 0) return false;            
 
             products.Add(name, price);
             return true;
