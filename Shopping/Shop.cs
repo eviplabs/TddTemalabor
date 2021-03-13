@@ -68,9 +68,12 @@ namespace Shopping
             return price;
         }
 
-        public void RegisterAmountDiscount(char name, int amount, double factor)
+        public bool RegisterAmountDiscount(char name, int amount, double factor)
         {
+            if (amount < 2) return false;
+
             amountDiscounts.Add(name, new AmountDiscount(amount, factor));
+            return true;
         }
 
         public void RegisterCountDiscount(char name, int amountToBuy, int amountToGet)
