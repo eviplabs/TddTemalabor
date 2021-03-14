@@ -84,6 +84,12 @@ namespace ShoppingTests
         }
 
         [Fact]
+        public void AmountDiscountRegistrationForNotExistingProduct()
+        {
+            Assert.False(s.RegisterAmountDiscount('A', 2, 0.9));
+        }
+
+        [Fact]
         public void AmountWithRegisteredDiscount()
         {
             s.RegisterProduct('A', 10);
