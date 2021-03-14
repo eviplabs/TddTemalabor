@@ -73,6 +73,12 @@ namespace ShoppingTests
         }
 
         [Fact]
+        public void AmountDiscountRegistrationForNotExistingProduct()
+        {
+            Assert.False(s.RegisterAmountDiscount('A', 2, 0.9));
+        }
+
+        [Fact]
         public void InvalidAmountParameterforAmountDiscountRegistration()
         {
             s.RegisterProduct('A', 10);            
@@ -84,9 +90,16 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void AmountDiscountRegistrationForNotExistingProduct()
+        public void AmountDiscountRegistrationWithInvalidFactor()
         {
-            Assert.False(s.RegisterAmountDiscount('A', 2, 0.9));
+            s.RegisterProduct('A', 10);
+            // 0 < szorzo < 1
+            Assert.False(s.RegisterAmountDiscount('A', 2, 1.5));
+            Assert.False(s.RegisterAmountDiscount('A', 2, 1.0));
+            Assert.False(s.RegisterAmountDiscount('A', 2, 0));
+            Assert.False(s.RegisterAmountDiscount('A', 2, -0.8));
+            var price = s.GetPrice("AAA");
+            Assert.Equal(30, price);
         }
 
         [Fact]
