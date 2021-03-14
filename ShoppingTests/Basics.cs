@@ -92,7 +92,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void InvalidAmountParameterforAmountDiscountRegistration()
+        public void AmountDiscountRegistrationWithInvalidAmountParameter()
         {
             s.RegisterProduct('A', 10);            
             Assert.False(s.RegisterAmountDiscount('A', 1, 0.9));
