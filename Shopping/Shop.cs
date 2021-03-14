@@ -76,6 +76,7 @@ namespace Shopping
         public bool RegisterAmountDiscount(char name, int amount, double factor)
         {
             if (amount < 2 || !ProductRegistered(name) || (factor <= 0 || factor >= 1)) return false;
+            if (amountDiscounts.ContainsKey(name)) return false;
 
             amountDiscounts.Add(name, new AmountDiscount(amount, factor));
             return true;
