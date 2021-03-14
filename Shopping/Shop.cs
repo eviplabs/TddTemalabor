@@ -13,10 +13,15 @@ namespace Shopping
         private Dictionary<char, CountDiscount> countDiscounts = new Dictionary<char, CountDiscount>();
         private Dictionary<int, int> supershopPoints = new Dictionary<int, int>(); // (userid, gyűjtött pontok) párok
         private List<ComboDiscount> comboDiscounts = new List<ComboDiscount>();
+
+        public bool ProductRegistered(char name)
+        {
+            return products.ContainsKey(name);
+        }
         public bool RegisterProduct(char name, int price)
         {
             if ((name < 'A' || name > 'Z') || price <= 0) return false;
-            if (products.ContainsKey(name)) return false;
+            if (ProductRegistered(name)) return false;
 
             products.Add(name, price);
             return true;
@@ -70,7 +75,7 @@ namespace Shopping
 
         public bool RegisterAmountDiscount(char name, int amount, double factor)
         {
-            if (amount < 2) return false;
+            if (amount < 2 || !ProductRegistered(name)) return false;
 
             amountDiscounts.Add(name, new AmountDiscount(amount, factor));
             return true;
