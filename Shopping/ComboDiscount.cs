@@ -24,7 +24,7 @@ namespace Shopping
                 }
                 else
                 {
-                    int currentOccurence = getDiscountedOccurence(shopping_cart, item);
+                    int currentOccurence = getRelevantItemsFromCart(shopping_cart, item);
                     if (maxOccurence > currentOccurence)
                     {
                         maxOccurence = currentOccurence;
@@ -32,10 +32,6 @@ namespace Shopping
                 }
             }
             return (prices - newPrice) * maxOccurence;
-        }
-        private int getDiscountedOccurence(string shopping_cart, char item)
-        {
-            return shopping_cart.ToCharArray().Count(c => c == item);
         }
     }
 }
