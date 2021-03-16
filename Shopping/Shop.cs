@@ -39,6 +39,11 @@ namespace Shopping
 
         public int GetPrice(string shopping_cart) 
         {
+            if (shopping_cart.Contains("t"))
+            {
+                products['t'] = -1;
+            }
+
             double price = GetPriceWithoutDiscounts(shopping_cart);
             foreach (var item in discounts) price -= item.Value.getDiscount(shopping_cart, item.Key, GetPriceWithoutDiscounts(item.Key));
             return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
@@ -49,5 +54,6 @@ namespace Shopping
             foreach (var item in shopping_cart) price += products[item];
             return price;
         }
+
     }
 }

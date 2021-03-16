@@ -150,5 +150,11 @@ namespace ShoppingTests
             sh.RegisterProduct('A', 10);
             Assert.Equal(9, sh.GetPrice("At"));
         }
+
+        public void ClubMemberShipDiscountx2()
+        {
+            sh.RegisterProduct('B', 20);
+            Assert.Equal(18, sh.GetPrice("Bt"));
+        }
     }
 }
