@@ -144,5 +144,11 @@ namespace ShoppingTests
             sh.RegisterAmountDiscount("A", 5, 0.9);
             Assert.Equal(23, sh.GetPrice("AAAAA"));
         }
+        [Fact]
+        public void ClubMemberShipExists()
+        {
+            sh.RegisterProduct('A', 10);
+            Assert.Equal(9, sh.GetPrice("At"));
+        }
     }
 }
