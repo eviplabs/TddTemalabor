@@ -14,9 +14,9 @@ namespace Shopping
             this.amount = amount;
             this.multiplier = multiplier;
         }
-        public override double getDiscount(string shpping_cart, string item, int price)
+        public override double getDiscount(string shopping_cart, string item, int price)
         {
-            return (getRelevantItemsFromCart(shpping_cart, char.Parse(item)) >= amount) ? getRelevantItemsFromCart(shpping_cart, char.Parse(item)) * price * (1-multiplier) : 0;
+            return (getRelevantItemsFromCart(shopping_cart, char.Parse(item)) >= amount) ? getRelevantItemsFromCart(shopping_cart, char.Parse(item)) * price * (1-multiplier) : 0;
         }
     }
 }

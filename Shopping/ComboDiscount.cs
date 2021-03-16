@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,16 +13,29 @@ namespace Shopping
         {
             this.newPrice = newPrice;
         }
-        public override double getDiscount(string shpping_cart, string items, int prices)
+        public override double getDiscount(string shopping_cart, string items, int prices)
         {
-            foreach (char c in items.ToCharArray())
+            int maxOccurence = shopping_cart.Length;
+            foreach (char item in items.ToCharArray())
             {
-                if (!shpping_cart.Contains(c))
+                if (!shopping_cart.Contains(item))
                 {
                     return 0;
                 }
+                else
+                {
+                    int currentOccurence = getDiscountedOccurence(shopping_cart, item);
+                    if (maxOccurence > currentOccurence)
+                    {
+                        maxOccurence = currentOccurence;
+                    }
+                }
             }
-            return prices - newPrice;
+            return (prices - newPrice) * maxOccurence;
+        }
+        private int getDiscountedOccurence(string shopping_cart, char item)
+        {
+            return shopping_cart.ToCharArray().Count(c => c == item);
         }
     }
 }

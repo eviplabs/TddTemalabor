@@ -40,8 +40,6 @@ namespace Shopping
         public int GetPrice(string shopping_cart) 
         {
             double price = GetPriceWithoutDiscounts(shopping_cart);
-            //double price = 0;
-            //foreach (var item in shopping_cart) price += products[item];
             foreach (var item in discounts) price -= item.Value.getDiscount(shopping_cart, item.Key, GetPriceWithoutDiscounts(item.Key));
             return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
         }
