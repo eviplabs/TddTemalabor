@@ -12,11 +12,13 @@ namespace Shopping
         private Dictionary<string, Discount> discounts;
         #endregion
 
+        #region Init
         public Shop() 
         {
             products = new Dictionary<char, int>();
             discounts = new Dictionary<string, Discount>();
         }
+        #endregion
 
         #region Registration
         public void RegisterProduct(char name, int price)
@@ -37,6 +39,7 @@ namespace Shopping
         }
         #endregion
 
+        #region Calculations
         public int GetPrice(string shopping_cart) 
         {
             bool memberShip = false;
@@ -61,6 +64,6 @@ namespace Shopping
             foreach (var item in shopping_cart) price += products[item];
             return price;
         }
-
+        #endregion
     }
 }

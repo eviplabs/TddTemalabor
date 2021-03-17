@@ -8,11 +8,20 @@ namespace Shopping
 {
     public class ComboDiscount : Discount
     {
+        #region Variables
         public int newPrice { get; set; }
-        public ComboDiscount(int newPrice)
+        public bool membership { get; set; }
+        #endregion
+
+        #region Init
+        public ComboDiscount(int newPrice, bool membership)
         {
             this.newPrice = newPrice;
+            this.membership = membership;
         }
+        #endregion
+
+        #region Calculations
         public override double getDiscount(string shopping_cart, string items, int prices)
         {
             int maxOccurence = shopping_cart.Length;
@@ -33,5 +42,6 @@ namespace Shopping
             }
             return (prices - newPrice) * maxOccurence;
         }
+        #endregion
     }
 }

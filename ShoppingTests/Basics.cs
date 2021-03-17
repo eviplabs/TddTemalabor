@@ -5,14 +5,20 @@ using Xunit;
 
 namespace ShoppingTests
 {
+    #region Documentation
     // Stryker.NET mutation testing tool: 
     //  https://github.com/stryker-mutator/stryker-net
     // Moq package:
     //  https://github.com/moq/moq4
+    #endregion
+
     public class Basics
     {
+        #region Variables
         private readonly Shop sh = new Shop();
+        #endregion
 
+        #region Tests
         [Fact]
         public void Instantiation()
         {
@@ -157,6 +163,7 @@ namespace ShoppingTests
             sh.RegisterProduct('B', 20);
             Assert.Equal(18, sh.GetPrice("Bt"));
         }
+
         [Fact]
         public void ClubMemberShipDiscountx3()
         {
@@ -171,14 +178,12 @@ namespace ShoppingTests
             sh.RegisterProduct('A', 10);
             sh.RegisterProduct('B', 20);
             sh.RegisterProduct('C', 50);
-            sh.RegisterComboDiscount("ABC", 60 , true);//3. taggal (bool) megadható hogy a kedvezmény csak klubtagoknak jár-e
+            sh.RegisterComboDiscount("ABC", 60 , true);     // 3. taggal (bool) megadható hogy a kedvezmény csak klubtagoknak jár-e
             //20+40+100=160 (comboDiscount csak tagoknak)
             Assert.Equal(160, sh.GetPrice("AABBCC"));
             //(60+60)*0,9  comboDiscount és MemberShipDiscount is
             Assert.Equal(108, sh.GetPrice("AABBCCt"));
-
         }
-
-
+        #endregion
     }
 }
