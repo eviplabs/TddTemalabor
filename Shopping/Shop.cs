@@ -42,27 +42,31 @@ namespace Shopping
         #region Calculations
         public int GetPrice(string shopping_cart) 
         {
-            bool memberShip = false;
-            if (shopping_cart.Contains("t"))
-            {
-                memberShip = true;
-                products['t'] = 0;
-            }
+            bool memberShip = hasMembership(shopping_cart);
+            double price = GetPriceSumWithoutDiscounts(shopping_cart);
 
-            double price = GetPriceWithoutDiscounts(shopping_cart);
-            foreach (var item in discounts) price -= item.Value.getDiscount(shopping_cart, item.Key, GetPriceWithoutDiscounts(item.Key));
-            if (memberShip)
-            {
-                return Convert.ToInt32(Math.Round(price*0.9, MidpointRounding.AwayFromZero));
-            }
+            price -= GetDiscountSum(shopping_cart);
 
-            return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
+            return Convert.ToInt32(Math.Round(
+                (memberShip)? price * 0.9 : price, MidpointRounding.AwayFromZero));
         }
 
-        private int GetPriceWithoutDiscounts(string shopping_cart) {
-            int price = 0;
-            foreach (var item in shopping_cart) price += products[item];
-            return price;
+        private int GetPriceSumWithoutDiscounts(string shopping_cart)
+        {
+            return shopping_cart.Sum(i => products[i]);
+        }
+        private double GetDiscountSum(string shopping_cart)
+        {
+            return discounts.Sum(d => d.Value.getDiscount(shopping_cart, d.Key, GetPriceSumWithoutDiscounts(d.Key)));
+        }
+        private bool hasMembership(string shopping_cart)
+        {
+            if (shopping_cart.Contains("t"))
+            {
+                products['t'] = 0;
+                return true;
+            }
+            return false;
         }
         #endregion
     }

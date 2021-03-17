@@ -39,7 +39,7 @@ namespace Shopping
             }
             return (prices - newPrice) * maxOccurence;
         }
-        public bool areConditionsFulfilled(string shopping_cart, string items)
+        private bool areConditionsFulfilled(string shopping_cart, string items)
         {
             if (membershipRequired && (!shopping_cart.Contains("t"))
                 || items.ToCharArray().Where(i => !shopping_cart.Contains(i)).Any())
