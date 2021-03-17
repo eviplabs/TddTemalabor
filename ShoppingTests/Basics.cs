@@ -189,5 +189,42 @@ namespace ShoppingTests
             Assert.Equal(198, price);
 
         }
+
+        [Fact]
+        public void AmountAndCountDiscountAtTheSameTime()
+        {
+            s.RegisterProduct('A', 10);
+            s.RegisterProduct('B', 20);
+            s.RegisterAmountDiscount('A', 2, 0.9);
+            s.RegisterCountDiscount('A', 2, 3);
+            var price = s.GetPrice("AAAB");   //Eredeti ár 3*10+20=50,  Amounttal 2*10*0.9+10+20=48,  Counttal 2*10+20=40
+            Assert.Equal(40, price);
+        }
+
+        [Fact]
+        public void ComboAndCountDiscountAtTheSameTime()
+        {
+            s.RegisterProduct('A', 10);
+            s.RegisterProduct('B', 20);
+            s.RegisterProduct('C', 30);
+            s.RegisterCountDiscount('A', 2, 3);
+            s.RegisterComboDiscount("ABC", 40, false);
+            var price = s.GetPrice("AAABBC"); //Eredeti ár 3*10+2*20+30=100, Counttal 2*10+2*20+30=90, Comboval 2*10+20+40=80
+            Assert.Equal(80, price);
+        }
+
+        [Fact]
+        public void ComboAndAmountDiscountAtTheSameTime()
+        {
+
+            s.RegisterProduct('A', 10);
+            s.RegisterProduct('B', 20);
+            s.RegisterProduct('C', 30);
+            s.RegisterAmountDiscount('C', 2, 3);
+            s.RegisterComboDiscount("ABC", 40, false);
+            var price = s.GetPrice("ABCCC");  //Eredeti ár 10+20+3*30=120, Amounttal 10+20+2*30=90, Comboval 40+2*30=100
+            Assert.Equal(90, price);
+        }
+
     }
 }
