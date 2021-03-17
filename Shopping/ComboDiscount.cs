@@ -10,37 +10,43 @@ namespace Shopping
     {
         #region Variables
         public int newPrice { get; set; }
-        public bool membership { get; set; }
+        public bool membershipRequired { get; set; }
         #endregion
 
         #region Init
-        public ComboDiscount(int newPrice, bool membership)
+        public ComboDiscount(int newPrice, bool membershipRequired)
         {
             this.newPrice = newPrice;
-            this.membership = membership;
+            this.membershipRequired = membershipRequired;
         }
         #endregion
 
         #region Calculations
         public override double getDiscount(string shopping_cart, string items, int prices)
         {
+            if (!areConditionsFulfilled(shopping_cart, items))
+            {
+                return 0;
+            }
             int maxOccurence = shopping_cart.Length;
             foreach (char item in items.ToCharArray())
             {
-                if (!shopping_cart.Contains(item))
+                int currentOccurence = getRelevantItemsFromCart(shopping_cart, item);
+                if (maxOccurence > currentOccurence)
                 {
-                    return 0;
-                }
-                else
-                {
-                    int currentOccurence = getRelevantItemsFromCart(shopping_cart, item);
-                    if (maxOccurence > currentOccurence)
-                    {
-                        maxOccurence = currentOccurence;
-                    }
+                    maxOccurence = currentOccurence;
                 }
             }
             return (prices - newPrice) * maxOccurence;
+        }
+        public bool areConditionsFulfilled(string shopping_cart, string items)
+        {
+            if (membershipRequired && (!shopping_cart.Contains("t"))
+                || items.ToCharArray().Where(i => !shopping_cart.Contains(i)).Any())
+            {
+                return false;
+            }
+            return true;
         }
         #endregion
     }

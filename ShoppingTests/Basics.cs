@@ -26,7 +26,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void ProductRegistration()
+        public void IsPriceInt()
         {
             sh.RegisterProduct('A', 10);
             var price = sh.GetPrice("AAA");
@@ -170,7 +170,7 @@ namespace ShoppingTests
             sh.RegisterProduct('B', 20);
             Assert.Equal(18, sh.GetPrice("Bttt"));
         }
-
+        
         [Fact]
         public void ComboDiscountWithMemberShip()
         {
