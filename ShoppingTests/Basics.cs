@@ -187,7 +187,6 @@ namespace ShoppingTests
             s.RegisterProduct('G', 70);
             var price = s.GetPrice("1pAACDDG");
             Assert.Equal(198, price);
-
         }
 
         [Fact]
@@ -216,7 +215,6 @@ namespace ShoppingTests
         [Fact]
         public void ComboAndAmountDiscountAtTheSameTime()
         {
-
             s.RegisterProduct('A', 10);
             s.RegisterProduct('B', 20);
             s.RegisterProduct('C', 30);
@@ -226,5 +224,65 @@ namespace ShoppingTests
             Assert.Equal(100, price);
         }
 
+        [Fact]
+        public void LongUserIDWithShoppingPoints()
+        {
+            s.RegisterProduct('A', 10);
+            s.RegisterProduct('B', 20);
+            s.RegisterProduct('C', 30);
+            s.RegisterProduct('D', 40);
+            s.RegisterProduct('E', 50);
+            s.RegisterProduct('F', 60);
+            s.RegisterProduct('G', 70);
+            // 123 -as user vásárol, de nem használja fel, 2 pontot kap
+            var price = s.GetPrice("AACDDGv123");
+            Assert.Equal(200, price);
+
+            s.RegisterProduct('A', 10);
+            s.RegisterProduct('B', 20);
+            s.RegisterProduct('C', 30);
+            s.RegisterProduct('D', 40);
+            s.RegisterProduct('E', 50);
+            s.RegisterProduct('F', 60);
+            s.RegisterProduct('G', 70);
+            // 1-es user vásárol, fel is használja a 2 pontot
+            var price2 = s.GetPrice("AACDDGv1p");
+            Assert.Equal(198, price2);
+
+            s.RegisterProduct('A', 10);
+            s.RegisterProduct('B', 20);
+            s.RegisterProduct('C', 30);
+            s.RegisterProduct('D', 40);
+            s.RegisterProduct('E', 50);
+            s.RegisterProduct('F', 60);
+            s.RegisterProduct('G', 70);
+            // 123-as user vásárol és fel is használja a pontokat, 2 + 2 pontot (előző vásárlásból)
+            var price3 = s.GetPrice("AACDDGv123p");
+            Assert.Equal(196, price3);
+        }
+
+        [Fact]
+        public void ComboDiscountForClubMembershipWithSuperShopCard()
+        {
+            s.RegisterProduct('A', 10);
+            s.RegisterProduct('B', 20);
+            s.RegisterProduct('C', 30);
+            s.RegisterProduct('D', 40);
+            s.RegisterProduct('E', 50);
+            s.RegisterProduct('F', 60);
+            s.RegisterProduct('G', 70);
+            s.RegisterComboDiscount("ABC", 55, true);     
+            var price = s.GetPrice("ABCDEFGv123");
+            Assert.Equal(275, price);
+        }
+
+        [Fact]
+        public void ClubMembershipWithSuperShopCard()
+        {
+            s.RegisterProduct('A', 40);
+            s.RegisterProduct('B', 60);
+            var price = s.GetPrice("ABv234");
+            Assert.Equal(90, price);
+        }
     }
 }
