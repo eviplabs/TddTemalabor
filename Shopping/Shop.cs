@@ -48,18 +48,23 @@ namespace Shopping
 
             /* osszeadjuk a termekek arat a darabszamukat-, es az erre vonatkozo
             esetleges kedvezmenyeket figyelembe veve */
-            int price = 0;
-            price = GetAmountDiscountPrice(productCounts, price);
+            List<int> prices = new List<int>();
 
-            price = getUpdatedCountDiscountPrice(productCounts, price);
+            prices.Add(GetAmountDiscountPrice(productCounts));
 
-            price -= ComboDiscount(GetRelevantComboDiscount(productCounts), clubMemberCard);
+            prices.Add(getUpdatedCountDiscountPrice(productCounts));
+
+            prices.Add(ComboDiscount(GetRelevantComboDiscount(productCounts), clubMemberCard, productCounts));
+
+            int price = prices.Min();
 
             price = GetUpdatedClubMembershipPrice(cart, price);
 
             checkAndAddSupershopPoints(cart, price);
 
             price = getSupershopAppliedPrice(cart, price);
+
+
 
             return price;
         }
@@ -86,8 +91,9 @@ namespace Shopping
         {
             countDiscounts.Add(name, new CountDiscount(amountToBuy, amountToGet));
         }
-        private int GetAmountDiscountPrice(Dictionary<char,int> cart, int price)
+        private int GetAmountDiscountPrice(Dictionary<char, int> cart)
         {
+            int price = 0;
             foreach ((char product, int count) in cart)
             {
                 if (amountDiscounts.ContainsKey(product) && count >= amountDiscounts[product].Amount)
@@ -101,8 +107,9 @@ namespace Shopping
             }
             return price;
         }
-        private int getUpdatedCountDiscountPrice(Dictionary<char, int> cart, int price)
+        private int getUpdatedCountDiscountPrice(Dictionary<char, int> cart)
         {
+            int price = getPriceWithoutDiscount(cart);
             // Az egyes termékeknek ha van CountDiscount akciója, akkor elosztja maradéktalanul a termékek
             // számát a m-el (az n-t fizet m-t vihetből), és kivonja a termék árát az eredmény szorzatával az egészből
             foreach ((char item, int count) in cart)
@@ -113,52 +120,68 @@ namespace Shopping
                     continue;
                 }
                 CountDiscount countDiscount = countDiscounts[item];
-                // Ha van amountDiscount, akkor az is kell az új ár kiszámolásához
+
                 double actualItemPrice = products[item];
-                if (amountDiscounts.ContainsKey(item))
-                {
-                    actualItemPrice *= amountDiscounts[item].Factor;
-                }
+
                 // (count / countDiscount.Get): ennyiszer tudjuk a jelenlegi kosarunknal kihasznalni a 3-at fizet 4-et vihet tipusu akciot
                 // countDiscount.Get-countDiscount.Buy: minden egyes alkalommal amikor kihasznalasra kerül, ennyi termek arat kell levonni
                 price -= (int)(actualItemPrice * ((int)(count / countDiscount.Get) * (countDiscount.Get - countDiscount.Buy)));
             }
             return price;
         }
+
+        private int getPriceWithoutDiscount(Dictionary<char, int> cart)
+        {
+            int price = 0;
+            foreach ((char product, int count) in cart)
+            {
+
+                price += products[product] * count;
+
+            }
+            return price;
+        }
+
         //A kombó kedvezményben megadott elemek és összeg feldolgozása
         public void RegisterComboDiscount(string combo, int comboprice, bool onlyforClubMembership)
         {
             comboDiscounts.Add(new ComboDiscount(combo, comboprice, onlyforClubMembership));
         }
         //Megfelelő kombós kedvezmény visszaadása az aktuális cart alapján.
-        public ComboDiscount GetRelevantComboDiscount(Dictionary<char,int> cart)
+        public ComboDiscount GetRelevantComboDiscount(Dictionary<char, int> cart)
         {
             if (comboDiscounts != null)
             {
-                foreach( var combo in comboDiscounts)
+                foreach (var combo in comboDiscounts)
                 {
                     int charCount = combo.ComboProducts.Count();
                     int matches = 0;
-                    foreach(char character in combo.ComboProducts)
+                    foreach (char character in combo.ComboProducts)
                     {
-                        if(products.ContainsKey(character) && cart.ContainsKey(character)) { matches++; }
+                        if (products.ContainsKey(character) && cart.ContainsKey(character)) { matches++; }
                     }
                     if (matches == charCount) { return combo; }
                 }
             }
             return null;
         }
+
         //Kombó kedvezmény számítása.
-        public int ComboDiscount(ComboDiscount combo, bool membershipBased)
+        public int ComboDiscount(ComboDiscount combo, bool membershipBased, Dictionary<char, int> cart)
         {
-            if (combo == null||(membershipBased==false && combo.ClubOnly)) { return 0; }
+            if (combo == null || (membershipBased == false && combo.ClubOnly))
+            {
+                return getPriceWithoutDiscount(cart);
+            }
             int sumPriceOfComboProducts = 0;
             foreach (var item in combo.ComboProducts)
             {
                 sumPriceOfComboProducts += products[item];
             }
-            return sumPriceOfComboProducts - combo.ComboPrice;
+            int price = getPriceWithoutDiscount(cart);
+            return price - (sumPriceOfComboProducts - combo.ComboPrice);
         }
+
         //Supershop pontok gyűjtése
         private void checkAndAddSupershopPoints(string name, int price)
         {

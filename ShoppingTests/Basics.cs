@@ -220,10 +220,10 @@ namespace ShoppingTests
             s.RegisterProduct('A', 10);
             s.RegisterProduct('B', 20);
             s.RegisterProduct('C', 30);
-            s.RegisterAmountDiscount('C', 2, 3);
+            s.RegisterAmountDiscount('C', 2, 0.8);
             s.RegisterComboDiscount("ABC", 40, false);
-            var price = s.GetPrice("ABCCC");  //Eredeti ár 10+20+3*30=120, Amounttal 10+20+2*30=90, Comboval 40+2*30=100
-            Assert.Equal(90, price);
+            var price = s.GetPrice("ABCCC");  //Eredeti ár 10+20+3*30=120, Amounttal 10 + 20 + 2*30*0.8 + 30 = 108, Comboval 40+2*30=100
+            Assert.Equal(100, price);
         }
 
     }
