@@ -166,6 +166,13 @@ namespace ShoppingTests
             //(60+60)*0,9  comboDiscount és MemberShipDiscount is
             Assert.Equal(108, sh.GetPrice("AABBCCt"));
         }
+
+        [Fact]
+        public void PayingWithSuperShopCard()
+        {
+            sh.GetPrice("ABCD1"); //180
+            Assert.Equal(178, sh.GetPrice("ABCD1p"));
+        }
         #endregion
     }
 }

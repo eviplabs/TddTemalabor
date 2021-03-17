@@ -64,7 +64,7 @@ namespace Shopping
             if (shopping_cart.Contains("t"))
             {
                 products['t'] = 0;
-                return true;
+                return true;    
             }
             return false;
         }
