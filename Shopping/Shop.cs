@@ -39,13 +39,20 @@ namespace Shopping
 
         public int GetPrice(string shopping_cart) 
         {
+            bool memberShip = false;
             if (shopping_cart.Contains("t"))
             {
-                products['t'] = -1;
+                memberShip = true;
+                products['t'] = 0;
             }
 
             double price = GetPriceWithoutDiscounts(shopping_cart);
             foreach (var item in discounts) price -= item.Value.getDiscount(shopping_cart, item.Key, GetPriceWithoutDiscounts(item.Key));
+            if (memberShip)
+            {
+                return Convert.ToInt32(Math.Round(price*0.9, MidpointRounding.AwayFromZero));
+            }
+
             return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
         }
 
