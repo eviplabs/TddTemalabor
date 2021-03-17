@@ -50,7 +50,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void AccuratePriceCalculation2()
+        public void AccuratePriceCalculationWithoutPreRegisteredProducts()
         {
             sh.RegisterProduct('G', 30);
             sh.RegisterProduct('E', 60);
@@ -58,7 +58,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void isProductNameCaseSensitive()
+        public void IsProductNameCaseSensitive()
         {
             sh.RegisterProduct('z', 10);
             Assert.Equal(10, sh.GetPrice("Z"));
@@ -105,7 +105,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterCountDiscountWithoutClaimingFreeProducts1()
+        public void RegisterCountDiscountWithoutClaimingFreeProducts()
         {
             sh.RegisterCountDiscount("A", 2, 3);
             Assert.Equal(120, sh.GetPrice("AAD"));
@@ -126,7 +126,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterComboDiscountWitDiscountX2()
+        public void RegisterComboDiscountWithMultipleDiscounts()
         {
             sh.RegisterComboDiscount("ABC", 60);
             Assert.Equal(130, sh.GetPrice("AABBCCA"));
@@ -140,19 +140,19 @@ namespace ShoppingTests
             Assert.Equal(23, sh.GetPrice("ZZZZZ"));
         }
         [Fact]
-        public void ClubMemberShipExists()
+        public void ClubMemberShipExistsV1()
         {
             Assert.Equal(9, sh.GetPrice("At"));
         }
 
         [Fact]
-        public void ClubMemberShipDiscountx2()
+        public void ClubMemberShipDiscountV2()
         {
             Assert.Equal(18, sh.GetPrice("Bt"));
         }
 
         [Fact]
-        public void ClubMemberShipDiscountx3()
+        public void ClubMemberShipDiscountWithMultipleIndicators()
         {
             Assert.Equal(18, sh.GetPrice("Bttt"));
         }
