@@ -7,14 +7,14 @@ namespace Shopping
 {
     public class Shop
     {
-        private Dictionary<char, int> Products;
+        private List<Product> Products;
         private Dictionary<char, (int, double)> ADiscounts;
         private Dictionary<char, (int, int)> CDiscounts;
         private Dictionary<string, (int, bool)> ComboDiscounts;
         private Dictionary<int, double> SupershopPoints;
         public Shop()
         {
-            Products= new Dictionary<char, int>();
+            Products = new List<Product>();
             ADiscounts = new Dictionary<char, (int, double)>();
             CDiscounts = new Dictionary<char, (int, int)>();
             ComboDiscounts = new Dictionary<string, (int,bool)>();
@@ -22,7 +22,7 @@ namespace Shopping
         }
         public void RegisterProduct(char name, int price) 
         {
-            Products[name] = price;
+            Products.Add(new Product(name, price));
         }
 
         public double GetPrice(string name) 
@@ -60,11 +60,11 @@ namespace Shopping
             {
                 if (ADiscounts.ContainsKey(key) && ProductCount[key] >= ADiscounts[key].Item1)
                 {
-                    price += ProductCount[key] * ADiscounts[key].Item2 * Products[key];
+                    price += ProductCount[key] * ADiscounts[key].Item2 * key.GetPriceByProductChar(Products);
                 }
                 else
                 {
-                    price+=ProductCount[key] * Products[key];
+                    price+=ProductCount[key] * key.GetPriceByProductChar(Products);
                 }
             }
 
@@ -84,7 +84,7 @@ namespace Shopping
                         foreach (var c in item.Key)
                         {
                             comboString = comboString.Remove(comboString.IndexOf(c), c.ToString().Length);
-                            price -= Products[c];
+                            price -= c.GetPriceByProductChar(Products);
                             combo++;
                         }
                     }
@@ -122,10 +122,11 @@ namespace Shopping
             return price * 0.01;
         }
 
-        public int CountDiscount(Dictionary<char, int> products, Dictionary<string, (int,bool)> combos, string name) 
+        public int CountDiscount(List<Product> products, Dictionary<string, (int,bool)> combos, string name) 
         {
+            
             Dictionary<char, int> path = new Dictionary<char, int>();
-            foreach (var item in products.Keys)
+            foreach (var item in products.Select(p=>p.Name))
             {
                 path.Add(item, 0);
             }
