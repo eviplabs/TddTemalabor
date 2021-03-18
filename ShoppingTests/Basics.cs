@@ -182,10 +182,11 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void PayingWithSuperShopCardMultipleDigitUserID()
+        public void PayingWithSuperShopCardRemainingPoints()
         {
-            sh.GetPrice("ABCDv123"); //180
-            Assert.Equal(178, sh.GetPrice("ABCDv123p"));
+            sh.GetPrice("DDDDDDDDDDD1"); //1100
+            Assert.Equal(0, sh.GetPrice("A1p")); //1 pontja marad, de az ár 0
+            Assert.Equal(9, sh.GetPrice("A1p"));
         }
         #endregion
     }

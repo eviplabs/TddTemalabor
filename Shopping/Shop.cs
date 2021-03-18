@@ -122,7 +122,7 @@ namespace Shopping
         private int GetSuperShopDiscount(int userID)
         {
             int points = superShopPoints[userID];
-            superShopPoints[userID] = 0;
+            superShopPoints[userID] = 0; //ez még nemjó így
             return points;
         }
         #endregion
