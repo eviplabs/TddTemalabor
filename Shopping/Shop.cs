@@ -10,6 +10,8 @@ namespace Shopping
         #region Variables
         private Dictionary<char, int> products;
         private Dictionary<string, Discount> discounts;
+        //superShopPoints: Key => UserID, value => az adott userID hoz tartozó árkedvezmény
+        private Dictionary<int, int> superShopPoints;
         #endregion
 
         #region Init
@@ -17,6 +19,7 @@ namespace Shopping
         {
             products = new Dictionary<char, int>();
             discounts = new Dictionary<string, Discount>();
+            superShopPoints = new Dictionary<int, int>();
         }
         #endregion
 
@@ -37,18 +40,40 @@ namespace Shopping
         {
             discounts.Add(name.ToUpper(), new ComboDiscount(newPrice, membership));
         }
+        private void RegisterSuperShopPoints(int userID, int fullPrice)
+        {
+            int priceToRegister = Convert.ToInt32(Math.Round(fullPrice * 0.01, MidpointRounding.AwayFromZero));
+            if (superShopPoints.ContainsKey(userID))
+            {
+                superShopPoints[userID] += priceToRegister;
+            }
+            else
+            {
+                superShopPoints.Add(userID, priceToRegister);
+            }
+        }
         #endregion
 
         #region Calculations
         public int GetPrice(string shopping_cart) 
         {
             bool memberShip = hasMembership(shopping_cart);
+            bool superShop = WantsToPayWithSupershop(shopping_cart);
+            int userID = GetUserID(shopping_cart);
             double price = GetPriceSumWithoutDiscounts(shopping_cart);
 
             price -= GetDiscountSum(shopping_cart);
 
-            return Convert.ToInt32(Math.Round(
+            int endPrice = Convert.ToInt32(Math.Round(
                 (memberShip)? price * 0.9 : price, MidpointRounding.AwayFromZero));
+
+            if (superShop && userID != 0) //átmeneti megoldás
+            {
+                endPrice -= GetSuperShopDiscount(userID);
+            }
+            RegisterSuperShopPoints(userID, endPrice);
+
+            return endPrice;
         }
 
         private int GetPriceSumWithoutDiscounts(string shopping_cart)
@@ -67,6 +92,35 @@ namespace Shopping
                 return true;    
             }
             return false;
+        }
+        private int GetUserID(string shopping_cart)
+        {
+            foreach (char c in shopping_cart)
+            {
+                if (char.IsDigit(c))
+                {
+                    products[c] = 0; //ez valszeg nemjo
+                    return (int)Char.GetNumericValue(c);
+                    //return c;
+                }
+            }
+            return 0; //átmeneti megoldás
+        }
+        private bool WantsToPayWithSupershop(string shopping_cart)
+        //kódduplikáció a hasMembership-el, ha ez nem változik, érdemes kiszervezni a belsejét
+        {
+            if (shopping_cart.Contains("p"))
+            {
+                products['p'] = 0;
+                return true;
+            }
+            return false;
+        }
+        private int GetSuperShopDiscount(int userID)
+        {
+            int points = superShopPoints[userID];
+            superShopPoints[userID] = 0;
+            return points;
         }
         #endregion
     }
