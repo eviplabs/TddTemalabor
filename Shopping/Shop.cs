@@ -8,14 +8,14 @@ namespace Shopping
     public class Shop
     {
         private List<Product> Products;
-        private Dictionary<char, (int, double)> ADiscounts;
+        private AmountDiscounts amountDistounts;
         private Dictionary<char, (int, int)> CDiscounts;
         private Dictionary<string, (int, bool)> ComboDiscounts;
         private Dictionary<int, double> SupershopPoints;
         public Shop()
         {
             Products = new List<Product>();
-            ADiscounts = new Dictionary<char, (int, double)>();
+            amountDistounts = new AmountDiscounts();
             CDiscounts = new Dictionary<char, (int, int)>();
             ComboDiscounts = new Dictionary<string, (int,bool)>();
             SupershopPoints = new Dictionary<int, double>();
@@ -56,17 +56,7 @@ namespace Shopping
                 }
             }
 
-            foreach (var key in ProductCount.Keys)
-            {
-                if (ADiscounts.ContainsKey(key) && ProductCount[key] >= ADiscounts[key].Item1)
-                {
-                    price += ProductCount[key] * ADiscounts[key].Item2 * key.GetPriceByProductChar(Products);
-                }
-                else
-                {
-                    price+=ProductCount[key] * key.GetPriceByProductChar(Products);
-                }
-            }
+            price += amountDistounts.getPrice(ProductCount, price, Products);
 
             string comboString;
             int count = CountDiscount(Products, ComboDiscounts, name);
@@ -103,9 +93,9 @@ namespace Shopping
             return clubmember ? price * 0.9 : price; 
         }
 
-        public void RegisterAmountDiscount(char name,int amount,double percent) 
+        public void RegisterAmountDiscount(char name, int amount, double percent)
         {
-            ADiscounts[name] = (amount, percent);
+            amountDistounts.RegisterAmountDiscount(name,amount, percent);
         }
 
         public void RegisterCountDiscount(char name, int count, int bonus)

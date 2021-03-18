@@ -79,7 +79,7 @@ namespace ShoppingTests
         {
             Shop.RegisterProduct('A', 10);
             Shop.RegisterProduct('B', 100);
-            Shop.RegisterAmountDiscount('A', 5, 0.9);
+            Shop. RegisterAmountDiscount('A', 5, 0.9);
             var price = Shop.GetPrice("AAAAAAB");
             Assert.Equal(154, price);
         }
