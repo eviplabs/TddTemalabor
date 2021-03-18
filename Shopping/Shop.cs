@@ -11,6 +11,7 @@ namespace Shopping
         private Dictionary<char, int> products;
         private Dictionary<string, Discount> discounts;
         //superShopPoints: Key => UserID, value => az adott userID hoz tartozó árkedvezmény
+        //Hibát dob, ha egyböl fizetni szeretnénk korábban nem használt UserID-vel!!!
         private Dictionary<int, int> superShopPoints;
         #endregion
 
@@ -71,7 +72,10 @@ namespace Shopping
             {
                 endPrice -= GetSuperShopDiscount(userID);
             }
-            RegisterSuperShopPoints(userID, endPrice);
+            else if (userID != 0)
+            {
+                RegisterSuperShopPoints(userID, endPrice);
+            }
 
             return endPrice;
         }

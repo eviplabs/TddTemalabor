@@ -177,7 +177,7 @@ namespace ShoppingTests
         [Fact]
         public void PayingWithSuperShopCardWithoutPoints()
         {
-            sh.GetPrice("A1");
+            sh.GetPrice("A1"); //ezért 0 pont jár
             Assert.Equal(180, sh.GetPrice("ABCD1p"));
         }
         #endregion
