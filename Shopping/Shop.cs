@@ -8,15 +8,15 @@ namespace Shopping
     public class Shop
     {
         private List<Product> Products;
-        private AmountDiscounts amountDistounts;
-        private Dictionary<char, (int, int)> CDiscounts;
+        private AmountDiscounts amountDiscounts;
+        private CountDiscountsCalculator countDiscounts;
         private Dictionary<string, (int, bool)> ComboDiscounts;
         private Dictionary<int, double> SupershopPoints;
         public Shop()
         {
             Products = new List<Product>();
-            amountDistounts = new AmountDiscounts();
-            CDiscounts = new Dictionary<char, (int, int)>();
+            amountDiscounts = new AmountDiscounts();
+            countDiscounts = new CountDiscountsCalculator();
             ComboDiscounts = new Dictionary<string, (int,bool)>();
             SupershopPoints = new Dictionary<int, double>();
         }
@@ -46,17 +46,9 @@ namespace Shopping
                 .Select(c => new { c.Key, Count = c.Count() })
                 .ToDictionary(t => t.Key, t => t.Count);
 
-            Dictionary<char, int> forfor = new Dictionary<char, int>(ProductCount);
+            countDiscounts.getPrice(ProductCount);
 
-            foreach (var key in forfor.Keys)
-            {
-                if (CDiscounts.ContainsKey(key) && ProductCount[key] >= CDiscounts[key].Item2)
-                { 
-                    ProductCount[key] = CountDiscountCalculator(key,ProductCount);
-                }
-            }
-
-            price += amountDistounts.getPrice(ProductCount, price, Products);
+            price += amountDiscounts.getPrice(ProductCount, price, Products);
 
             string comboString;
             int count = CountDiscount(Products, ComboDiscounts, name);
@@ -95,12 +87,12 @@ namespace Shopping
 
         public void RegisterAmountDiscount(char name, int amount, double percent)
         {
-            amountDistounts.RegisterAmountDiscount(name,amount, percent);
+            amountDiscounts.RegisterAmountDiscount(name,amount, percent);
         }
 
         public void RegisterCountDiscount(char name, int count, int bonus)
         {
-            CDiscounts[name] = (count, bonus);
+            countDiscounts.RegisterCountDiscount(name, count, bonus);
         }
 
         public void RegisterComboDiscount(string name, int newprice, bool clubMembership=false)
@@ -146,12 +138,6 @@ namespace Shopping
             }
             return min;
         }
-        private int CountDiscountCalculator(char ProductID, Dictionary<char, int> ProductCount)
-        {
-            int pc = ProductCount[ProductID];
-            int a = CDiscounts[ProductID].Item1;
-            int b = CDiscounts[ProductID].Item2;
-            return pc - (pc / b) * (b - a);
-        }
+
     }
 }
