@@ -99,9 +99,8 @@ namespace Shopping
             {
                 if (char.IsDigit(c))
                 {
-                    products[c] = 0; //ez valszeg nemjo
+                    products[c] = 0;
                     return (int)Char.GetNumericValue(c);
-                    //return c;
                 }
             }
             return 0; //átmeneti megoldás
