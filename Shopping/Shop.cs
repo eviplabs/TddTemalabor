@@ -10,15 +10,16 @@ namespace Shopping
         private List<Product> Products;
         private AmountDiscounts amountDiscounts;
         private CountDiscountsCalculator countDiscounts;
-        private Dictionary<string, (int, bool)> ComboDiscounts;
+        private ComboDiscountCalculator comboDiscountCalculator;
         private Dictionary<int, double> SupershopPoints;
         public Shop()
         {
             Products = new List<Product>();
             amountDiscounts = new AmountDiscounts();
             countDiscounts = new CountDiscountsCalculator();
-            ComboDiscounts = new Dictionary<string, (int,bool)>();
+            comboDiscountCalculator = new ComboDiscountCalculator();
             SupershopPoints = new Dictionary<int, double>();
+
         }
         public void RegisterProduct(char name, int price) 
         {
@@ -35,6 +36,7 @@ namespace Shopping
                 name = name.Replace("t", "");               
             }
 
+
             int id = 0;
             if (name.Any(char.IsDigit))
             {
@@ -48,34 +50,9 @@ namespace Shopping
 
             countDiscounts.getPrice(ProductCount);
 
-            price += amountDiscounts.getPrice(ProductCount, price, Products);
+            price = amountDiscounts.getPrice(ProductCount, price, Products);
 
-            string comboString;
-            int count = CountDiscount(Products, ComboDiscounts, name);
-
-            foreach (var item in ComboDiscounts)
-            {
-                
-                if (item.Value.Item2 == false || (item.Value.Item2 == true && clubmember))
-                {
-                    comboString = new string(name);
-                    int combo = 0;
-                    for (int i = 0; i < count; i++)
-                    {
-                        combo = 0;
-                        foreach (var c in item.Key)
-                        {
-                            comboString = comboString.Remove(comboString.IndexOf(c), c.ToString().Length);
-                            price -= c.GetPriceByProductChar(Products);
-                            combo++;
-                        }
-                    }
-                    if (combo == item.Key.Length)
-                    {
-                        price += item.Value.Item1 * count;
-                    }
-                }
-            }
+            price= comboDiscountCalculator.getPrice(name, clubmember, price, Products);
 
             if (SupershopPoints.Count > 0)
             {
@@ -94,50 +71,13 @@ namespace Shopping
         {
             countDiscounts.RegisterCountDiscount(name, count, bonus);
         }
-
-        public void RegisterComboDiscount(string name, int newprice, bool clubMembership=false)
+        public void RegisterComboDiscount(string name, int newprice, bool clubMembership = false)
         {
-            ComboDiscounts[name] = (newprice,clubMembership);
+            comboDiscountCalculator.RegisterComboDiscount(name,newprice, clubMembership);
         }
 
         public double GetSupershopPoints(double price) {
             return price * 0.01;
         }
-
-        public int CountDiscount(List<Product> products, Dictionary<string, (int,bool)> combos, string name) 
-        {
-            
-            Dictionary<char, int> path = new Dictionary<char, int>();
-            foreach (var item in products.Select(p=>p.Name))
-            {
-                path.Add(item, 0);
-            }
-
-            foreach (var item in combos.Keys)
-            {
-                foreach (var c in item)
-                {
-                    var count = name.Count(x => x == c);
-                    path[c] = count;
-                }
-            }
-            int min = int.MaxValue;
-            foreach (var item in path.Keys)
-            {
-                if (path[item] == 0)
-                {
-                    path.Remove(item);
-                }
-            }
-            foreach (var item in path.Keys)
-            {
-                if (path[item] < min)
-                {
-                    min = path[item];
-                }
-            }
-            return min;
-        }
-
     }
 }
