@@ -8,8 +8,8 @@ namespace Shopping
     public class CountDiscount : Discount
     {
         #region Variables
-        public int required { get; set; }
-        public int freeItem { get; set; }
+        private int required { get; set; }
+        private int freeItem { get; set; }
         #endregion
 
         #region Init

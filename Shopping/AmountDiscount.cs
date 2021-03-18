@@ -8,8 +8,8 @@ namespace Shopping
     public class AmountDiscount : Discount
     {
         #region Variables
-        public int amount { get; set; }
-        public double multiplier { get; set; }
+        private int amount { get; set; }
+        private double multiplier { get; set; }
         #endregion
 
         #region Init
