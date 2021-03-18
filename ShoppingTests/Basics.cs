@@ -246,10 +246,10 @@ namespace ShoppingTests
             Shop.RegisterProduct('C', 50);
             Shop.RegisterProduct('D', 70);
 
-            var price = Shop.GetPrice("AB2C3D1p");
+            var price = Shop.GetPrice("AB2C3D1");
             var points = Shop.GetSupershopPoints(price);
             //20+30+50+70 = 170 * 0.01 = 1.7
-            Assert.Equal(1.73, points);
+            Assert.Equal(1.7, points);
         }
     }
 }

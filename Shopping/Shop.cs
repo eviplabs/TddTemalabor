@@ -41,7 +41,8 @@ namespace Shopping
             if (name.Any(char.IsDigit))
             {
                 id = (int)Char.GetNumericValue(name[name.Length-1]);
-                name = name.Replace(id.ToString(), "");
+                foreach (var n in name.Where(n => char.IsDigit(n)))
+                    name = name.Replace(n.ToString(), "");
             }
 
             Dictionary<char, int> ProductCount = name.GroupBy(c => c)
@@ -64,7 +65,7 @@ namespace Shopping
 
         public void RegisterAmountDiscount(char name, int amount, double percent)
         {
-            amountDiscounts.RegisterAmountDiscount(name,amount, percent);
+            amountDiscounts.RegisterAmountDiscount(name, amount, percent);
         }
 
         public void RegisterCountDiscount(char name, int count, int bonus)
@@ -73,7 +74,7 @@ namespace Shopping
         }
         public void RegisterComboDiscount(string name, int newprice, bool clubMembership = false)
         {
-            comboDiscountCalculator.RegisterComboDiscount(name,newprice, clubMembership);
+            comboDiscountCalculator.RegisterComboDiscount(name, newprice, clubMembership);
         }
 
         public double GetSupershopPoints(double price) {
