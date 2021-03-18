@@ -140,13 +140,13 @@ namespace ShoppingTests
             Assert.Equal(23, sh.GetPrice("ZZZZZ"));
         }
         [Fact]
-        public void ClubMemberShipExistsV1()
+        public void ClubMemberShipExists()
         {
             Assert.Equal(9, sh.GetPrice("At"));
         }
 
         [Fact]
-        public void ClubMemberShipDiscountV2()
+        public void ClubMemberShipDiscount()
         {
             Assert.Equal(18, sh.GetPrice("Bt"));
         }

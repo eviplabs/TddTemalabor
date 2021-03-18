@@ -9,8 +9,8 @@ namespace Shopping
     public class ComboDiscount : Discount
     {
         #region Variables
-        public int newPrice { get; set; }
-        public bool membershipRequired { get; set; }
+        private int newPrice { get; set; }
+        private bool membershipRequired { get; set; }
         #endregion
 
         #region Init

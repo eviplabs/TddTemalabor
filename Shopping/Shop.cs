@@ -16,7 +16,7 @@ namespace Shopping
         #endregion
 
         #region Init
-        public Shop() 
+        public Shop()
         {
             products = new Dictionary<char, int>();
             discounts = new Dictionary<string, Discount>();
@@ -56,7 +56,7 @@ namespace Shopping
         #endregion
 
         #region Calculations
-        public int GetPrice(string shopping_cart) 
+        public int GetPrice(string shopping_cart)
         {
             bool memberShip = hasMembership(shopping_cart);
             bool superShop = WantsToPayWithSupershop(shopping_cart);
@@ -66,11 +66,24 @@ namespace Shopping
             price -= GetDiscountSum(shopping_cart);
 
             int endPrice = Convert.ToInt32(Math.Round(
-                (memberShip)? price * 0.9 : price, MidpointRounding.AwayFromZero));
+                (memberShip) ? price * 0.9 : price, MidpointRounding.AwayFromZero));
 
             if (superShop && userID != 0) //átmeneti megoldás
             {
-                endPrice -= GetSuperShopDiscount(userID);
+                if (superShopPoints[userID] > endPrice)
+                {
+                    while (endPrice > 0)
+                    {
+                        endPrice--;
+                        superShopPoints[userID]--;
+                    }
+
+                }
+                else
+                {
+                    endPrice -= superShopPoints[userID];
+                    superShopPoints[userID] = 0;
+                }
             }
             else if (userID != 0)
             {
@@ -93,7 +106,7 @@ namespace Shopping
             if (shopping_cart.Contains("t"))
             {
                 products['t'] = 0;
-                return true;    
+                return true;
             }
             return false;
         }
@@ -119,12 +132,12 @@ namespace Shopping
             }
             return false;
         }
-        private int GetSuperShopDiscount(int userID)
+        /*private int GetSuperShopDiscount(int userID)
         {
             int points = superShopPoints[userID];
-            superShopPoints[userID] = 0; //ez még nemjó így
+            superShopPoints[userID] = 0;
             return points;
-        }
+        }*/
         #endregion
     }
 }
