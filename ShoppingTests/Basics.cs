@@ -75,7 +75,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterAmountDiscount1()
+        public void RegisterAmountDiscount()
         {
             Shop.RegisterProduct('A', 10);
             Shop.RegisterProduct('B', 100);
@@ -85,7 +85,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterAmountDiscount2()
+        public void RegisterTwoAmountDiscount()
         {
             Shop.RegisterProduct('A', 10);
             Shop.RegisterProduct('B', 100);
@@ -96,7 +96,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterCountDiscount1()
+        public void RegisterCountDiscount()
         {
             Shop.RegisterProduct('A', 10);
             Shop.RegisterProduct('E', 50);
@@ -108,7 +108,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterCountDiscount2()
+        public void RegisterTwoCountDiscount()
         {
             Shop.RegisterProduct('A', 10);
             Shop.RegisterProduct('B', 20);
@@ -121,7 +121,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterCountDiscount3()
+        public void RegisterTwoCountDiscountDifferentNumbers()
         {
             Shop.RegisterProduct('A', 10);
             Shop.RegisterProduct('B', 20);
@@ -133,7 +133,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterComboDiscount1()
+        public void RegisterComboDiscount()
         {
             Shop.RegisterProduct('A', 10);
             Shop.RegisterProduct('B', 20);
@@ -146,7 +146,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterComboDiscount2()
+        public void RegisterTwoComboDiscount()
         {
             Shop.RegisterProduct('A', 10);
             Shop.RegisterProduct('B', 20);
@@ -160,7 +160,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterComboDiscount3()
+        public void RegisterComboDiscountRepeatProductNames()
         {
             Shop.RegisterProduct('A', 10);
             Shop.RegisterProduct('B', 20);

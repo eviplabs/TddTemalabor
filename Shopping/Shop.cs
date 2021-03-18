@@ -11,15 +11,16 @@ namespace Shopping
         private AmountDiscounts amountDiscounts;
         private CountDiscountsCalculator countDiscounts;
         private ComboDiscountCalculator comboDiscountCalculator;
-        private Dictionary<int, double> SupershopPoints;
+        private SupershopPointsCalculator supershopPointsCalculator;
+        private List<SuperShopPoint> SupershopPoints;
         public Shop()
         {
             Products = new List<Product>();
             amountDiscounts = new AmountDiscounts();
             countDiscounts = new CountDiscountsCalculator();
             comboDiscountCalculator = new ComboDiscountCalculator();
-            SupershopPoints = new Dictionary<int, double>();
-
+            supershopPointsCalculator = new SupershopPointsCalculator();
+            SupershopPoints = new List<SuperShopPoint>();
         }
         public void RegisterProduct(char name, int price) 
         {
@@ -30,19 +31,15 @@ namespace Shopping
         {
             bool clubmember = false;
             double price = 0;
+            int id = 0;
             if (name.Contains("t")) 
             {
                 clubmember = true; 
-                name = name.Replace("t", "");               
-            }
-
-
-            int id = 0;
-            if (name.Any(char.IsDigit))
+                name = name.Replace("t", "");
+            }else if (name.Any(char.IsDigit))
             {
-                id = (int)Char.GetNumericValue(name[name.Length-1]);
-                foreach (var n in name.Where(n => char.IsDigit(n)))
-                    name = name.Replace(n.ToString(), "");
+                id = (int)Char.GetNumericValue(name[name.Length - 1]);
+                name = name.ReplaceNumbersFromName();
             }
 
             Dictionary<char, int> ProductCount = name.GroupBy(c => c)
@@ -53,11 +50,11 @@ namespace Shopping
 
             price = amountDiscounts.getPrice(ProductCount, price, Products);
 
-            price= comboDiscountCalculator.getPrice(name, clubmember, price, Products);
+            price = comboDiscountCalculator.getPrice(name, clubmember, price, Products);
 
             if (SupershopPoints.Count > 0)
             {
-                SupershopPoints.Add(id, GetSupershopPoints(price));
+                supershopPointsCalculator.AddSupershopPoint(id, price);
             }
 
             return clubmember ? price * 0.9 : price; 
@@ -78,7 +75,7 @@ namespace Shopping
         }
 
         public double GetSupershopPoints(double price) {
-            return price * 0.01;
+            return supershopPointsCalculator.GetSupershopPoints(price);
         }
     }
 }

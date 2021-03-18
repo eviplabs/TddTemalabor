@@ -9,5 +9,12 @@ namespace Shopping
     {
         static public int GetPriceByProductChar(this char self, List<Product> Products) 
             => Products.Where(p => p.Name == self).Select(p => p.Price).Single();
+
+        static public string ReplaceNumbersFromName(this string name) 
+        {
+            foreach (var n in name.Where(n => char.IsDigit(n)))
+                name = name.Replace(n.ToString(), "");
+            return name;
+        }
     }
 }
