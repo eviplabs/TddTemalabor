@@ -180,6 +180,13 @@ namespace ShoppingTests
             sh.GetPrice("A1"); //ezért 0 pont jár
             Assert.Equal(180, sh.GetPrice("ABCD1p"));
         }
+
+        [Fact]
+        public void PayingWithSuperShopCardMultipleDigitUserID()
+        {
+            sh.GetPrice("ABCDv123"); //180
+            Assert.Equal(178, sh.GetPrice("ABCDv123p"));
+        }
         #endregion
     }
 }
