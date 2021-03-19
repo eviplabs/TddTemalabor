@@ -290,5 +290,23 @@ namespace ShoppingTests
             var price = s.GetPrice("ABv234");
             Assert.Equal(90, price);
         }
+
+        [Fact]
+        public void MembershipBasedDiscounts()
+        {
+            s.RegisterProduct('A', 10);
+            s.RegisterProduct('B', 20);
+            s.RegisterProduct('C', 30);
+            s.RegisterProduct('D', 40);
+            s.RegisterProduct('E', 50);
+
+            s.RegisterAmountDiscount('B', 3, 0.8); //Membershiptol fuggore kell csinalni.
+            s.RegisterCountDiscount('C', 2, 3); //Membershiptol fuggore kell csinalni.
+            var price = s.GetPrice("BBBE");
+            var price2 = s.GetPrice("ACCC");
+
+            Assert.Equal(110, price);
+            Assert.Equal(100, price2);
+        }
     }
 }
