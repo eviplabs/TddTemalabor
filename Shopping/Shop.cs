@@ -30,10 +30,8 @@ namespace Shopping
         {
             // Megszamoljuk, hogy az egyes termekek hanyszor szerepelnek
             Dictionary<char, int> productCounts = new Dictionary<char, int>();
-            bool clubMemberCard = false;
             foreach (char item in cart)
             {
-                if (item.Equals('t')) { clubMemberCard = true; }
                 if (!products.ContainsKey(item)) continue;
 
                 if (!productCounts.ContainsKey(item))
@@ -54,7 +52,7 @@ namespace Shopping
 
             prices.Add(getUpdatedCountDiscountPrice(productCounts));
 
-            prices.Add(ComboDiscount(GetRelevantComboDiscount(productCounts), clubMemberCard, productCounts));
+            prices.Add(ComboDiscount(GetRelevantComboDiscount(productCounts), IsAClubMember(cart), productCounts));
 
             int price = prices.Min();
 
@@ -71,7 +69,7 @@ namespace Shopping
 
         private int GetUpdatedClubMembershipPrice(string name, int price)
         {
-            if (name.Contains("t"))
+            if (IsAClubMember(name))
             {
                 return (int)(price * 0.9);
             }
@@ -182,6 +180,22 @@ namespace Shopping
             return price - (sumPriceOfComboProducts - combo.ComboPrice);
         }
 
+        public void RegisterSuperShopCard(int id)
+        {
+            supershopPoints.Add(id, 0);
+        }
+
+        //Klubtagsag vizsgalata a kosar tartalma alapjan.
+        private bool IsAClubMember(string cart)
+        {
+            var result = new Regex(@"(\d+)").Match(cart);
+            if (result.Success)
+            {
+                int userid = int.Parse(result.Value);
+                if (supershopPoints.ContainsKey(userid)) { return true; }
+            }
+            return false;
+        }
         //Supershop pontok gyűjtése
         private void checkAndAddSupershopPoints(string name, int price)
         {
@@ -191,7 +205,7 @@ namespace Shopping
                 int userid = int.Parse(result.Value);
                 if (!supershopPoints.ContainsKey(userid))
                 {
-                    supershopPoints.Add(userid, 0);
+                    //Itt tul keso hozzaadni.
                 }
                 supershopPoints[userid] += price / 100;
             }
@@ -203,15 +217,18 @@ namespace Shopping
             {
                 return price; //A vevő nem szeretne szupershoppal fizetni 
             }
-            int userid = int.Parse(result.Value);
-            if (supershopPoints[userid] > price)
+            else
             {
-                supershopPoints[userid] -= price;
-                return 0; //A vevőnek több pontja van, mint a kosár ára, ezért csak a pontjaival fizet
+                int userid = int.Parse(result.Value);
+                if (supershopPoints[userid] > price)
+                {
+                    supershopPoints[userid] -= price;
+                    return 0; //A vevőnek több pontja van, mint a kosár ára, ezért csak a pontjaival fizet
+                }
+                price -= supershopPoints[userid]; //Ha van a vevőnek pontja levonja, ha nincs akkor nem csinál semmit.
+                supershopPoints[userid] = 0; //Volt a vevőnek pontja, nullázza, ha nem akkor nem csinál semmit.
+                return price; //A vevő pontjaival frissített ár
             }
-            price -= supershopPoints[userid]; //Ha van a vevőnek pontja levonja, ha nincs akkor nem csinál semmit.
-            supershopPoints[userid] = 0; //Volt a vevőnek pontja, nullázza, ha nem akkor nem csinál semmit.
-            return price; //A vevő pontjaival frissített ár
         }
     }
 }

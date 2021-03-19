@@ -156,7 +156,8 @@ namespace ShoppingTests
         {
             s.RegisterProduct('A', 40);
             s.RegisterProduct('B', 60);
-            var price = s.GetPrice("ABt");
+            s.RegisterSuperShopCard(112);
+            var price = s.GetPrice("ABv112");
             Assert.Equal(90, price);
         }
 
@@ -185,8 +186,9 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
+            s.RegisterSuperShopCard(1);
             var price = s.GetPrice("1pAACDDG");
-            Assert.Equal(198, price);
+            Assert.Equal(179, price); //10%-os tagsagi kedvezmeny is ervenyesul.
         }
 
         [Fact]
@@ -234,9 +236,11 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
-            // 123 -as user vásárol, de nem használja fel, 2 pontot kap
+            s.RegisterSuperShopCard(123);
+            s.RegisterSuperShopCard(1);
+            // 123 -as user vásárol, de nem használja fel, 1 pontot kap
             var price = s.GetPrice("AACDDGv123");
-            Assert.Equal(200, price);
+            Assert.Equal(180, price); //A helyes osszeg a funkcio valtozasa miatt megvaltozott.
 
             s.RegisterProduct('A', 10);
             s.RegisterProduct('B', 20);
@@ -245,9 +249,9 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
-            // 1-es user vásárol, fel is használja a 2 pontot
+            // 1-es user vásárol, fel is használja az 1 pontot.
             var price2 = s.GetPrice("AACDDGv1p");
-            Assert.Equal(198, price2);
+            Assert.Equal(179, price2);
 
             s.RegisterProduct('A', 10);
             s.RegisterProduct('B', 20);
@@ -256,9 +260,9 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
-            // 123-as user vásárol és fel is használja a pontokat, 2 + 2 pontot (előző vásárlásból)
+            // 123-as user vásárol és fel is használja a pontokat, 1 + 1 pontot (előző vásárlásból)
             var price3 = s.GetPrice("AACDDGv123p");
-            Assert.Equal(196, price3);
+            Assert.Equal(178, price3);//200 helyett 180 az ar a 10% alapkedvezmeny miatt, es arra jon ra 1-1 pont, ami levonodik.
         }
 
         [Fact]
@@ -271,9 +275,10 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
+            s.RegisterSuperShopCard(123);
             s.RegisterComboDiscount("ABC", 55, true);     
             var price = s.GetPrice("ABCDEFGv123");
-            Assert.Equal(275, price);
+            Assert.Equal(247, price);
         }
 
         [Fact]
@@ -281,6 +286,7 @@ namespace ShoppingTests
         {
             s.RegisterProduct('A', 40);
             s.RegisterProduct('B', 60);
+            s.RegisterSuperShopCard(234);
             var price = s.GetPrice("ABv234");
             Assert.Equal(90, price);
         }
