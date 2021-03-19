@@ -48,6 +48,8 @@ namespace Shopping
             esetleges kedvezmenyeket figyelembe veve */
             List<int> prices = new List<int>();
 
+            CheckNewMember(cart);
+
             prices.Add(GetAmountDiscountPrice(productCounts));
 
             prices.Add(getUpdatedCountDiscountPrice(productCounts));
@@ -179,10 +181,23 @@ namespace Shopping
             int price = getPriceWithoutDiscount(cart);
             return price - (sumPriceOfComboProducts - combo.ComboPrice);
         }
+        private void CheckNewMember(string cart)
+        {
+            var result = new Regex(@"(\d+)").Match(cart);
+            if (result.Success)
+            {
+                int userid = int.Parse(result.Value);
+                if (!supershopPoints.ContainsKey(userid))
+                {
+                    RegisterSuperShopCard(userid);
+                }
+            }
+            return;
 
+        }
         public void RegisterSuperShopCard(int id)
         {
-            supershopPoints.Add(id, 0);
+            supershopPoints.Add(id,0);
         }
 
         //Klubtagsag vizsgalata a kosar tartalma alapjan.

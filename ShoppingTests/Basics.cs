@@ -156,7 +156,7 @@ namespace ShoppingTests
         {
             s.RegisterProduct('A', 40);
             s.RegisterProduct('B', 60);
-            s.RegisterSuperShopCard(112);
+            
             var price = s.GetPrice("ABv112");
             Assert.Equal(90, price);
         }
@@ -186,7 +186,7 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
-            s.RegisterSuperShopCard(1);
+            
             var price = s.GetPrice("1pAACDDG");
             Assert.Equal(179, price); //10%-os tagsagi kedvezmeny is ervenyesul.
         }
@@ -236,8 +236,8 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
-            s.RegisterSuperShopCard(123);
-            s.RegisterSuperShopCard(1);
+            
+            
             // 123 -as user vásárol, de nem használja fel, 1 pontot kap
             var price = s.GetPrice("AACDDGv123");
             Assert.Equal(180, price); //A helyes osszeg a funkcio valtozasa miatt megvaltozott.
@@ -275,7 +275,7 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
-            s.RegisterSuperShopCard(123);
+            
             s.RegisterComboDiscount("ABC", 55, true);     
             var price = s.GetPrice("ABCDEFGv123");
             Assert.Equal(247, price);
@@ -286,7 +286,7 @@ namespace ShoppingTests
         {
             s.RegisterProduct('A', 40);
             s.RegisterProduct('B', 60);
-            s.RegisterSuperShopCard(234);
+            
             var price = s.GetPrice("ABv234");
             Assert.Equal(90, price);
         }
