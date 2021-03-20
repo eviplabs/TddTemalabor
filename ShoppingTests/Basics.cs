@@ -308,5 +308,21 @@ namespace ShoppingTests
             Assert.Equal(110, price);
             Assert.Equal(100, price2);
         }
+        [Fact]
+        public void CouponDiscount()
+        {
+            s.RegisterProduct('A', 10);
+            s.RegisterProduct('B', 20);
+            s.RegisterProduct('C', 30);
+            s.RegisterProduct('D', 40);
+            s.RegisterCouponDiscount("69420", 0.5);
+            s.RegisterCouponDiscount("69420", 0.5);// Két kupont regisztrálunk két sorban
+            var price = s.GetPrice("ABCDk420");
+            Assert.Equal(price, s.GetPrice("ABCD")*0.5);
+            price = s.GetPrice("ABCDk69420");
+            Assert.Equal(price, s.GetPrice("ABCD")*0.5);
+            price = s.GetPrice("ABCDk69420");
+            Assert.Equal(price, s.GetPrice("ABCD")); // Elfogyott a kupon
+        }
     }
 }
