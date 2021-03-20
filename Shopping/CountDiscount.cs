@@ -8,10 +8,13 @@ namespace Shopping
     {
         public int Buy { get; set; } 
         public int Get { get; set; } //Buy-t fizet Get-et vihet
-        public CountDiscount(int buy, int get)
+        public bool isMemberOnly { get; set; }
+
+        public CountDiscount(int buy, int get, bool isMemberOnly)
         {
             this.Buy = buy;
             this.Get = get;
+            this.isMemberOnly = isMemberOnly;
         }
     }
 }

@@ -50,9 +50,9 @@ namespace Shopping
 
             CheckNewMember(cart);
 
-            prices.Add(GetAmountDiscountPrice(productCounts));
+            prices.Add(GetAmountDiscountPrice(productCounts, IsAClubMember(cart)));
 
-            prices.Add(getUpdatedCountDiscountPrice(productCounts));
+            prices.Add(getUpdatedCountDiscountPrice(productCounts, IsAClubMember(cart)));
 
             prices.Add(ComboDiscount(GetRelevantComboDiscount(productCounts), IsAClubMember(cart), productCounts));
 
@@ -78,25 +78,25 @@ namespace Shopping
             return price;
         }
 
-        public bool RegisterAmountDiscount(char name, int amount, double factor)
+        public bool RegisterAmountDiscount(char name, int amount, double factor, bool isMemberOnly = false)
         {
             if (amount < 2 || !ProductRegistered(name) || (factor <= 0 || factor >= 1)) return false;
             if (amountDiscounts.ContainsKey(name)) return false;
 
-            amountDiscounts.Add(name, new AmountDiscount(amount, factor));
+            amountDiscounts.Add(name, new AmountDiscount(amount, factor, isMemberOnly));
             return true;
         }
 
-        public void RegisterCountDiscount(char name, int amountToBuy, int amountToGet)
+        public void RegisterCountDiscount(char name, int amountToBuy, int amountToGet, bool isMemberOnly = false)
         {
-            countDiscounts.Add(name, new CountDiscount(amountToBuy, amountToGet));
+            countDiscounts.Add(name, new CountDiscount(amountToBuy, amountToGet, isMemberOnly));
         }
-        private int GetAmountDiscountPrice(Dictionary<char, int> cart)
+        private int GetAmountDiscountPrice(Dictionary<char, int> cart, bool isMember)
         {
             int price = 0;
             foreach ((char product, int count) in cart)
             {
-                if (amountDiscounts.ContainsKey(product) && count >= amountDiscounts[product].Amount)
+                if (amountDiscounts.ContainsKey(product) && count >= amountDiscounts[product].Amount && (isMember || !amountDiscounts[product].isMemberOnly))
                 {
                     price += (int)(products[product] * count * amountDiscounts[product].Factor);
                 }
@@ -107,7 +107,7 @@ namespace Shopping
             }
             return price;
         }
-        private int getUpdatedCountDiscountPrice(Dictionary<char, int> cart)
+        private int getUpdatedCountDiscountPrice(Dictionary<char, int> cart, bool isMember)
         {
             int price = getPriceWithoutDiscount(cart);
             // Az egyes termékeknek ha van CountDiscount akciója, akkor elosztja maradéktalanul a termékek
@@ -120,7 +120,11 @@ namespace Shopping
                     continue;
                 }
                 CountDiscount countDiscount = countDiscounts[item];
-
+                // Ha csak tagokra érvényes az akció, de a vásárló nem tag, átugorja az iterációt
+                if (!isMember && countDiscounts[item].isMemberOnly)
+                {
+                    continue;
+                }
                 double actualItemPrice = products[item];
 
                 // (count / countDiscount.Get): ennyiszer tudjuk a jelenlegi kosarunknal kihasznalni a 3-at fizet 4-et vihet tipusu akciot
@@ -143,9 +147,9 @@ namespace Shopping
         }
 
         //A kombó kedvezményben megadott elemek és összeg feldolgozása
-        public void RegisterComboDiscount(string combo, int comboprice, bool onlyforClubMembership)
+        public void RegisterComboDiscount(string combo, int comboprice, bool isMemberOnly = false)
         {
-            comboDiscounts.Add(new ComboDiscount(combo, comboprice, onlyforClubMembership));
+            comboDiscounts.Add(new ComboDiscount(combo, comboprice, isMemberOnly));
         }
         //Megfelelő kombós kedvezmény visszaadása az aktuális cart alapján.
         public ComboDiscount GetRelevantComboDiscount(Dictionary<char, int> cart)
@@ -169,7 +173,7 @@ namespace Shopping
         //Kombó kedvezmény számítása.
         public int ComboDiscount(ComboDiscount combo, bool membershipBased, Dictionary<char, int> cart)
         {
-            if (combo == null || (membershipBased == false && combo.ClubOnly))
+            if (combo == null || (membershipBased == false && combo.isMemberOnly))
             {
                 return getPriceWithoutDiscount(cart);
             }

@@ -300,8 +300,8 @@ namespace ShoppingTests
             s.RegisterProduct('D', 40);
             s.RegisterProduct('E', 50);
 
-            s.RegisterAmountDiscount('B', 3, 0.8); //Membershiptol fuggore kell csinalni.
-            s.RegisterCountDiscount('C', 2, 3); //Membershiptol fuggore kell csinalni.
+            s.RegisterAmountDiscount('B', 3, 0.8, true); //Membershiptol fuggo
+            s.RegisterCountDiscount('C', 2, 3, true); //Membershiptol fuggo
             var price = s.GetPrice("BBBE");
             var price2 = s.GetPrice("ACCC");
 

@@ -9,14 +9,13 @@ namespace Shopping
     {
         public List<char> ComboProducts= new List<char>();
         public int ComboPrice { get; set; }
+        public bool isMemberOnly { get; set; }
 
-        public bool ClubOnly { get; set; }
-
-        public ComboDiscount( string combo, int price, bool clubOnly)
+        public ComboDiscount( string combo, int price, bool isMemberOnly)
         {
             ComboProducts = combo.ToList();
             ComboPrice = price;
-            ClubOnly = clubOnly;
+            this.isMemberOnly = isMemberOnly;
 
         }
 
