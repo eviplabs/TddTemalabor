@@ -188,6 +188,22 @@ namespace ShoppingTests
             Assert.Equal(0, sh.GetPrice("A1p")); //1 pontja marad, de az ár 0
             Assert.Equal(9, sh.GetPrice("A1p"));
         }
+        [Fact]
+        public void MultipleTypeDiscounts()
+        {
+            sh.RegisterAmountDiscount("A",4,0.9);
+            sh.RegisterComboDiscount("ABC",50);
+            sh.RegisterCountDiscount("C",1,2);
+            Assert.Equal(166,sh.GetPrice("AAAAABBBCCC")); //260 - 90 - 4 - 0
+        }
+        [Fact]
+        public void MultipleComboDiscounts()
+        {
+            sh.RegisterComboDiscount("AB",20);
+            sh.RegisterComboDiscount("AC",20);
+            sh.RegisterComboDiscount("ABC",20);
+            Assert.Equal(120,sh.GetPrice("ABCD"));
+        }
         #endregion
     }
 }
