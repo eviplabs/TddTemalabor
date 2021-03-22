@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Shopping
 {
     class AmountDiscounts
     {
-        private Dictionary<char, (int, double)> Discounts;
+        public Dictionary<char, (int amount, double percent)> Discounts { get; }
         public AmountDiscounts()
         {
             Discounts = new Dictionary<char, (int, double)>();
@@ -17,20 +18,17 @@ namespace Shopping
             Discounts[name] = (amount, percent);
         }
 
-        public double getPrice(Dictionary<char, int> ProductCount, double price, List<Product> Products) 
+        public void getPrice(Dictionary<char, int> ProductCount, double price, List<Product> Products) 
         {
-            foreach (var key in ProductCount.Keys)
+            Dictionary<char, int> forfor = new Dictionary<char, int>(ProductCount);
+            foreach (var key in forfor.Keys)
             {
-                if (Discounts.ContainsKey(key) && ProductCount[key] >= Discounts[key].Item1)
+                if (Discounts.ContainsKey(key) && ProductCount[key] >= Discounts[key].amount)
                 {
-                    price += ProductCount[key] * Discounts[key].Item2 * key.GetPriceByProductChar(Products);
-                }
-                else
-                {
-                    price += ProductCount[key] * key.GetPriceByProductChar(Products);
+                    Products.ForEach(p => { if (p.Name == key) p.Price = ProductCount[key] * Discounts[key].percent * key.GetPriceByProductChar(Products); });
+                    ProductCount[key] = 1;
                 }
             }
-            return price;
         }
     }
 }

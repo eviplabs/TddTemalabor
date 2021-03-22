@@ -7,13 +7,12 @@ namespace Shopping
     class CountDiscountsCalculator
     {
 
-        private Dictionary<char, CountDiscount> Discounts;
+        public Dictionary<char, CountDiscount> Discounts { get; }
 
         public CountDiscountsCalculator()
         {
             Discounts = new Dictionary<char, CountDiscount>();
         }
-
 
         public void RegisterCountDiscount(char name, int count, int bonus)
         {

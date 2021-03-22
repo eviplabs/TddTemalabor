@@ -7,7 +7,7 @@ namespace Shopping
 {
     public static class ExtensionMethods
     {
-        static public int GetPriceByProductChar(this char self, List<Product> Products) 
+        static public double GetPriceByProductChar(this char self, List<Product> Products) 
             => Products.Where(p => p.Name == self).Select(p => p.Price).Single();
 
         static public string ReplaceNumbersFromName(this string name) 

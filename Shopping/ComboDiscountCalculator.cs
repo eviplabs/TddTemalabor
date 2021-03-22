@@ -7,7 +7,7 @@ namespace Shopping
 {
     class ComboDiscountCalculator
     {
-        private Dictionary<string, ComboDiscount> ComboDiscounts;
+        public Dictionary<string, ComboDiscount> ComboDiscounts { get; }
 
         public ComboDiscountCalculator()
         {

@@ -9,7 +9,7 @@ namespace Shopping
     {
         private List<Product> Products;
         private AmountDiscounts amountDiscounts;
-        private CountDiscountsCalculator countDiscounts;
+        private CountDiscountsCalculator countDiscountsCalculator;
         private ComboDiscountCalculator comboDiscountCalculator;
         private SupershopPointsCalculator supershopPointsCalculator;
         private List<SuperShopPoint> SupershopPoints;
@@ -17,7 +17,7 @@ namespace Shopping
         {
             Products = new List<Product>();
             amountDiscounts = new AmountDiscounts();
-            countDiscounts = new CountDiscountsCalculator();
+            countDiscountsCalculator = new CountDiscountsCalculator();
             comboDiscountCalculator = new ComboDiscountCalculator();
             supershopPointsCalculator = new SupershopPointsCalculator();
             SupershopPoints = new List<SuperShopPoint>();
@@ -51,12 +51,21 @@ namespace Shopping
             Dictionary<char, int> ProductCount = name.GroupBy(c => c)
                 .Select(c => new { c.Key, Count = c.Count() })
                 .ToDictionary(t => t.Key, t => t.Count);
+            
+            if(amountDiscounts.Discounts.Count > 0) 
+            {
+                amountDiscounts.getPrice(ProductCount, price, Products);
+            }
+            else 
+            {
+                countDiscountsCalculator.getPrice(ProductCount);
+                price = comboDiscountCalculator.getPrice(name, clubmember, price, Products);
+            }
 
-            countDiscounts.getPrice(ProductCount);
-
-            price = amountDiscounts.getPrice(ProductCount, price, Products);
-
-            price = comboDiscountCalculator.getPrice(name, clubmember, price, Products);
+            foreach (var key in ProductCount.Keys)
+            {
+                price += ProductCount[key] * key.GetPriceByProductChar(Products);
+            }
 
             if (SupershopPoints.Count > 0)
             {
@@ -74,7 +83,7 @@ namespace Shopping
 
         public void RegisterCountDiscount(char name, int count, int bonus)
         {
-            countDiscounts.RegisterCountDiscount(name, count, bonus);
+            countDiscountsCalculator.RegisterCountDiscount(name, count, bonus);
         }
         public void RegisterComboDiscount(string name, int newprice, bool clubMembership = false)
         {

@@ -6,7 +6,7 @@ namespace Shopping
 {
     public class Product
     {
-        public int Price { get; set; }
+        public double Price { get; set; }
 
         public char Name { get; set; }
 
