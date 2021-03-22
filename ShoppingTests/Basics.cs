@@ -274,5 +274,19 @@ namespace ShoppingTests
             var price = Shop.GetPrice("AAAAA");
             Assert.Equal(50, price);
         }
+
+        [Fact]
+        public void MoreThanOneDiscountInPlaceButOnlyCountDiscountHasPriority()
+        {
+            Shop.RegisterProduct('A', 20);
+            Shop.RegisterProduct('B', 30);
+            Shop.RegisterProduct('C', 50);
+
+            Shop.RegisterCountDiscount('A', 3, 5);
+            Shop.RegisterComboDiscount("ABC",60,false);
+            var price = Shop.GetPrice("AAAAABC");
+            //20*3+30+50 = 140
+            Assert.Equal(140, price);
+        }
     }
 }
