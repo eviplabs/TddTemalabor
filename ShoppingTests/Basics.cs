@@ -264,5 +264,15 @@ namespace ShoppingTests
             //20+30+50 - 3 = 97
             Assert.Equal(97, price - supershopPoints);
         }
+
+        [Fact]
+        public void When_MoreDiscountOnSameItem_Expect_AmountDiscountIsMoreImportant()
+        {
+            Shop.RegisterProduct('A', 20);
+            Shop.RegisterAmountDiscount('A', 5, 0.5);
+            Shop.RegisterCountDiscount('A', 3, 5);
+            var price = Shop.GetPrice("AAAAA");
+            Assert.Equal(50, price);
+        }
     }
 }
