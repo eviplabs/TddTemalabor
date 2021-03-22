@@ -29,9 +29,15 @@ namespace Shopping
 
         public double GetPrice(string name) 
         {
+            bool supershoppointusedtopay = false;
             bool clubmember = false;
             double price = 0;
             int id = 0;
+            if (name.Contains("p"))
+            {
+                supershoppointusedtopay = true;
+                name = name.Replace("p", "");
+            }
             if (name.Contains("t")) 
             {
                 clubmember = true; 
@@ -57,7 +63,8 @@ namespace Shopping
                 supershopPointsCalculator.AddSupershopPoint(id, price);
             }
 
-            return clubmember ? price * 0.9 : price; 
+            return clubmember ? price * 0.9 - (supershoppointusedtopay ? supershopPointsCalculator.GetSupershopPoints(price): 0)
+                : price; 
         }
 
         public void RegisterAmountDiscount(char name, int amount, double percent)
