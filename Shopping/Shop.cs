@@ -13,6 +13,8 @@ namespace Shopping
         private Dictionary<char, CountDiscount> countDiscounts = new Dictionary<char, CountDiscount>();
         private Dictionary<int, int> supershopPoints = new Dictionary<int, int>(); // (userid, gyűjtött pontok) párok
         private List<ComboDiscount> comboDiscounts = new List<ComboDiscount>();
+        private List<CouponDiscount> couponDiscounts = new List<CouponDiscount>();
+
 
         public bool ProductRegistered(char name)
         {
@@ -26,7 +28,7 @@ namespace Shopping
             products.Add(name, price);
             return true;
         }
-        public int GetPrice(string cart)
+        public double GetPrice(string cart)
         {
             // Megszamoljuk, hogy az egyes termekek hanyszor szerepelnek
             Dictionary<char, int> productCounts = new Dictionary<char, int>();
@@ -56,7 +58,9 @@ namespace Shopping
 
             prices.Add(ComboDiscount(GetRelevantComboDiscount(productCounts), IsAClubMember(cart), productCounts));
 
-            int price = prices.Min();
+            double price = prices.Min();
+
+            price = CouponDiscount(cart, price);
 
             price = GetUpdatedClubMembershipPrice(cart, price);
 
@@ -64,12 +68,10 @@ namespace Shopping
 
             price = getSupershopAppliedPrice(cart, price);
 
-
-
             return price;
         }
 
-        private int GetUpdatedClubMembershipPrice(string name, int price)
+        private double GetUpdatedClubMembershipPrice(string name, double price)
         {
             if (IsAClubMember(name))
             {
@@ -207,7 +209,8 @@ namespace Shopping
         //Klubtagsag vizsgalata a kosar tartalma alapjan.
         private bool IsAClubMember(string cart)
         {
-            var result = new Regex(@"(\d+)").Match(cart);
+            var result = new Regex(@"^[A-Z]+[^k](\d+)|^(\d+)").Match(cart);
+            result = new Regex(@"(\d+)").Match(result.ToString());
             if (result.Success)
             {
                 int userid = int.Parse(result.Value);
@@ -216,7 +219,7 @@ namespace Shopping
             return false;
         }
         //Supershop pontok gyűjtése
-        private void checkAndAddSupershopPoints(string name, int price)
+        private void checkAndAddSupershopPoints(string name, double price)
         {
             var result = new Regex(@"(\d+)").Match(name);
             if (result.Success)
@@ -226,12 +229,13 @@ namespace Shopping
                 {
                     //Itt tul keso hozzaadni.
                 }
-                supershopPoints[userid] += price / 100;
+                supershopPoints[userid] += Convert.ToInt32(price) / 100;
             }
         }
-        private int getSupershopAppliedPrice(string name, int price)
+        private double getSupershopAppliedPrice(string name, double price)
         {
             var result = new Regex(@"(\d+)").Match(name);
+
             if (!name.Contains('p'))
             {
                 return price; //A vevő nem szeretne szupershoppal fizetni 
@@ -241,13 +245,35 @@ namespace Shopping
                 int userid = int.Parse(result.Value);
                 if (supershopPoints[userid] > price)
                 {
-                    supershopPoints[userid] -= price;
+                    supershopPoints[userid] -= Convert.ToInt32(price);
                     return 0; //A vevőnek több pontja van, mint a kosár ára, ezért csak a pontjaival fizet
                 }
                 price -= supershopPoints[userid]; //Ha van a vevőnek pontja levonja, ha nincs akkor nem csinál semmit.
                 supershopPoints[userid] = 0; //Volt a vevőnek pontja, nullázza, ha nem akkor nem csinál semmit.
                 return price; //A vevő pontjaival frissített ár
             }
+        }
+
+        public void RegisterCouponDiscount(string couponCode, double value)
+        {
+            couponDiscounts.Add(new CouponDiscount(couponCode, value));
+        }
+
+        public double CouponDiscount(string cart, double price)
+        {
+            int index = cart.IndexOf('k') + 1;
+            string couponCode = cart.Substring(index);
+            foreach (var coupon in couponDiscounts)
+            {
+                if (coupon.couponCode.Equals(couponCode))
+                {
+                    price *= coupon.value;
+                    couponDiscounts.Remove(coupon);
+                    return price;
+                }
+            }
+
+            return price;
         }
     }
 }
