@@ -126,7 +126,7 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterComboDiscountWithMultipleDiscounts()
+        public void RegisterComboDiscountWithMultipleAppliableDiscounts()
         {
             sh.RegisterComboDiscount("ABC", 60);
             Assert.Equal(130, sh.GetPrice("AABBCCA"));
@@ -194,7 +194,7 @@ namespace ShoppingTests
             sh.RegisterAmountDiscount("A",4,0.9);
             sh.RegisterComboDiscount("ABC",50);
             sh.RegisterCountDiscount("C",1,2);
-            Assert.Equal(165,sh.GetPrice("AAAAABBBCCC")); //260 - 90 - 5 - 0
+            Assert.Equal(186,sh.GetPrice("AAAAAAABBBCCC")); //280 - 90 - 4 - 0
         }
         [Fact]
         public void MultipleComboDiscounts()
@@ -203,6 +203,14 @@ namespace ShoppingTests
             sh.RegisterComboDiscount("AC",20);
             sh.RegisterComboDiscount("ABC",20);
             Assert.Equal(120,sh.GetPrice("ABCD"));
+        }
+        [Fact]
+        public void MultipleAppliableComboDiscounts()
+        {
+            sh.RegisterComboDiscount("AB", 20);
+            sh.RegisterComboDiscount("AC", 20);
+            sh.RegisterComboDiscount("ABC", 20);
+            Assert.Equal(140,sh.GetPrice("AABBCD"));
         }
         #endregion
     }
