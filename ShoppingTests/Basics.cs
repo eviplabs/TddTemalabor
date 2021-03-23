@@ -189,7 +189,7 @@ namespace ShoppingTests
             Assert.Equal(9, sh.GetPrice("A1p"));
         }
         [Fact]
-        public void MultipleTypeDiscounts()
+        public void MultipleTypeDiscounts()//amount discount helyes mülödéséböl adódóan ez 260 - 5
         {
             sh.RegisterAmountDiscount("A",4,0.9);
             sh.RegisterComboDiscount("ABC",50);

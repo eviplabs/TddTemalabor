@@ -68,7 +68,7 @@ namespace Shopping
             int endPrice = Convert.ToInt32(Math.Round(
                 (memberShip) ? price * 0.9 : price, MidpointRounding.AwayFromZero));
 
-            if (superShop && userID != 0) //átmeneti megoldás
+            if (superShop && userID != 0)
             {
                 if (superShopPoints[userID] > endPrice)
                 {
@@ -120,7 +120,7 @@ namespace Shopping
                     return (int)Char.GetNumericValue(c);
                 }
             }
-            return 0; //átmeneti megoldás
+            return 0;
         }
         private bool WantsToPayWithSupershop(string shopping_cart)
         //kódduplikáció a hasMembership-el, ha ez nem változik, érdemes kiszervezni a belsejét
