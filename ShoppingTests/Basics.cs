@@ -191,10 +191,10 @@ namespace ShoppingTests
         [Fact]
         public void MultipleTypeDiscounts()
         {
-            sh.RegisterAmountDiscount("A",4,0.9); //amount discount helyes mülödéséböl adódóan ez 260 - 5 - ...
+            sh.RegisterAmountDiscount("A",4,0.9);
             sh.RegisterComboDiscount("ABC",50);
             sh.RegisterCountDiscount("C",1,2);
-            Assert.Equal(166,sh.GetPrice("AAAAABBBCCC")); //260 - 90 - 4 - 0
+            Assert.Equal(166,sh.GetPrice("AAAAABBBCCC")); //260 - 90 - 5 - 0
         }
         [Fact]
         public void MultipleComboDiscounts()
