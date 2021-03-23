@@ -194,7 +194,7 @@ namespace ShoppingTests
             sh.RegisterAmountDiscount("A",4,0.9);
             sh.RegisterComboDiscount("ABC",50);
             sh.RegisterCountDiscount("C",1,2);
-            Assert.Equal(166,sh.GetPrice("AAAAABBBCCC")); //260 - 90 - 5 - 0
+            Assert.Equal(165,sh.GetPrice("AAAAABBBCCC")); //260 - 90 - 5 - 0
         }
         [Fact]
         public void MultipleComboDiscounts()
