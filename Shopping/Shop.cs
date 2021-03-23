@@ -99,7 +99,38 @@ namespace Shopping
         }
         private double GetDiscountSum(string shopping_cart)
         {
-            return discounts.Sum(d => d.Value.getDiscount(shopping_cart, d.Key, GetPriceSumWithoutDiscounts(d.Key)));
+            //return discounts.Sum(d => d.Value.getDiscount(shopping_cart, d.Key, GetPriceSumWithoutDiscounts(d.Key)));
+            double sumOfDiscounts = 0;
+            (string, Discount) bcd = ("", null);
+            foreach (var item in discounts)
+            {
+                if (item.Value.GetType().Equals(typeof(ComboDiscount)))
+                {
+                    if (bcd.Item1.Equals("")) //mehet 1 ifbe majd ma kesz
+                    {
+                        bcd = (item.Key, item.Value);
+                    }
+                    else if (bcd.Item1.Length < item.Key.Length)
+                    {
+                        bcd = (item.Key, item.Value);
+                    }
+                    else if (bcd.Item1.Length == item.Key.Length && String.Compare(bcd.Item1, item.Key) > 0)
+                    {
+                        bcd = (item.Key, item.Value);
+                    }
+                }
+                else
+                {
+                    sumOfDiscounts += item.Value.getDiscount(shopping_cart, item.Key, GetPriceSumWithoutDiscounts(item.Key));
+                }
+            }
+            if (bcd.Item1.Equals("")) //mehet majd '?' operátorral
+            {
+                return sumOfDiscounts;
+            }
+            sumOfDiscounts += bcd.Item2.getDiscount(shopping_cart, bcd.Item1, GetPriceSumWithoutDiscounts(bcd.Item1)); //ez is mehet 1be
+            return sumOfDiscounts;
+
         }
         private bool hasMembership(string shopping_cart)
         {
