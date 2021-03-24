@@ -56,9 +56,12 @@ namespace Shopping
             {
                 amountDiscounts.getPrice(ProductCount, price, Products);
             }
-            else 
+            else if (countDiscountsCalculator.Discounts.Count > 0)
             {
                 countDiscountsCalculator.getPrice(ProductCount);
+            }
+            else
+            {
                 price = comboDiscountCalculator.getPrice(name, clubmember, price, Products);
             }
 
