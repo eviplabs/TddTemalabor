@@ -288,5 +288,20 @@ namespace ShoppingTests
             //20*3+30+50 = 140
             Assert.Equal(140, price);
         }
+
+        [Fact]
+        public void MoreThanOneDiscountInPlaceAndBothShouldBeApplied()
+        {
+            Shop.RegisterProduct('A', 20);
+            Shop.RegisterProduct('B', 30);
+            Shop.RegisterProduct('C', 50);
+
+            Shop.RegisterCountDiscount('A', 3, 5);
+            Shop.RegisterComboDiscount("BBB", 60, false);
+            var price = Shop.GetPrice("AAAAABBBC");
+            //20*3+60+50 = 170
+            Assert.Equal(170, price);
+
+        }
     }
 }
