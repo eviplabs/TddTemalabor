@@ -19,26 +19,26 @@ namespace Shopping
             Discounts[name] = new CountDiscount(count, bonus);
         }
 
-        public int CountDiscountCalculator(char ProductID, Dictionary<char, int> ProductCount)
+        public (int,int) CountDiscountCalculator(char ProductID, Dictionary<char, (int, int)> ProductCount)
         {
-            int pc = ProductCount[ProductID];
+            int pc = ProductCount[ProductID].Item1;
             int a = Discounts[ProductID].count;
             int b = Discounts[ProductID].bonus;
-            return pc - (pc / b) * (b - a);
+            
+            return (pc - (pc / b) * (b - a),pc-b);
         }
 
-        public void getPrice(Dictionary<char,int> ProductCount)
+        public void getPrice(Dictionary<char, (int, int)> ProductCount)
         {
-            Dictionary<char, int> forfor = new Dictionary<char, int>(ProductCount);
+            Dictionary<char, (int, int)> forfor = new Dictionary<char, (int, int)>(ProductCount);
 
             foreach (var key in forfor.Keys)
             {
-                if (Discounts.ContainsKey(key) && ProductCount[key] >= Discounts[key].bonus)
+                if (Discounts.ContainsKey(key) && ProductCount[key].Item2 >= Discounts[key].bonus)
                 {
                     ProductCount[key] = CountDiscountCalculator(key, ProductCount);
                 }
             }
         }
-
     }
 }

@@ -7,7 +7,7 @@ namespace Shopping
 {
     public class Shop
     {
-        private List<Product> Products;
+        public List<Product> Products;
         private AmountDiscounts amountDiscounts;
         private CountDiscountsCalculator countDiscountsCalculator;
         private ComboDiscountCalculator comboDiscountCalculator;
@@ -48,26 +48,34 @@ namespace Shopping
                 name = name.ReplaceNumbersFromName();
             }
 
-            Dictionary<char, int> ProductCount = name.GroupBy(c => c)
-                .Select(c => new { c.Key, Count = c.Count() })
-                .ToDictionary(t => t.Key, t => t.Count);
+            Dictionary<char, (int, int)> ProductCount = name.GroupBy(c => c)
+                .Select(c => new { c.Key, Count = c.Count(), Remains = c.Count()})
+                .ToDictionary(t => t.Key,t => (t.Count, t.Remains));
             
-            if(amountDiscounts.Discounts.Count > 0) 
+
+
+            if (amountDiscounts.Discounts.Count > 0) 
             {
-                amountDiscounts.getPrice(ProductCount, price, Products);
+               amountDiscounts.getPrice(ProductCount, price, Products);
             }
-            else if (countDiscountsCalculator.Discounts.Count > 0)
+            if (countDiscountsCalculator.Discounts.Count > 0)
             {
                 countDiscountsCalculator.getPrice(ProductCount);
             }
-            else
+            name = null;
+            foreach (var a in ProductCount.Keys) {
+                for(int i=0;i<ProductCount[a].Item2; i++) {
+                    name += a;
+                }
+            }
+            if (comboDiscountCalculator.ComboDiscounts.Count > 0)
             {
                 price = comboDiscountCalculator.getPrice(name, clubmember, price, Products);
             }
 
             foreach (var key in ProductCount.Keys)
             {
-                price += ProductCount[key] * key.GetPriceByProductChar(Products);
+                price += ProductCount[key].Item1 * key.GetPriceByProductChar(Products);
             }
 
             if (SupershopPoints.Count > 0)
