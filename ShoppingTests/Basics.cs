@@ -301,7 +301,18 @@ namespace ShoppingTests
             var price = Shop.GetPrice("AAAAABBBC");
             //20*3+60+50 = 170
             Assert.Equal(170, price);
+        }
 
+        [Fact]
+        public void MoreThanOneDigitCustomerID()
+        {
+            Shop.RegisterProduct('A', 20);
+            Shop.RegisterProduct('B', 30);
+            Shop.RegisterProduct('C', 50);
+
+            var price = Shop.GetPrice("ABCp230");
+            //(20+30+50)*0,9
+            Assert.Equal(90, price);
         }
     }
 }
