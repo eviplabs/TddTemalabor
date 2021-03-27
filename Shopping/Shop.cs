@@ -32,6 +32,8 @@ namespace Shopping
         {
             // Megszamoljuk, hogy az egyes termekek hanyszor szerepelnek
             Dictionary<char, int> productCounts = new Dictionary<char, int>();
+            // handling barcodes (CRD P012) (test: MoreProductWithOneCode)
+            cart = Regex.Replace(cart, @"(['A-Z'])(\d+)", m => new String(m.Groups[1].Value[0], Int32.Parse(m.Groups[2].Value)));
             foreach (char item in cart)
             {
                 if (!products.ContainsKey(item)) continue;
