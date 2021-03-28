@@ -335,5 +335,14 @@ namespace ShoppingTests
             var price = s.GetPrice("A2B3C");
             Assert.Equal(110, price);
         }
+
+        [Fact]
+        public void WeighBasedPricing()
+        {
+            s.RegisterProduct('A', 10);
+            s.RegisterProduct('B', 20, true);            
+            var price = s.GetPrice("A2B1200");
+            Assert.Equal(44, price); //2*10+1.2*20
+        }
     }
 }
