@@ -58,5 +58,17 @@ namespace ShoppingTests
             //(20+30+50)*0,9
             Assert.Equal(90, price);
         }
+
+        [Fact]
+        public void MoreThanOneDigitCustomerIDWithV()
+        {
+            Shop.RegisterProduct('A', 20);
+            Shop.RegisterProduct('B', 30);
+            Shop.RegisterProduct('C', 40);
+
+            var price = Shop.GetPrice("ABCv21");
+            //(20+30+40)*0,9
+            Assert.Equal(81, price);
+        }
     }
 }
