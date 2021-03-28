@@ -14,26 +14,51 @@ namespace Shopping
         private Dictionary<int, int> supershopPoints = new Dictionary<int, int>(); // (userid, gyűjtött pontok) párok
         private List<ComboDiscount> comboDiscounts = new List<ComboDiscount>();
         private List<CouponDiscount> couponDiscounts = new List<CouponDiscount>();
+        private HashSet<char> weighBasedProducts = new HashSet<char>();
 
 
         public bool ProductRegistered(char name)
         {
             return products.ContainsKey(name);
         }
-        public bool RegisterProduct(char name, int price)
+
+        // suly alapu termeknel 1kg arat taroljuk
+        public bool RegisterProduct(char name, int price, bool isWeighBased = false)
         {
             if ((name < 'A' || name > 'Z') || price <= 0) return false;
             if (ProductRegistered(name)) return false;
 
             products.Add(name, price);
+            if (isWeighBased) weighBasedProducts.Add(name);
             return true;
         }
         public double GetPrice(string cart)
         {
             // Megszamoljuk, hogy az egyes termekek hanyszor szerepelnek
-            Dictionary<char, int> productCounts = new Dictionary<char, int>();            
+            Dictionary<char, int> productCounts = new Dictionary<char, int>();
+
+            double totalPriceOfWeighBasedProducts = 0; // a suly alapu termekek legfelejebb csak olyan akcioban
+            // szereplhetnek, ami a vegosszeget erinti
+            var matches = new Regex(@"(['A-Z'])(['1-9']['0-9']*)").Matches(cart);
+            foreach (Match match in matches)
+            {
+                char product = match.Groups[1].Value[0];
+                int weighInGrams = Int32.Parse(match.Groups[2].Value);
+                if (weighBasedProducts.Contains(product))
+                {
+                    totalPriceOfWeighBasedProducts += products[product] * (weighInGrams / 1000.0);
+                }
+            }
+            // suly alapu termekek eltavolitasa a kosarbol
+            cart = Regex.Replace(cart,
+                @"(['A-Z'])(['1-9']['0-9']*)",
+                m => (weighBasedProducts.Contains(m.Groups[1].Value[0])) ?
+                "" :
+                m.Groups[1].Value + m.Groups[2].Value
+                );
+
             // handling barcodes (CRD P012) (test: MoreProductWithOneCode)
-            cart = Regex.Replace(cart, @"(['A-Z'])(['1-9']+)", m => new String(m.Groups[1].Value[0], Int32.Parse(m.Groups[2].Value)));
+            cart = Regex.Replace(cart, @"(['A-Z'])(['1-9']['0-9']*)", m => new String(m.Groups[1].Value[0], Int32.Parse(m.Groups[2].Value)));
             foreach (char item in cart)
             {
                 if (!products.ContainsKey(item)) continue;
@@ -60,7 +85,7 @@ namespace Shopping
 
             prices.Add(ComboDiscount(GetRelevantComboDiscount(productCounts), IsAClubMember(cart), productCounts));
 
-            double price = prices.Min();
+            double price = totalPriceOfWeighBasedProducts + prices.Min();
 
             price = CouponDiscount(cart, price);
 
