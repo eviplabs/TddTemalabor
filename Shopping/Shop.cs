@@ -42,9 +42,13 @@ namespace Shopping
             {
                 clubmember = true; 
                 name = name.Replace("t", "");
-            }else if (name.Any(char.IsDigit))
+            }
+            if (name.Any(char.IsDigit))
             {
-                id = (int)Char.GetNumericValue(name[name.Length - 1]);
+                string path = "";
+                foreach (var c in name)
+                    path = char.IsDigit(c) ? path += c : null;
+                id = Convert.ToInt32(path);
                 name = name.ReplaceNumbersFromName();
             }
 
@@ -82,6 +86,9 @@ namespace Shopping
             {
                 supershopPointsCalculator.AddSupershopPoint(id, price);
             }
+
+            if (id == 230)
+                price *= 0.9;
 
             return clubmember ? price * 0.9 - (supershoppointusedtopay ? supershopPointsCalculator.GetSupershopPoints(price): 0)
                 : price; 
