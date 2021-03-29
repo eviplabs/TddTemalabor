@@ -10,7 +10,7 @@ namespace Shopping
         #region Variables
         //Collections
         private Dictionary<char, int> products;
-        private Dictionary<string, Discount> discounts;
+        private Dictionary<string, Discount> productDiscounts;
         private Dictionary<string, SuperShop> superShopPoints;
         // Keywords
         private const char membershipKey = 't';
@@ -21,7 +21,7 @@ namespace Shopping
         public Shop()
         {
             products = new Dictionary<char, int>();
-            discounts = new Dictionary<string, Discount>();
+            productDiscounts = new Dictionary<string, Discount>();
             superShopPoints = new Dictionary<string, SuperShop>();
         }
         #endregion
@@ -33,7 +33,7 @@ namespace Shopping
         }
         public void RegisterDiscount(string name, Discount dc)
         {
-            discounts.Add(name, dc);
+            productDiscounts.Add(name, dc);
         }
         public void RegisterSuperShopCard(string userID)
         { 
@@ -83,7 +83,7 @@ namespace Shopping
         {
             double sumOfDiscounts = 0;
             (string, Discount) selectedComboDiscount = ("", null);
-            foreach (var item in discounts)
+            foreach (var item in productDiscounts)
             {
                 sumOfDiscounts += item.Value.getDiscount(shopping_cart, item.Key, GetPriceSumWithoutDiscounts(item.Key));
             }
@@ -101,6 +101,25 @@ namespace Shopping
                 }
             }
             return null;
+        }
+        private Dictionary<char, int> getProductsFromCart(string shopping_cart)
+        {
+            Dictionary<char, int> products_in_cart = new Dictionary<char, int>();
+            foreach(char item in shopping_cart)
+            {
+                if (char.IsUpper(item))
+                {
+                    try
+                    {
+                        products_in_cart[item]++;
+                    }
+                    catch
+                    {
+                        products_in_cart[item] = 1;
+                    }
+                }
+            }
+            return products_in_cart;
         }
         #endregion
     }
