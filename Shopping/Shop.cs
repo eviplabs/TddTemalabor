@@ -13,6 +13,9 @@ namespace Shopping
         //superShopPoints: Key => UserID, value => az adott userID hoz tartozó árkedvezmény
         //Hibát dob, ha egyböl fizetni szeretnénk korábban nem használt UserID-vel!!!
         private Dictionary<int, int> superShopPoints;
+
+        private char membershipKey = 't';
+        private char superShopPaymentKey = 'p';
         #endregion
 
         #region Init
@@ -58,10 +61,23 @@ namespace Shopping
         #region Calculations
         public int GetPrice(string shopping_cart)
         {
-            bool memberShip = hasMembership(shopping_cart);
-            bool superShop = WantsToPayWithSupershop(shopping_cart);
+            bool memberShip = shopping_cart.hasKeyword(membershipKey);
+            bool superShop = shopping_cart.hasKeyword(superShopPaymentKey);
+
+            if (memberShip)
+            {
+                products[membershipKey] = 0;
+            }
+            if (superShop)
+            {
+                products[superShopPaymentKey] = 0;
+            }
+
+
             int userID = GetUserID(shopping_cart);
             double price = GetPriceSumWithoutDiscounts(shopping_cart);
+
+            
 
             price -= GetDiscountSum(shopping_cart);
 
@@ -120,15 +136,6 @@ namespace Shopping
             return selectedComboDiscount.Item1.Equals("") ? sumOfDiscounts : sumOfDiscounts + selectedComboDiscount.Item2.getDiscount(shopping_cart, selectedComboDiscount.Item1, GetPriceSumWithoutDiscounts(selectedComboDiscount.Item1));
 
         }
-        private bool hasMembership(string shopping_cart)
-        {
-            if (shopping_cart.Contains("t"))
-            {
-                products['t'] = 0;
-                return true;
-            }
-            return false;
-        }
         private int GetUserID(string shopping_cart)
         {
             foreach (char c in shopping_cart)
@@ -140,16 +147,6 @@ namespace Shopping
                 }
             }
             return 0;
-        }
-        private bool WantsToPayWithSupershop(string shopping_cart)
-        //kódduplikáció a hasMembership-el, ha ez nem változik, érdemes kiszervezni a belsejét
-        {
-            if (shopping_cart.Contains("p"))
-            {
-                products['p'] = 0;
-                return true;
-            }
-            return false;
         }
         /*private int GetSuperShopDiscount(int userID)
         {

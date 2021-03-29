@@ -41,7 +41,7 @@ namespace Shopping
         }
         private bool areConditionsFulfilled(string shopping_cart, string items)
         {
-            if (membershipRequired && (!shopping_cart.Contains("t"))
+            if (membershipRequired && (!shopping_cart.hasKeyword('t'))
                 || items.ToCharArray().Where(i => !shopping_cart.Contains(i)).Any())
             {
                 return false;
