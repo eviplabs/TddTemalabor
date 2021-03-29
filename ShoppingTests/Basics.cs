@@ -67,7 +67,7 @@ namespace ShoppingTests
         [Fact]
         public void RegisterAmountDiscount()
         {
-            sh.RegisterAmountDiscount("A", 5, 0.9);
+            sh.RegisterDiscount("A", new AmountDiscount(5, 0.9));
             var price = sh.GetPrice("AAAAAAD");
             Assert.Equal(154, price);
         }
@@ -82,7 +82,7 @@ namespace ShoppingTests
         [Fact]
         public void RegisterAmountDiscountWithFalseDiscount()
         {
-            sh.RegisterAmountDiscount("B", 5, 0.9);
+            sh.RegisterDiscount("B", new AmountDiscount(5, 0.9));
             var price = sh.GetPrice("AAAAAAD");
             Assert.Equal(160, price);
         }
@@ -92,7 +92,7 @@ namespace ShoppingTests
         {
             sh.RegisterProduct('E', 10);
             sh.RegisterProduct('G', 100);
-            sh.RegisterAmountDiscount("E", 5, 0.9);
+            sh.RegisterDiscount("E", new AmountDiscount(5, 0.9));
             var price = sh.GetPrice("EEEEEEG");
             Assert.Equal(154, price);
         }
@@ -100,35 +100,35 @@ namespace ShoppingTests
         [Fact]
         public void RegisterCountDiscount()
         {
-            sh.RegisterCountDiscount("A",2,3);
+            sh.RegisterDiscount("A", new CountDiscount(2, 3));
             Assert.Equal(120, sh.GetPrice("AAAD"));
         }
 
         [Fact]
         public void RegisterCountDiscountWithoutClaimingFreeProducts()
         {
-            sh.RegisterCountDiscount("A", 2, 3);
+            sh.RegisterDiscount("A", new CountDiscount(2, 3));
             Assert.Equal(120, sh.GetPrice("AAD"));
         }
 
         [Fact]
         public void RegisterComboDiscount()
         {
-            sh.RegisterComboDiscount("ABC", 60);
+            sh.RegisterDiscount("ABC", new ComboDiscount(60));
             Assert.Equal(110, sh.GetPrice("CAAAABB"));
         }
 
         [Fact]
         public void RegisterComboDiscountWithFalseDiscount()
         {
-            sh.RegisterComboDiscount("ABCD", 60);
+            sh.RegisterDiscount("ABCD", new ComboDiscount(60));
             Assert.Equal(130, sh.GetPrice("CAAAABB"));
         }
 
         [Fact]
         public void RegisterComboDiscountWithMultipleAppliableDiscounts()
         {
-            sh.RegisterComboDiscount("ABC", 60);
+            sh.RegisterDiscount("ABC", new ComboDiscount(60));
             Assert.Equal(130, sh.GetPrice("AABBCCA"));
         }
 
@@ -136,7 +136,7 @@ namespace ShoppingTests
         public void RoundingGetPrice()
         {
             sh.RegisterProduct('Z', 5);
-            sh.RegisterAmountDiscount("Z", 5, 0.9);
+            sh.RegisterDiscount("Z", new AmountDiscount(5, 0.9));
             Assert.Equal(23, sh.GetPrice("ZZZZZ"));
         }
         [Fact]
@@ -160,7 +160,7 @@ namespace ShoppingTests
         [Fact]
         public void ComboDiscountWithMemberShip()
         {
-            sh.RegisterComboDiscount("ABC", 60 , true);     // 3. taggal (bool) megadható hogy a kedvezmény csak klubtagoknak jár-e
+            sh.RegisterDiscount("ABC", new ComboDiscount(60, true)); // 3. taggal (bool) megadható hogy a kedvezmény csak klubtagoknak jár-e
             //20+40+100=160 (comboDiscount csak tagoknak)
             Assert.Equal(160, sh.GetPrice("AABBCC"));
             //(60+60)*0,9  comboDiscount és MemberShipDiscount is
@@ -194,25 +194,25 @@ namespace ShoppingTests
         [Fact]
         public void MultipleTypeDiscounts()
         {
-            sh.RegisterAmountDiscount("A",4,0.9);
-            sh.RegisterComboDiscount("ABC",50);
-            sh.RegisterCountDiscount("C",1,2);
+            sh.RegisterDiscount("A", new AmountDiscount(4, 0.9));
+            sh.RegisterDiscount("ABC", new ComboDiscount(50));
+            sh.RegisterDiscount("C", new CountDiscount(1, 2));
             Assert.Equal(186,sh.GetPrice("AAAAAAABBBCCC")); //280 - 90 - 4 - 0
         }
         [Fact]
         public void MultipleComboDiscounts()
         {
-            sh.RegisterComboDiscount("AB",20);
-            sh.RegisterComboDiscount("AC",20);
-            sh.RegisterComboDiscount("ABC",20);
+            sh.RegisterDiscount("AB", new ComboDiscount(20));
+            sh.RegisterDiscount("AC", new ComboDiscount(20));
+            sh.RegisterDiscount("ABC", new ComboDiscount(20));
             Assert.Equal(120,sh.GetPrice("ABCD"));
         }
         [Fact]
         public void MultipleAppliableComboDiscounts()
         {
-            sh.RegisterComboDiscount("AB", 20);
-            sh.RegisterComboDiscount("AC", 20);
-            sh.RegisterComboDiscount("ABC", 20);
+            sh.RegisterDiscount("AB", new ComboDiscount(20));
+            sh.RegisterDiscount("AC", new ComboDiscount(20));
+            sh.RegisterDiscount("ABC", new ComboDiscount(20));
             Assert.Equal(140,sh.GetPrice("AABBCD"));
         }
         #endregion

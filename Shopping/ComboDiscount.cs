@@ -14,7 +14,7 @@ namespace Shopping
         #endregion
 
         #region Init
-        public ComboDiscount(int newPrice, bool membershipRequired)
+        public ComboDiscount(int newPrice, bool membershipRequired = false)
         {
             this.newPrice = newPrice;
             this.membershipRequired = membershipRequired;

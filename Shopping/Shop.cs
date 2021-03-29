@@ -30,6 +30,10 @@ namespace Shopping
         {
             products.Add(Char.ToUpper(name), price);
         }
+        public void RegisterDiscount(string name, Discount dc)
+        {
+            discounts.Add(name, dc);
+        }
         public void RegisterAmountDiscount(string name, int amount, double discount)
         {
             discounts.Add(name.ToUpper(), new AmountDiscount(amount, discount));
