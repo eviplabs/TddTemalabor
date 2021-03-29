@@ -66,5 +66,16 @@ namespace ShoppingTests
             var price = Shop.GetPrice("ABCv21");
             Assert.Equal(90, price);
         }
+
+        [Fact]
+        public void When_UserIDProvided_Expect_ClubmembershipDiscountIsActivated()
+        {
+            Shop.RegisterProduct('A', 20);
+            Shop.RegisterProduct('B', 30);
+            Shop.RegisterProduct('C', 40);
+
+            var price = Shop.GetPrice("ABCv99");
+            Assert.Equal(81, price);
+        }
     }
 }
