@@ -43,8 +43,8 @@ namespace Shopping
         #region Calculations
         public int GetPrice(string shopping_cart)
         {
-            bool memberShip = shopping_cart.hasKeyword(membershipKey);
-            bool superShop = shopping_cart.hasKeyword(superShopPaymentKey);
+            bool memberShip = shopping_cart.Contains(membershipKey);
+            bool superShop = shopping_cart.Contains(superShopPaymentKey);
 
             if (memberShip)
             {

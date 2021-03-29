@@ -7,7 +7,5 @@ namespace Shopping
 {
     public static class ExtensionMethods
     {
-        static public bool hasKeyword(this string self, char keyword)
-            => self.Contains(keyword);
     }
 }
