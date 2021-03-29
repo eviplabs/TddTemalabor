@@ -84,19 +84,7 @@ namespace Shopping
             (string, Discount) selectedComboDiscount = ("", null);
             foreach (var item in discounts)
             {
-                if (item.Value.GetType().Equals(typeof(ComboDiscount)))
-                {
-                    if (selectedComboDiscount.Item1.Equals("") ||
-                        selectedComboDiscount.Item1.Length < item.Key.Length ||
-                        selectedComboDiscount.Item1.Length == item.Key.Length && String.Compare(selectedComboDiscount.Item1, item.Key) > 0)
-                    {
-                        selectedComboDiscount = (item.Key, item.Value);
-                    }
-                }
-                else
-                {
-                    sumOfDiscounts += item.Value.getDiscount(shopping_cart, item.Key, GetPriceSumWithoutDiscounts(item.Key));
-                }
+                sumOfDiscounts += item.Value.getDiscount(shopping_cart, item.Key, GetPriceSumWithoutDiscounts(item.Key));
             }
             return selectedComboDiscount.Item1.Equals("") ? sumOfDiscounts : sumOfDiscounts + selectedComboDiscount.Item2.getDiscount(shopping_cart, selectedComboDiscount.Item1, GetPriceSumWithoutDiscounts(selectedComboDiscount.Item1));
 

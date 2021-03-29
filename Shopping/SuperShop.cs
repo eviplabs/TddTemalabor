@@ -31,6 +31,5 @@ namespace Shopping
         {
             return points += (int)Math.Round(0.01 * price,MidpointRounding.AwayFromZero); 
         }
-
     }
 }

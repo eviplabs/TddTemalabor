@@ -16,6 +16,7 @@ namespace Shopping
         {
             return shopping_cart.ToCharArray().Count(c => c == item);
         }
+ 
         #endregion
     }
 }
