@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Shopping
 {
-    class SuperShopDiscount
+    class SuperShop
     {
+        private int points;
     }
 }

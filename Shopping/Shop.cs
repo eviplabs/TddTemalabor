@@ -77,8 +77,6 @@ namespace Shopping
             int userID = GetUserID(shopping_cart);
             double price = GetPriceSumWithoutDiscounts(shopping_cart);
 
-            
-
             price -= GetDiscountSum(shopping_cart);
 
             int endPrice = Convert.ToInt32(Math.Round(
@@ -108,7 +106,6 @@ namespace Shopping
 
             return endPrice;
         }
-
         private int GetPriceSumWithoutDiscounts(string shopping_cart)
         {
             return shopping_cart.Sum(i => products[i]);
