@@ -44,7 +44,7 @@ namespace Shopping
         {
             discounts.Add(name.ToUpper(), new ComboDiscount(newPrice, membership));
         }
-        private void RegisterSuperShopPoints(int userID, int fullPrice)
+        public void RegisterSuperShopCard(int userID)
         { 
             superShopPoints.Add(userID, new SuperShop());
         }
@@ -65,7 +65,6 @@ namespace Shopping
                 products[superShopPaymentKey] = 0;
             }
 
-
             int userID = GetUserID(shopping_cart);
             double price = GetPriceSumWithoutDiscounts(shopping_cart);
 
@@ -76,11 +75,11 @@ namespace Shopping
 
             if (superShop && userID != 0)
             {
-                superShopPoints[userID].getDiscount(shopping_cart, "", endPrice);
+                endPrice -= (int)superShopPoints[userID].getDiscount(shopping_cart, "", endPrice);
             }
-            else if (userID != 0)
+            if(userID != 0)
             {
-                RegisterSuperShopPoints(userID, endPrice);
+                superShopPoints[userID].addPoints(endPrice);
             }
 
             return endPrice;

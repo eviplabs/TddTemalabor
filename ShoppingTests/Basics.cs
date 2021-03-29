@@ -170,6 +170,7 @@ namespace ShoppingTests
         [Fact]
         public void PayingWithSuperShopCard()
         {
+            sh.RegisterSuperShopCard(1);
             sh.GetPrice("ABCD1"); //180
             Assert.Equal(178, sh.GetPrice("ABCD1p"));
         }
@@ -177,6 +178,7 @@ namespace ShoppingTests
         [Fact]
         public void PayingWithSuperShopCardWithoutPoints()
         {
+            sh.RegisterSuperShopCard(1);
             sh.GetPrice("A1"); //ezért 0 pont jár
             Assert.Equal(180, sh.GetPrice("ABCD1p"));
         }
@@ -184,6 +186,7 @@ namespace ShoppingTests
         [Fact]
         public void PayingWithSuperShopCardRemainingPoints()
         {
+            sh.RegisterSuperShopCard(1);
             sh.GetPrice("DDDDDDDDDDD1"); //1100
             Assert.Equal(0, sh.GetPrice("A1p")); //1 pontja marad, de az ár 0
             Assert.Equal(9, sh.GetPrice("A1p"));
