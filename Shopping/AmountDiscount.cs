@@ -23,7 +23,8 @@ namespace Shopping
         #region Calculations
         public override double getDiscount(string shopping_cart, string item, int price)
         {
-            return (getRelevantItemsFromCart(shopping_cart, char.Parse(item)) >= amount) ? getRelevantItemsFromCart(shopping_cart, char.Parse(item)) * price * (1-multiplier) : 0;
+            int relevants = getRelevantItemsFromCart(shopping_cart, char.Parse(item));
+            return (relevants >= amount) ? relevants * price * (1-multiplier) : 0;
         }
         #endregion
     }
