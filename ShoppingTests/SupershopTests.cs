@@ -42,9 +42,7 @@ namespace ShoppingTests
             Shop.RegisterProduct('C', 50);
 
             var price = Shop.GetPrice("ABC1p");
-            var supershopPoints = Shop.GetSupershopPoints(300);
-            //20+30+50 - 3 = 97
-            Assert.Equal(97, price - supershopPoints);
+            Assert.Equal(99, price);
         }
 
         [Fact]
@@ -55,8 +53,7 @@ namespace ShoppingTests
             Shop.RegisterProduct('C', 50);
 
             var price = Shop.GetPrice("ABCp230");
-            //(20+30+50)*0,9
-            Assert.Equal(90, price);
+            Assert.Equal(99, price);
         }
 
         [Fact]
@@ -67,8 +64,7 @@ namespace ShoppingTests
             Shop.RegisterProduct('C', 40);
 
             var price = Shop.GetPrice("ABCv21");
-            //(20+30+40)*0,9
-            Assert.Equal(81, price);
+            Assert.Equal(90, price);
         }
     }
 }
