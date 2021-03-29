@@ -10,8 +10,6 @@ namespace Shopping
         #region Variables
         private Dictionary<char, int> products;
         private Dictionary<string, Discount> discounts;
-        //superShopPoints: Key => UserID, value => az adott userID hoz tartozó árkedvezmény
-        //Hibát dob, ha egyböl fizetni szeretnénk korábban nem használt UserID-vel!!!
         private Dictionary<int, SuperShop> superShopPoints;
 
         private char membershipKey = 't';
@@ -123,12 +121,6 @@ namespace Shopping
             }
             return 0;
         }
-        /*private int GetSuperShopDiscount(int userID)
-        {
-            int points = superShopPoints[userID];
-            superShopPoints[userID] = 0;
-            return points;
-        }*/
         #endregion
     }
 }
