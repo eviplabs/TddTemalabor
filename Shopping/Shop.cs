@@ -12,7 +12,7 @@ namespace Shopping
         private Dictionary<string, Discount> discounts;
         //superShopPoints: Key => UserID, value => az adott userID hoz tartozó árkedvezmény
         //Hibát dob, ha egyböl fizetni szeretnénk korábban nem használt UserID-vel!!!
-        private Dictionary<int, int> superShopPoints;
+        private Dictionary<int, SuperShop> superShopPoints;
 
         private char membershipKey = 't';
         private char superShopPaymentKey = 'p';
@@ -23,7 +23,7 @@ namespace Shopping
         {
             products = new Dictionary<char, int>();
             discounts = new Dictionary<string, Discount>();
-            superShopPoints = new Dictionary<int, int>();
+            superShopPoints = new Dictionary<int, SuperShop>();
         }
         #endregion
 
@@ -45,16 +45,8 @@ namespace Shopping
             discounts.Add(name.ToUpper(), new ComboDiscount(newPrice, membership));
         }
         private void RegisterSuperShopPoints(int userID, int fullPrice)
-        {
-            int priceToRegister = Convert.ToInt32(Math.Round(fullPrice * 0.01, MidpointRounding.AwayFromZero));
-            if (superShopPoints.ContainsKey(userID))
-            {
-                superShopPoints[userID] += priceToRegister;
-            }
-            else
-            {
-                superShopPoints.Add(userID, priceToRegister);
-            }
+        { 
+            superShopPoints.Add(userID, new SuperShop());
         }
         #endregion
 
@@ -84,20 +76,7 @@ namespace Shopping
 
             if (superShop && userID != 0)
             {
-                if (superShopPoints[userID] > endPrice)
-                {
-                    while (endPrice > 0)
-                    {
-                        endPrice--;
-                        superShopPoints[userID]--;
-                    }
-
-                }
-                else
-                {
-                    endPrice -= superShopPoints[userID];
-                    superShopPoints[userID] = 0;
-                }
+                superShopPoints[userID].getDiscount(shopping_cart, "", endPrice);
             }
             else if (userID != 0)
             {
