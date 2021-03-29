@@ -34,18 +34,6 @@ namespace Shopping
         {
             discounts.Add(name, dc);
         }
-        public void RegisterAmountDiscount(string name, int amount, double discount)
-        {
-            discounts.Add(name.ToUpper(), new AmountDiscount(amount, discount));
-        }
-        public void RegisterCountDiscount(string name, int required, int freeItem)
-        {
-            discounts.Add(name.ToUpper(), new CountDiscount(required, freeItem));
-        }
-        public void RegisterComboDiscount(string name, int newPrice, bool membership = false)
-        {
-            discounts.Add(name.ToUpper(), new ComboDiscount(newPrice, membership));
-        }
         public void RegisterSuperShopCard(int userID)
         { 
             superShopPoints.Add(userID, new SuperShop());
