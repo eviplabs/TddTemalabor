@@ -43,6 +43,10 @@ namespace Shopping
                 clubmember = true; 
                 name = name.Replace("t", "");
             }
+            if (name.Contains("v"))
+            {
+                name = name.Replace("v", "");
+            }
             if (name.Any(char.IsDigit))
             {
                 string path = "";
@@ -87,11 +91,8 @@ namespace Shopping
                 supershopPointsCalculator.AddSupershopPoint(id, price);
             }
 
-            if (id == 230)
-                price *= 0.9;
-
             return clubmember ? price * 0.9 - (supershoppointusedtopay ? supershopPointsCalculator.GetSupershopPoints(price): 0)
-                : price; 
+                : price - (supershoppointusedtopay ? supershopPointsCalculator.GetSupershopPoints(price) : 0); 
         }
 
         public void RegisterAmountDiscount(char name, int amount, double percent)
