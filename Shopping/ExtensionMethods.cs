@@ -5,8 +5,9 @@ using System.Text;
 
 namespace Shopping
 {
-    class ExtensionMethods
+    public static class ExtensionMethods
     {
-
+        static public bool hasKeyword(this string self, char keyword)
+            => self.Contains(keyword);
     }
 }
