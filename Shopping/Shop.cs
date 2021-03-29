@@ -10,7 +10,7 @@ namespace Shopping
         #region Variables
         private Dictionary<char, int> products;
         private Dictionary<string, Discount> discounts;
-        private Dictionary<int, SuperShop> superShopPoints;
+        private Dictionary<string, SuperShop> superShopPoints;
 
         private char membershipKey = 't';
         private char superShopPaymentKey = 'p';
@@ -21,7 +21,7 @@ namespace Shopping
         {
             products = new Dictionary<char, int>();
             discounts = new Dictionary<string, Discount>();
-            superShopPoints = new Dictionary<int, SuperShop>();
+            superShopPoints = new Dictionary<string, SuperShop>();
         }
         #endregion
 
@@ -34,7 +34,7 @@ namespace Shopping
         {
             discounts.Add(name, dc);
         }
-        public void RegisterSuperShopCard(int userID)
+        public void RegisterSuperShopCard(string userID)
         { 
             superShopPoints.Add(userID, new SuperShop());
         }
@@ -55,7 +55,7 @@ namespace Shopping
                 products[superShopPaymentKey] = 0;
             }
 
-            int userID = GetUserID(shopping_cart);
+            string userID = GetUserID(shopping_cart);
             double price = GetPriceSumWithoutDiscounts(shopping_cart);
 
             price -= GetDiscountSum(shopping_cart);
@@ -63,11 +63,11 @@ namespace Shopping
             int endPrice = Convert.ToInt32(Math.Round(
                 (memberShip) ? price * 0.9 : price, MidpointRounding.AwayFromZero));
 
-            if (superShop && userID != 0)
+            if (superShop && userID != null)
             {
                 endPrice -= (int)superShopPoints[userID].getDiscount(shopping_cart, "", endPrice);
             }
-            if(userID != 0)
+            if(userID != null)
             {
                 superShopPoints[userID].addPoints(endPrice);
             }
@@ -101,17 +101,17 @@ namespace Shopping
             return selectedComboDiscount.Item1.Equals("") ? sumOfDiscounts : sumOfDiscounts + selectedComboDiscount.Item2.getDiscount(shopping_cart, selectedComboDiscount.Item1, GetPriceSumWithoutDiscounts(selectedComboDiscount.Item1));
 
         }
-        private int GetUserID(string shopping_cart)
+        private string GetUserID(string shopping_cart)
         {
             foreach (char c in shopping_cart)
             {
                 if (char.IsDigit(c))
                 {
                     products[c] = 0;
-                    return (int)Char.GetNumericValue(c);
+                    return c.ToString();
                 }
             }
-            return 0;
+            return null;
         }
         #endregion
     }
