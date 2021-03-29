@@ -8,12 +8,13 @@ namespace Shopping
     public class Shop
     {
         #region Variables
+        //Collections
         private Dictionary<char, int> products;
         private Dictionary<string, Discount> discounts;
         private Dictionary<string, SuperShop> superShopPoints;
-
-        private char membershipKey = 't';
-        private char superShopPaymentKey = 'p';
+        // Keywords
+        private const char membershipKey = 't';
+        private const char superShopPaymentKey = 'p';
         #endregion
 
         #region Init
