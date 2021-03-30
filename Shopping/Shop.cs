@@ -23,7 +23,7 @@ namespace Shopping
         }
 
         // suly alapu termeknel 1kg arat taroljuk
-        public bool RegisterProduct(char name, int price, bool isWeighBased = false)
+        public bool RegisterProduct(char name, int price, bool isWeighBased = false, int quantity = 0)
         {
             if ((name < 'A' || name > 'Z') || price <= 0) return false;
             if (ProductRegistered(name)) return false;

@@ -11,6 +11,7 @@ namespace ShoppingTests
     public class Basics
     {
         private readonly Shop s = new Shop();
+        private readonly IInventory inventory = new InMemoryInventory();
 
         [Fact]
         public void Instantiation()
@@ -94,7 +95,7 @@ namespace ShoppingTests
         [Fact]
         public void AmountDiscountRegistrationWithInvalidAmountParameter()
         {
-            s.RegisterProduct('A', 10);            
+            s.RegisterProduct('A', 10);
             Assert.False(s.RegisterAmountDiscount('A', 1, 0.9));
             Assert.False(s.RegisterAmountDiscount('A', 0, 0.9));
             Assert.False(s.RegisterAmountDiscount('A', -1, 0.9));
@@ -156,7 +157,7 @@ namespace ShoppingTests
         {
             s.RegisterProduct('A', 40);
             s.RegisterProduct('B', 60);
-            
+
             var price = s.GetPrice("ABv112");
             Assert.Equal(90, price);
         }
@@ -186,7 +187,7 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
-            
+
             var price = s.GetPrice("1pAACDDG");
             Assert.Equal(179, price); //10%-os tagsagi kedvezmeny is ervenyesul.
         }
@@ -236,8 +237,8 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
-            
-            
+
+
             // 123 -as user vásárol, de nem használja fel, 1 pontot kap
             var price = s.GetPrice("AACDDGv123");
             Assert.Equal(180, price); //A helyes osszeg a funkcio valtozasa miatt megvaltozott.
@@ -275,8 +276,8 @@ namespace ShoppingTests
             s.RegisterProduct('E', 50);
             s.RegisterProduct('F', 60);
             s.RegisterProduct('G', 70);
-            
-            s.RegisterComboDiscount("ABC", 55, true);     
+
+            s.RegisterComboDiscount("ABC", 55, true);
             var price = s.GetPrice("ABCDEFGv123");
             Assert.Equal(247, price);
         }
@@ -286,7 +287,7 @@ namespace ShoppingTests
         {
             s.RegisterProduct('A', 40);
             s.RegisterProduct('B', 60);
-            
+
             var price = s.GetPrice("ABv234");
             Assert.Equal(90, price);
         }
@@ -318,10 +319,10 @@ namespace ShoppingTests
             s.RegisterCouponDiscount("69420", 0.5);
             s.RegisterCouponDiscount("69420", 0.5);// Két kupont regisztrálunk két sorban
             var price = s.GetPrice("ABCDk69420");
-            var p = s.GetPrice("ABCD")*0.5;
-            Assert.Equal(price, s.GetPrice("ABCD")*0.5);
+            var p = s.GetPrice("ABCD") * 0.5;
+            Assert.Equal(price, s.GetPrice("ABCD") * 0.5);
             price = s.GetPrice("ABCDk69420");
-            Assert.Equal(price, s.GetPrice("ABCD")*0.5);
+            Assert.Equal(price, s.GetPrice("ABCD") * 0.5);
             price = s.GetPrice("ABCDk69420");
             Assert.Equal(price, s.GetPrice("ABCD")); // Elfogyott a kupon
         }
@@ -340,9 +341,19 @@ namespace ShoppingTests
         public void WeighBasedPricing()
         {
             s.RegisterProduct('A', 10);
-            s.RegisterProduct('B', 20, true);            
+            s.RegisterProduct('B', 20, true);
             var price = s.GetPrice("A2B1200");
             Assert.Equal(44, price); //2*10+1.2*20
+        }
+
+        [Fact]
+        public void RefreshInventory()
+        {
+            s.RegisterProduct('A', 10, false, 5);  // A regisztráció során mostmár megadható a kezdeti szám (ennyi darab van raktáron kezdetben)
+            s.RegisterProduct('B', 20, false, 5);
+            var price = s.GetPrice("AB");
+            var quantity = inventory.GetProductQuantity('A'); // Vásárlás után a darabszámnak eggyel csökkenni kell
+            Assert.Equal(4, quantity);
         }
     }
 }
