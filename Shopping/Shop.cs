@@ -45,6 +45,7 @@ namespace Shopping
             }
             if (name.Contains("v"))
             {
+                clubmember = true;
                 name = name.Replace("v", "");
             }
             if (name.Any(char.IsDigit))
