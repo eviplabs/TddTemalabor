@@ -56,7 +56,7 @@ namespace ShoppingTests
             Assert.Equal(99, price);
         }
 
-        [Fact]
+        [Fact (Skip = "skipped due to CRDP09")]
         public void MoreThanOneDigitCustomerIDWithV()
         {
             Shop.RegisterProduct('A', 20);
