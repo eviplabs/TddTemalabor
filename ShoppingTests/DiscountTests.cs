@@ -157,5 +157,20 @@ namespace ShoppingTests
             //(20*5+60+50) = 210
             Assert.Equal(210, price);
         }
+
+        [Fact]
+        public void AllDiscountsCanBeClubMemberSpecificIncludingAmountDiscount()
+        {
+            Shop.RegisterProduct('A', 20);
+            Shop.RegisterProduct('B', 30);
+            Shop.RegisterProduct('C', 50);
+
+            Shop.RegisterCountDiscount('A', 3, 5, true);
+            Shop.RegisterComboDiscount("BBB", 60, false);
+            Shop.RegisterAmountDiscount('A', 3, 0.5, false);
+            var price = Shop.GetPrice("AAAAABBBC");
+            //(5*(20*0.5)+60+50) = 160
+            Assert.Equal(160, price);
+        }
     }
 }
