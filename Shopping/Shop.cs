@@ -69,7 +69,7 @@ namespace Shopping
             }
             if (countDiscountsCalculator.Discounts.Count > 0)
             {
-                countDiscountsCalculator.getPrice(ProductCount);
+                countDiscountsCalculator.getPrice(ProductCount, clubmember);
             }
             name = null;
             foreach (var a in ProductCount.Keys) {
@@ -101,9 +101,9 @@ namespace Shopping
             amountDiscounts.RegisterAmountDiscount(name, amount, percent);
         }
 
-        public void RegisterCountDiscount(char name, int count, int bonus)
+        public void RegisterCountDiscount(char name, int count, int bonus, bool isDiscountclubMembershipExclusive = false)
         {
-            countDiscountsCalculator.RegisterCountDiscount(name, count, bonus);
+            countDiscountsCalculator.RegisterCountDiscount(name, count, bonus, isDiscountclubMembershipExclusive);
         }
         public void RegisterComboDiscount(string name, int newprice, bool clubMembership = false)
         {

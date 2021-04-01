@@ -11,12 +11,15 @@ namespace Shopping
 
         public int bonus { get; set; }
 
+        public bool clubMembershipExclusive { get; set; }
+
         public CountDiscount(){}
 
-        public CountDiscount(int count, int bonus)
+        public CountDiscount(int count, int bonus, bool clubMembershipExclusive)
         {
             this.count = count;
             this.bonus = bonus;
+            this.clubMembershipExclusive = clubMembershipExclusive;
         }
 
     }
