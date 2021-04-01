@@ -16,5 +16,9 @@ namespace Shopping
                 name = name.Replace(n.ToString(), "");
             return name;
         }
+        public static Int32 ToInt(this string number)
+        {
+            return Convert.ToInt32(number);
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Shopping
 {
@@ -43,10 +44,12 @@ namespace Shopping
                 clubmember = true; 
                 name = name.Replace("t", "");
             }
-            if (name.Contains("v"))
+            Match customer = Regex.Match(name, @"[v]([\d]+)");
+            if (customer.Success)
             {
                 clubmember = true;
-                name = name.Replace("v", "");
+                name = name.Replace(customer.Value, "");
+                id = customer.Groups[1].Value.ToInt();
             }
             if (name.Any(char.IsDigit))
             {
