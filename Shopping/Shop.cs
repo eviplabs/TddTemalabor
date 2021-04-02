@@ -11,10 +11,9 @@ namespace Shopping
         private Dictionary<char, int> products = new Dictionary<char, int>();
         private Dictionary<char, AmountDiscount> amountDiscounts = new Dictionary<char, AmountDiscount>();
         private Dictionary<char, CountDiscount> countDiscounts = new Dictionary<char, CountDiscount>();
-        private Dictionary<int, int> supershopPoints = new Dictionary<int, int>(); // (userid, gyűjtött pontok) párok
         private List<ComboDiscount> comboDiscounts = new List<ComboDiscount>();
-        private List<CouponDiscount> couponDiscounts = new List<CouponDiscount>();
         private HashSet<char> weighBasedProducts = new HashSet<char>();
+        private SuperShop superShop = new SuperShop();
 
 
         public bool ProductRegistered(char name)
@@ -37,18 +36,7 @@ namespace Shopping
             // Megszamoljuk, hogy az egyes termekek hanyszor szerepelnek
             Dictionary<char, int> productCounts = new Dictionary<char, int>();
 
-            double totalPriceOfWeighBasedProducts = 0; // a suly alapu termekek legfelejebb csak olyan akcioban
-            // szereplhetnek, ami a vegosszeget erinti
-            var matches = new Regex(@"(['A-Z'])(['1-9']['0-9']*)").Matches(cart);
-            foreach (Match match in matches)
-            {
-                char product = match.Groups[1].Value[0];
-                int weighInGrams = Int32.Parse(match.Groups[2].Value);
-                if (weighBasedProducts.Contains(product))
-                {
-                    totalPriceOfWeighBasedProducts += products[product] * (weighInGrams / 1000.0);
-                }
-            }
+            double weightBasedPrice = CalculateWeightBasedPrice(cart);
             // suly alapu termekek eltavolitasa a kosarbol
             cart = Regex.Replace(cart,
                 @"(['A-Z'])(['1-9']['0-9']*)",
@@ -79,32 +67,33 @@ namespace Shopping
 
             CheckNewMember(cart);
 
-            prices.Add(GetAmountDiscountPrice(productCounts, IsAClubMember(cart)));
+            prices.Add(GetAmountDiscountPrice(productCounts, superShop.IsAClubMember(cart)));
 
-            prices.Add(getUpdatedCountDiscountPrice(productCounts, IsAClubMember(cart)));
+            prices.Add(getUpdatedCountDiscountPrice(productCounts, superShop.IsAClubMember(cart)));
 
-            prices.Add(ComboDiscount(GetRelevantComboDiscount(productCounts), IsAClubMember(cart), productCounts));
+            prices.Add(ComboDiscount(GetRelevantComboDiscount(productCounts), superShop.IsAClubMember(cart), productCounts));
 
-            double price = totalPriceOfWeighBasedProducts + prices.Min();
+            double price = weightBasedPrice + prices.Min();
 
-            price = CouponDiscount(cart, price);
-
-            price = GetUpdatedClubMembershipPrice(cart, price);
-
-            checkAndAddSupershopPoints(cart, price);
-
-            price = getSupershopAppliedPrice(cart, price);
-
-            return price;
+            return superShop.ProccessCart(cart, price);
         }
 
-        private double GetUpdatedClubMembershipPrice(string name, double price)
+        private double CalculateWeightBasedPrice(string cart)
         {
-            if (IsAClubMember(name))
+            double weightBasedPrice = 0;
+            // a suly alapu termekek legfelejebb csak olyan akcioban
+            // szereplhetnek, ami a vegosszeget erinti
+            var matches = new Regex(@"(['A-Z'])(['1-9']['0-9']*)").Matches(cart);
+            foreach (Match match in matches)
             {
-                return (int)(price * 0.9);
+                char product = match.Groups[1].Value[0];
+                int weighInGrams = Int32.Parse(match.Groups[2].Value);
+                if (weighBasedProducts.Contains(product))
+                {
+                    weightBasedPrice += products[product] * (weighInGrams / 1000.0);
+                }
             }
-            return price;
+            return weightBasedPrice;
         }
 
         public bool RegisterAmountDiscount(char name, int amount, double factor, bool isMemberOnly = false)
@@ -220,87 +209,17 @@ namespace Shopping
             if (result.Success)
             {
                 int userid = int.Parse(result.Value);
-                if (!supershopPoints.ContainsKey(userid))
+                if (!superShop.CustomerPoints.ContainsKey(userid))
                 {
-                    RegisterSuperShopCard(userid);
+                    superShop.RegisterSuperShopCard(userid);
                 }
             }
             return;
 
         }
-        public void RegisterSuperShopCard(int id)
-        {
-            supershopPoints.Add(id,0);
-        }
-
-        //Klubtagsag vizsgalata a kosar tartalma alapjan.
-        private bool IsAClubMember(string cart)
-        {
-            var result = new Regex(@"^[A-Z]+[^k](\d+)|^(\d+)").Match(cart);
-            result = new Regex(@"(\d+)").Match(result.ToString());
-            if (result.Success)
-            {
-                int userid = int.Parse(result.Value);
-                if (supershopPoints.ContainsKey(userid)) { return true; }
-            }
-            return false;
-        }
-        //Supershop pontok gyűjtése
-        private void checkAndAddSupershopPoints(string name, double price)
-        {
-            var result = new Regex(@"(\d+)").Match(name);
-            if (result.Success)
-            {
-                int userid = int.Parse(result.Value);
-                if (!supershopPoints.ContainsKey(userid))
-                {
-                    //Itt tul keso hozzaadni.
-                }
-                supershopPoints[userid] += Convert.ToInt32(price) / 100;
-            }
-        }
-        private double getSupershopAppliedPrice(string name, double price)
-        {
-            var result = new Regex(@"(\d+)").Match(name);
-
-            if (!name.Contains('p'))
-            {
-                return price; //A vevő nem szeretne szupershoppal fizetni 
-            }
-            else
-            {
-                int userid = int.Parse(result.Value);
-                if (supershopPoints[userid] > price)
-                {
-                    supershopPoints[userid] -= Convert.ToInt32(price);
-                    return 0; //A vevőnek több pontja van, mint a kosár ára, ezért csak a pontjaival fizet
-                }
-                price -= supershopPoints[userid]; //Ha van a vevőnek pontja levonja, ha nincs akkor nem csinál semmit.
-                supershopPoints[userid] = 0; //Volt a vevőnek pontja, nullázza, ha nem akkor nem csinál semmit.
-                return price; //A vevő pontjaival frissített ár
-            }
-        }
-
         public void RegisterCouponDiscount(string couponCode, double value)
         {
-            couponDiscounts.Add(new CouponDiscount(couponCode, value));
-        }
-
-        public double CouponDiscount(string cart, double price)
-        {
-            int index = cart.IndexOf('k') + 1;
-            string couponCode = cart.Substring(index);
-            foreach (var coupon in couponDiscounts)
-            {
-                if (coupon.couponCode.Equals(couponCode))
-                {
-                    price *= coupon.value;
-                    couponDiscounts.Remove(coupon);
-                    return price;
-                }
-            }
-
-            return price;
+            superShop.CouponList.Add(new CouponDiscount(couponCode, value));
         }
     }
 }
