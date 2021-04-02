@@ -8,27 +8,30 @@ namespace Shopping
 {
     public class Shop
     {
-        private Dictionary<char, int> products = new Dictionary<char, int>();
+        private Dictionary<char, int> productPrices = new Dictionary<char, int>();
         private Dictionary<char, AmountDiscount> amountDiscounts = new Dictionary<char, AmountDiscount>();
         private Dictionary<char, CountDiscount> countDiscounts = new Dictionary<char, CountDiscount>();
         private List<ComboDiscount> comboDiscounts = new List<ComboDiscount>();
         private HashSet<char> weighBasedProducts = new HashSet<char>();
         private SuperShop superShop = new SuperShop();
+        public InMemoryInventory inventory = new InMemoryInventory();
 
 
         public bool ProductRegistered(char name)
         {
-            return products.ContainsKey(name);
+            return productPrices.ContainsKey(name);
         }
 
         // suly alapu termeknel 1kg arat taroljuk
-        public bool RegisterProduct(char name, int price, bool isWeighBased = false, int quantity = 0)
+        public bool RegisterProduct(char name, int price, bool isWeighBased = false, int quantity=0)
         {
             if ((name < 'A' || name > 'Z') || price <= 0) return false;
             if (ProductRegistered(name)) return false;
 
-            products.Add(name, price);
-            if (isWeighBased) weighBasedProducts.Add(name);
+            productPrices.Add(name, price);
+
+            if (isWeighBased) { weighBasedProducts.Add(name); }
+            else { inventory.Products.Add(name, quantity); }
             return true;
         }
         public double GetPrice(string cart)
@@ -49,7 +52,7 @@ namespace Shopping
             cart = Regex.Replace(cart, @"(['A-Z'])(['1-9']['0-9']*)", m => new String(m.Groups[1].Value[0], Int32.Parse(m.Groups[2].Value)));
             foreach (char item in cart)
             {
-                if (!products.ContainsKey(item)) continue;
+                if (!productPrices.ContainsKey(item)) continue;
 
                 if (!productCounts.ContainsKey(item))
                 {
@@ -60,6 +63,8 @@ namespace Shopping
                     productCounts[item]++;
                 }
             }
+
+            inventory.RemoveProducts(cart);
 
             /* osszeadjuk a termekek arat a darabszamukat-, es az erre vonatkozo
             esetleges kedvezmenyeket figyelembe veve */
@@ -90,7 +95,7 @@ namespace Shopping
                 int weighInGrams = Int32.Parse(match.Groups[2].Value);
                 if (weighBasedProducts.Contains(product))
                 {
-                    weightBasedPrice += products[product] * (weighInGrams / 1000.0);
+                    weightBasedPrice += productPrices[product] * (weighInGrams / 1000.0);
                 }
             }
             return weightBasedPrice;
@@ -116,11 +121,11 @@ namespace Shopping
             {
                 if (amountDiscounts.ContainsKey(product) && count >= amountDiscounts[product].Amount && (isMember || !amountDiscounts[product].isMemberOnly))
                 {
-                    price += (int)(products[product] * count * amountDiscounts[product].Factor);
+                    price += (int)(productPrices[product] * count * amountDiscounts[product].Factor);
                 }
                 else
                 {
-                    price += products[product] * count;
+                    price += productPrices[product] * count;
                 }
             }
             return price;
@@ -143,7 +148,7 @@ namespace Shopping
                 {
                     continue;
                 }
-                double actualItemPrice = products[item];
+                double actualItemPrice = productPrices[item];
 
                 // (count / countDiscount.Get): ennyiszer tudjuk a jelenlegi kosarunknal kihasznalni a 3-at fizet 4-et vihet tipusu akciot
                 // countDiscount.Get-countDiscount.Buy: minden egyes alkalommal amikor kihasznalasra kerül, ennyi termek arat kell levonni
@@ -158,7 +163,7 @@ namespace Shopping
             foreach ((char product, int count) in cart)
             {
 
-                price += products[product] * count;
+                price += productPrices[product] * count;
 
             }
             return price;
@@ -180,7 +185,7 @@ namespace Shopping
                     int matches = 0;
                     foreach (char character in combo.ComboProducts)
                     {
-                        if (products.ContainsKey(character) && cart.ContainsKey(character)) { matches++; }
+                        if (productPrices.ContainsKey(character) && cart.ContainsKey(character)) { matches++; }
                     }
                     if (matches == charCount) { return combo; }
                 }
@@ -198,7 +203,7 @@ namespace Shopping
             int sumPriceOfComboProducts = 0;
             foreach (var item in combo.ComboProducts)
             {
-                sumPriceOfComboProducts += products[item];
+                sumPriceOfComboProducts += productPrices[item];
             }
             int price = getPriceWithoutDiscount(cart);
             return price - (sumPriceOfComboProducts - combo.ComboPrice);

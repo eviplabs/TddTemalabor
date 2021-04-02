@@ -352,8 +352,19 @@ namespace ShoppingTests
             s.RegisterProduct('A', 10, false, 5);  // A regisztráció során mostmár megadható a kezdeti szám (ennyi darab van raktáron kezdetben)
             s.RegisterProduct('B', 20, false, 5);
             var price = s.GetPrice("AB");
-            var quantity = inventory.GetProductQuantity('A'); // Vásárlás után a darabszámnak eggyel csökkenni kell
+            var quantity = s.inventory.GetProductQuantity('A'); // Vásárlás után a darabszámnak eggyel csökkenni kell
             Assert.Equal(4, quantity);
+        }
+
+        [Fact]
+        public void ProductStorno()
+        {
+            s.RegisterProduct('B', 20, false, 5);
+            s.RegisterProduct('C', 30, false, 5);
+            var price = s.GetPrice("BCv111");
+            //var stornoValue = ... ("C" termekre);
+            Assert.Equal(27, stornoValue);
+            
         }
     }
 }
