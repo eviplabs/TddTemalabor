@@ -99,9 +99,9 @@ namespace Shopping
                 : price - (supershoppointusedtopay ? supershopPointsCalculator.GetSupershopPoints(price) : 0); 
         }
 
-        public void RegisterAmountDiscount(char name, int amount, double percent)
+        public void RegisterAmountDiscount(char name, int amount, double percent, bool clubMembershipExclusive = false)
         {
-            amountDiscounts.RegisterAmountDiscount(name, amount, percent);
+            amountDiscounts.RegisterAmountDiscount(name, amount, percent, clubMembershipExclusive);
         }
 
         public void RegisterCountDiscount(char name, int count, int bonus, bool isDiscountclubMembershipExclusive = false)

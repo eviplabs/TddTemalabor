@@ -8,14 +8,17 @@ namespace Shopping
     class AmountDiscounts
     {
         public Dictionary<char, (int amount, double percent)> Discounts { get; }
+
+        public bool clubMembershipExclusive { get; set; }
         public AmountDiscounts()
         {
             Discounts = new Dictionary<char, (int, double)>();
         }
 
-        public void RegisterAmountDiscount(char name, int amount, double percent)
+        public void RegisterAmountDiscount(char name, int amount, double percent, bool clubMembershipExclusive = false)
         {
             Discounts[name] = (amount, percent);
+            this.clubMembershipExclusive = clubMembershipExclusive;
         }
 
         public void getPrice(Dictionary<char, (int,int)> ProductCount, double price, List<Product> Products) 
