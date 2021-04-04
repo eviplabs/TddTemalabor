@@ -226,5 +226,11 @@ namespace Shopping
         {
             superShop.CouponList.Add(new CouponDiscount(couponCode, value));
         }
+        public double Storno(string cart, char product)
+        {
+            inventory.RefreshProduct(product, inventory.GetProductQuantity(product) + 1);
+            var newCart = cart.Remove(cart.IndexOf(product),1);
+            return GetPrice(cart) - GetPrice(newCart);
+        }
     }
 }

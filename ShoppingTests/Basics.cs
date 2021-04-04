@@ -362,7 +362,7 @@ namespace ShoppingTests
             s.RegisterProduct('B', 20, false, 5);
             s.RegisterProduct('C', 30, false, 5);
             var price = s.GetPrice("BCv111");
-            //var stornoValue = ... ("C" termekre);
+            var stornoValue = s.Storno("BCv111", 'C');//("C" termekre);
             Assert.Equal(27, stornoValue);
             
         }
