@@ -366,5 +366,18 @@ namespace ShoppingTests
             Assert.Equal(27, stornoValue);
             
         }
+        [Fact] void BarcodeReader()
+        {
+            s.RegisterProduct('A', 10, false, 3);
+            s.RegisterProduct('B', 20, false, 3);
+            s.RegisterProduct('C', 30, false, 3);
+            s.RegisterProduct('D', 40, false, 3);
+            s.AddToCart('A');
+            s.AddToCart('B');
+            s.AddToCart('C');
+            s.AddToCart('D');
+            //Assert.Equal(s.GetPrice("ABCD"), s.GetCartPrice()); // Ha marad a GetPrice
+            //Assert.Equal(100, s.GetCartPrice()); // Ha nem marad a GetPrice
+        }
     }
 }
