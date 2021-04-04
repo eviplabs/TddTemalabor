@@ -366,7 +366,8 @@ namespace ShoppingTests
             Assert.Equal(27, stornoValue);
             
         }
-        [Fact] void BarcodeReader()
+        [Fact]
+        void BarcodeReader()
         {
             s.RegisterProduct('A', 10, false, 3);
             s.RegisterProduct('B', 20, false, 3);
