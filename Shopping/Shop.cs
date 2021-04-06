@@ -65,10 +65,7 @@ namespace Shopping
                 {
                     price -= superShopPoints[userID].getDiscount(price);
                 }
-                if (userID != null)
-                {
-                    superShopPoints[userID].addPoints(price);
-                }
+                superShopPoints[userID].addPoints(price);
             }
             return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
         }
