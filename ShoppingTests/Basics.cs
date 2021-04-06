@@ -227,12 +227,11 @@ namespace ShoppingTests
             productList.Add(sh.products['A']);
             productList.Add(sh.products['B']);
             sh.RegisterDiscount("AB", new ComboDiscount(productList, 20));
-            productList.Remove(sh.products['B']);
             productList.Add(sh.products['C']);
-            sh.RegisterDiscount("AC", new ComboDiscount(productList, 20));
-            productList.Add(sh.products['B']);
             sh.RegisterDiscount("ABC", new ComboDiscount(productList, 20));
-            Assert.Equal(120,sh.GetPrice("ABCD"));
+            productList.Remove(sh.products['B']);
+            sh.RegisterDiscount("AC", new ComboDiscount(productList, 20));
+            Assert.Equal(120,sh.GetPrice("ABCD")); // 180 - 60
         }
         [Fact]
         public void MultipleAppliableComboDiscounts()
@@ -241,12 +240,11 @@ namespace ShoppingTests
             productList.Add(sh.products['A']);
             productList.Add(sh.products['B']);
             sh.RegisterDiscount("AB", new ComboDiscount(productList, 20));
-            productList.Remove(sh.products['B']);
             productList.Add(sh.products['C']);
-            sh.RegisterDiscount("AC", new ComboDiscount(productList, 20));
-            productList.Add(sh.products['B']);
             sh.RegisterDiscount("ABC", new ComboDiscount(productList, 20));
-            Assert.Equal(140,sh.GetPrice("AABBCD"));
+            productList.Remove(sh.products['B']);
+            sh.RegisterDiscount("AC", new ComboDiscount(productList, 20));
+            Assert.Equal(140,sh.GetPrice("AABBCD")); // 210 - 60 - 10
         }
         #endregion
     }
