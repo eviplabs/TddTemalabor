@@ -73,8 +73,7 @@ namespace Shopping
         {
             return productsInCart.Sum(i => i.Value * products[i.Key].price);
         }
-        private double GetDiscountSum(double price, ref Dictionary<char, int> productsInCart,
-                                    bool membership)
+        private double GetDiscountSum(double price, ref Dictionary<char, int> productsInCart, bool membership)
         {
             var orderedDiscounts = productDiscounts.OrderByDescending(d => d.Key.Length).ToDictionary(d => d.Key, d => d.Value);
             foreach (var dc in orderedDiscounts)

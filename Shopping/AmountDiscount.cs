@@ -27,8 +27,12 @@ namespace Shopping
         public override double getDiscount(ref Dictionary<char, int> productsInCart, bool hasMembership)
         {
             int relevants = getRelevantItemsFromCart(productsInCart, dcProduct.name);
-            removeFromCart(ref productsInCart, relevants);
-            return (relevants >= amount) ? relevants * dcProduct.price * (1 - multiplier) : 0;
+            if(relevants >= amount)
+            {
+                removeFromCart(ref productsInCart, relevants);
+                return relevants * dcProduct.price * (1 - multiplier);
+            }
+            return 0;
         }
 
         protected override void removeFromCart(ref Dictionary<char, int> productsInCart, int occurence)

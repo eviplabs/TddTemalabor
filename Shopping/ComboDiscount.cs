@@ -35,11 +35,7 @@ namespace Shopping
             foreach (var product in dcProducts)
             {
                 int currentOccurence = productsInCart[product.name];
-                if (currentOccurence == 0)
-                {
-                    return 0;
-                }
-                else if (maxOccurence > currentOccurence)
+                if (maxOccurence > currentOccurence)
                 {
                     maxOccurence = currentOccurence;
                 }

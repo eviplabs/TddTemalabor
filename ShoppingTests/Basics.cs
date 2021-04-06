@@ -223,27 +223,37 @@ namespace ShoppingTests
         [Fact]
         public void MultipleComboDiscounts()
         {
-            List<Product> productList = new List<Product>();
-            productList.Add(sh.products['A']);
-            productList.Add(sh.products['B']);
-            sh.RegisterDiscount("AB", new ComboDiscount(productList, 20));
-            productList.Add(sh.products['C']);
-            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 20));
-            productList.Remove(sh.products['B']);
-            sh.RegisterDiscount("AC", new ComboDiscount(productList, 20));
+            List<Product> productList1 = new List<Product>();
+            List<Product> productList2 = new List<Product>();
+            List<Product> productList3 = new List<Product>();
+            productList1.Add(sh.products['A']);
+            productList1.Add(sh.products['B']);
+            sh.RegisterDiscount("AB", new ComboDiscount(productList1, 20));
+            productList2.Add(sh.products['A']);
+            productList2.Add(sh.products['B']);
+            productList2.Add(sh.products['C']);
+            sh.RegisterDiscount("ABC", new ComboDiscount(productList2, 20));
+            productList3.Add(sh.products['A']);
+            productList3.Add(sh.products['C']);
+            sh.RegisterDiscount("AC", new ComboDiscount(productList3, 20));
             Assert.Equal(120,sh.GetPrice("ABCD")); // 180 - 60
         }
         [Fact]
         public void MultipleAppliableComboDiscounts()
         {
-            List<Product> productList = new List<Product>();
-            productList.Add(sh.products['A']);
-            productList.Add(sh.products['B']);
-            sh.RegisterDiscount("AB", new ComboDiscount(productList, 20));
-            productList.Add(sh.products['C']);
-            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 20));
-            productList.Remove(sh.products['B']);
-            sh.RegisterDiscount("AC", new ComboDiscount(productList, 20));
+            List<Product> productList1 = new List<Product>();
+            List<Product> productList2 = new List<Product>();
+            List<Product> productList3 = new List<Product>();
+            productList1.Add(sh.products['A']);
+            productList1.Add(sh.products['B']);
+            sh.RegisterDiscount("AB", new ComboDiscount(productList1, 20));
+            productList2.Add(sh.products['A']);
+            productList2.Add(sh.products['B']);
+            productList2.Add(sh.products['C']);
+            sh.RegisterDiscount("ABC", new ComboDiscount(productList2, 20));
+            productList3.Add(sh.products['A']);
+            productList3.Add(sh.products['C']);
+            sh.RegisterDiscount("AC", new ComboDiscount(productList3, 20));
             Assert.Equal(140,sh.GetPrice("AABBCD")); // 210 - 60 - 10
         }
         #endregion
