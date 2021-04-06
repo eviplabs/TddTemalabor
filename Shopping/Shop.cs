@@ -95,22 +95,8 @@ namespace Shopping
         }
         private Dictionary<char, int> getProductsFromCart(string shopping_cart)
         {
-            Dictionary<char, int> products_in_cart = new Dictionary<char, int>();
-            foreach(char item in shopping_cart)
-            {
-                if (char.IsUpper(item))
-                {
-                    try
-                    {
-                        products_in_cart[item]++;
-                    }
-                    catch
-                    {
-                        products_in_cart[item] = 1;
-                    }
-                }
-            }
-            return products_in_cart;
+            return shopping_cart.Where(c => char.IsUpper(c)).GroupBy(p => p)
+                            .Select(p => new { p.Key, Count = p.Count() }).ToDictionary(p => p.Key, p => p.Count);
         }
         #endregion
     }
