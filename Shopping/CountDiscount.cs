@@ -8,13 +8,15 @@ namespace Shopping
     public class CountDiscount : Discount
     {
         #region Variables
+        private Product dcProduct;
         private int required;
         private int freeItem;
         #endregion
 
         #region Init
-        public CountDiscount(int required, int freeItem)
+        public CountDiscount(Product discountedProduct, int required, int freeItem)
         {
+            dcProduct = discountedProduct;
             this.required = required;
             this.freeItem = freeItem;
         }
@@ -23,7 +25,7 @@ namespace Shopping
         #region Calculations
         public override double getDiscount(string shopping_cart, string item, int price)
         {
-            return (getRelevantItemsFromCart(shopping_cart, char.Parse(item)) / freeItem) * (freeItem - required) * price;
+            return (getRelevantItemsFromCart(shopping_cart, dcProduct.name) / freeItem) * (freeItem - required) * dcProduct.price;
         }
         #endregion
     }

@@ -9,7 +9,7 @@ namespace Shopping
     {
         #region Variables
         //Collections
-        private Dictionary<char, int> products;
+        public Dictionary<char, int> products;
         private Dictionary<string, Discount> productDiscounts;
         private Dictionary<string, SuperShop> superShopPoints;
         // Keywords
