@@ -84,14 +84,15 @@ namespace Shopping
         }
         private string GetUserID(string shopping_cart)
         {
+            string id = "";
             foreach (char c in shopping_cart)
             {
                 if (char.IsDigit(c))
                 {
-                    return c.ToString();
+                    id += c;
                 }
             }
-            return null;
+            return id;
         }
         private Dictionary<char, int> getProductsFromCart(string shopping_cart)
         {

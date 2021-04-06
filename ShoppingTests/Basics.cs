@@ -261,7 +261,7 @@ namespace ShoppingTests
         {
             sh.RegisterSuperShopCard("123");
             sh.GetPrice("ABCD123"); //180
-            Assert.Equal(178, sh.GetPrice("ABCD1p"));
+            Assert.Equal(178, sh.GetPrice("ABCD123p"));
         }
         #endregion
     }
