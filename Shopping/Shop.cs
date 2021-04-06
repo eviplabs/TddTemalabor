@@ -48,6 +48,8 @@ namespace Shopping
         {
             bool memberShip = shopping_cart.Contains(membershipKey);
             bool hasSSId = shopping_cart.Where(i => char.IsDigit(i)).Any(); // has SuperShop ID
+
+            var productsInCart = getProductsFromCart(shopping_cart);
             
             double price = GetPriceSumWithoutDiscounts(shopping_cart);
             price -= GetDiscountSum(shopping_cart);

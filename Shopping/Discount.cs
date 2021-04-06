@@ -9,6 +9,7 @@ namespace Shopping
     {
         #region Abstracts
         public abstract double getDiscount(string shopping_cart);
+        public abstract double getDiscount(Dictionary<char, int> productsInCart);
         #endregion
 
         #region Base Functions

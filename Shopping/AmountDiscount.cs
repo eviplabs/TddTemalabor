@@ -28,6 +28,11 @@ namespace Shopping
             int relevants = getRelevantItemsFromCart(shopping_cart, dcProduct.name);
             return (relevants >= amount) ? relevants * dcProduct.price * (1-multiplier) : 0;
         }
+
+        public override double getDiscount(Dictionary<char, int> productsInCart)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

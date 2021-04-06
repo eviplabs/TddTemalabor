@@ -41,6 +41,12 @@ namespace Shopping
             }
             return (dcProducts.Sum(p => p.price) - newPrice) * maxOccurence;
         }
+
+        public override double getDiscount(Dictionary<char, int> productsInCart)
+        {
+            throw new NotImplementedException();
+        }
+
         private bool areConditionsFulfilled(string shopping_cart)
         {
             if (membershipRequired && (!shopping_cart.Contains('t'))
