@@ -114,21 +114,34 @@ namespace ShoppingTests
         [Fact]
         public void RegisterComboDiscount()
         {
-            sh.RegisterDiscount("ABC", new ComboDiscount(60));
+            List<Product> productList = new List<Product>();
+            productList.Add(sh.products['A']);
+            productList.Add(sh.products['B']);
+            productList.Add(sh.products['C']);
+            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 60));
             Assert.Equal(110, sh.GetPrice("CAAAABB"));
         }
 
         [Fact]
         public void RegisterComboDiscountWithFalseDiscount()
         {
-            sh.RegisterDiscount("ABCD", new ComboDiscount(60));
+            List<Product> productList = new List<Product>();
+            productList.Add(sh.products['A']);
+            productList.Add(sh.products['B']);
+            productList.Add(sh.products['C']);
+            productList.Add(sh.products['D']);
+            sh.RegisterDiscount("ABCD", new ComboDiscount(productList, 60));
             Assert.Equal(130, sh.GetPrice("CAAAABB"));
         }
 
         [Fact]
         public void RegisterComboDiscountWithMultipleAppliableDiscounts()
         {
-            sh.RegisterDiscount("ABC", new ComboDiscount(60));
+            List<Product> productList = new List<Product>();
+            productList.Add(sh.products['A']);
+            productList.Add(sh.products['B']);
+            productList.Add(sh.products['C']);
+            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 60));
             Assert.Equal(130, sh.GetPrice("AABBCCA"));
         }
 
@@ -160,7 +173,11 @@ namespace ShoppingTests
         [Fact]
         public void ComboDiscountWithMemberShip()
         {
-            sh.RegisterDiscount("ABC", new ComboDiscount(60, true)); // 3. taggal (bool) megadható hogy a kedvezmény csak klubtagoknak jár-e
+            List<Product> productList = new List<Product>();
+            productList.Add(sh.products['A']);
+            productList.Add(sh.products['B']);
+            productList.Add(sh.products['C']);
+            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 60, true)); // 3. taggal (bool) megadható hogy a kedvezmény csak klubtagoknak jár-e
             //20+40+100=160 (comboDiscount csak tagoknak)
             Assert.Equal(160, sh.GetPrice("AABBCC"));
             //(60+60)*0,9  comboDiscount és MemberShipDiscount is
@@ -194,25 +211,41 @@ namespace ShoppingTests
         [Fact]
         public void MultipleTypeDiscounts()
         {
+            List<Product> productList = new List<Product>();
+            productList.Add(sh.products['A']);
+            productList.Add(sh.products['B']);
+            productList.Add(sh.products['C']);
             sh.RegisterDiscount("A", new AmountDiscount(sh.products['A'], 4, 0.9));
-            sh.RegisterDiscount("ABC", new ComboDiscount(50));
+            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 50));
             sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 1, 2));
             Assert.Equal(186,sh.GetPrice("AAAAAAABBBCCC")); //280 - 90 - 4 - 0
         }
         [Fact]
         public void MultipleComboDiscounts()
         {
-            sh.RegisterDiscount("AB", new ComboDiscount(20));
-            sh.RegisterDiscount("AC", new ComboDiscount(20));
-            sh.RegisterDiscount("ABC", new ComboDiscount(20));
+            List<Product> productList = new List<Product>();
+            productList.Add(sh.products['A']);
+            productList.Add(sh.products['B']);
+            sh.RegisterDiscount("AB", new ComboDiscount(productList, 20));
+            productList.Remove(sh.products['B']);
+            productList.Add(sh.products['C']);
+            sh.RegisterDiscount("AC", new ComboDiscount(productList, 20));
+            productList.Add(sh.products['B']);
+            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 20));
             Assert.Equal(120,sh.GetPrice("ABCD"));
         }
         [Fact]
         public void MultipleAppliableComboDiscounts()
         {
-            sh.RegisterDiscount("AB", new ComboDiscount(20));
-            sh.RegisterDiscount("AC", new ComboDiscount(20));
-            sh.RegisterDiscount("ABC", new ComboDiscount(20));
+            List<Product> productList = new List<Product>();
+            productList.Add(sh.products['A']);
+            productList.Add(sh.products['B']);
+            sh.RegisterDiscount("AB", new ComboDiscount(productList, 20));
+            productList.Remove(sh.products['B']);
+            productList.Add(sh.products['C']);
+            sh.RegisterDiscount("AC", new ComboDiscount(productList, 20));
+            productList.Add(sh.products['B']);
+            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 20));
             Assert.Equal(140,sh.GetPrice("AABBCD"));
         }
         #endregion

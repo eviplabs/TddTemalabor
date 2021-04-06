@@ -9,13 +9,15 @@ namespace Shopping
     public class ComboDiscount : Discount
     {
         #region Variables
+        private List<Product> dcProducts;
         private int newPrice;
         private bool membershipRequired;
         #endregion
 
         #region Init
-        public ComboDiscount(int newPrice, bool membershipRequired = false)
+        public ComboDiscount(List<Product> discountedProducts, int newPrice, bool membershipRequired = false)
         {
+            dcProducts = discountedProducts;
             this.newPrice = newPrice;
             this.membershipRequired = membershipRequired;
         }
@@ -24,14 +26,14 @@ namespace Shopping
         #region Calculations
         public override double getDiscount(string shopping_cart, string items, int price)
         {
-            if (!areConditionsFulfilled(shopping_cart, items))
+            if (!areConditionsFulfilled(shopping_cart))
             {
                 return 0;
             }
             int maxOccurence = shopping_cart.Length;
-            foreach (char item in items.ToCharArray())
+            foreach (var product in dcProducts)
             {
-                int currentOccurence = getRelevantItemsFromCart(shopping_cart, item);
+                int currentOccurence = getRelevantItemsFromCart(shopping_cart, product.name);
                 if (maxOccurence > currentOccurence)
                 {
                     maxOccurence = currentOccurence;
@@ -39,10 +41,10 @@ namespace Shopping
             }
             return (price - newPrice) * maxOccurence;
         }
-        private bool areConditionsFulfilled(string shopping_cart, string items)
+        private bool areConditionsFulfilled(string shopping_cart)
         {
             if (membershipRequired && (!shopping_cart.Contains('t'))
-                || items.ToCharArray().Where(i => !shopping_cart.Contains(i)).Any())
+                || dcProducts.Where(i => !shopping_cart.Contains(i.name)).Any())
             {
                 return false;
             }
