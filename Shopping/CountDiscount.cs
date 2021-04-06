@@ -28,7 +28,7 @@ namespace Shopping
             return (getRelevantItemsFromCart(shopping_cart, dcProduct.name) / freeItem) * (freeItem - required) * dcProduct.price;
         }
 
-        public override double getDiscount(Dictionary<char, int> productsInCart)
+        public override double getDiscount(Dictionary<char, int> productsInCart, bool hasMembership)
         {
             return (productsInCart[dcProduct.name] / freeItem) * (freeItem - required) * dcProduct.price;
         }
