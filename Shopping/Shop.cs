@@ -8,8 +8,8 @@ namespace Shopping
     public class Shop
     {
         #region Variables
-        //Collections
-        public Dictionary<char, int> products;
+        // Collections
+        public Dictionary<char, Product> products;
         private Dictionary<string, Discount> productDiscounts;
         private Dictionary<string, SuperShop> superShopPoints;
         // Keywords
@@ -20,7 +20,7 @@ namespace Shopping
         #region Init
         public Shop()
         {
-            products = new Dictionary<char, int>();
+            products = new Dictionary<char, Product>();
             productDiscounts = new Dictionary<string, Discount>();
             superShopPoints = new Dictionary<string, SuperShop>();
         }
@@ -29,7 +29,7 @@ namespace Shopping
         #region Registration
         public void RegisterProduct(char name, int price)
         {
-            products.Add(Char.ToUpper(name), price);
+            products.Add(Char.ToUpper(name), new Product(name, price));
         }
         public void RegisterDiscount(string name, Discount dc)
         {
@@ -47,14 +47,14 @@ namespace Shopping
             bool memberShip = shopping_cart.Contains(membershipKey);
             bool superShop = shopping_cart.Contains(superShopPaymentKey);
 
-            if (memberShip)
+            /*if (memberShip)
             {
                 products[membershipKey] = 0;
             }
             if (superShop)
             {
                 products[superShopPaymentKey] = 0;
-            }
+            }*/
 
             string userID = GetUserID(shopping_cart);
             double price = GetPriceSumWithoutDiscounts(shopping_cart);
@@ -77,7 +77,7 @@ namespace Shopping
         }
         private int GetPriceSumWithoutDiscounts(string shopping_cart)
         {
-            return shopping_cart.Sum(i => products[i]);
+            return shopping_cart.Sum(i => products[i].price);
         }
         private double GetDiscountSum(string shopping_cart)
         {
@@ -96,7 +96,7 @@ namespace Shopping
             {
                 if (char.IsDigit(c))
                 {
-                    products[c] = 0;
+                    // products[c] = 0;
                     return c.ToString();
                 }
             }
