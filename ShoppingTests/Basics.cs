@@ -100,14 +100,14 @@ namespace ShoppingTests
         [Fact]
         public void RegisterCountDiscount()
         {
-            sh.RegisterDiscount("A", new CountDiscount(2, 3));
+            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 2, 3));
             Assert.Equal(120, sh.GetPrice("AAAD"));
         }
 
         [Fact]
         public void RegisterCountDiscountWithoutClaimingFreeProducts()
         {
-            sh.RegisterDiscount("A", new CountDiscount(2, 3));
+            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 2, 3));
             Assert.Equal(120, sh.GetPrice("AAD"));
         }
 
@@ -196,7 +196,7 @@ namespace ShoppingTests
         {
             sh.RegisterDiscount("A", new AmountDiscount(4, 0.9));
             sh.RegisterDiscount("ABC", new ComboDiscount(50));
-            sh.RegisterDiscount("C", new CountDiscount(1, 2));
+            sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 1, 2));
             Assert.Equal(186,sh.GetPrice("AAAAAAABBBCCC")); //280 - 90 - 4 - 0
         }
         [Fact]
