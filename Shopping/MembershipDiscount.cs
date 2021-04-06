@@ -4,12 +4,11 @@ using System.Text;
 
 namespace Shopping
 {
-    class MembershipDiscount : Discount
+    class MembershipDiscount
     {
-        public override double getDiscount(string shopping_cart)
+        public double getDiscount(double price)
         {
-            // TODO return price * 0.1;
-            return 0;
+            return price * 0.1;
         }
     }
 }

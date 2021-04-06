@@ -12,6 +12,10 @@ namespace Shopping
         public Dictionary<char, Product> products;
         private Dictionary<string, Discount> productDiscounts;
         private Dictionary<string, SuperShop> superShopPoints;
+
+        // Further Discounts
+        private MembershipDiscount memberDc;
+
         // Keywords
         private const char membershipKey = 't';
         private const char superShopPaymentKey = 'p';
@@ -60,6 +64,7 @@ namespace Shopping
             double price = GetPriceSumWithoutDiscounts(shopping_cart);
 
             price -= GetDiscountSum(shopping_cart);
+            price = memberDc.getDiscount(price);
 
             int endPrice = Convert.ToInt32(Math.Round(
                 (memberShip) ? price * 0.9 : price, MidpointRounding.AwayFromZero));
