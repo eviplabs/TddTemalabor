@@ -17,7 +17,17 @@ namespace Shopping
         {
             return shopping_cart.ToCharArray().Count(c => c == item);
         }
- 
+        protected int getRelevantItemsFromCart(Dictionary<char, int> productsInCart, char item)
+        {
+            try
+            {
+                return productsInCart[item];
+            }
+            catch
+            {
+                return 0;
+            }
+        }
         #endregion
     }
 }

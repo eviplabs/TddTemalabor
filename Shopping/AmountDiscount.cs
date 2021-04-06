@@ -31,7 +31,7 @@ namespace Shopping
 
         public override double getDiscount(Dictionary<char, int> productsInCart, bool hasMembership)
         {
-            int relevants = productsInCart[dcProduct.name];
+            int relevants = getRelevantItemsFromCart(productsInCart, dcProduct.name);
             return (relevants >= amount) ? relevants * dcProduct.price * (1 - multiplier) : 0;
         }
         #endregion
