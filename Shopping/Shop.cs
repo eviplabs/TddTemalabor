@@ -56,12 +56,12 @@ namespace Shopping
             {
                 price -= MembershipDiscount.getDiscount(price);
             }
-            string userID = GetUserID(shopping_cart);
             int endPrice = Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
 
             if (hasSSId)
             {
                 bool superShopPayment = shopping_cart.Contains(superShopPaymentKey);
+                string userID = GetUserID(shopping_cart);
                 if (userID != null)
                 {
                     endPrice -= (int)superShopPoints[userID].getDiscount(shopping_cart);
