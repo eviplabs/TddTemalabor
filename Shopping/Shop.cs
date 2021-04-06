@@ -51,8 +51,8 @@ namespace Shopping
 
             var productsInCart = getProductsFromCart(shopping_cart);
             
-            double price = GetPriceSumWithoutDiscounts(shopping_cart);
-            price -= GetDiscountSum(shopping_cart);
+            double price = GetPriceSumWithoutDiscounts(productsInCart);
+            price -= GetDiscountSum(productsInCart, memberShip);
             if (memberShip)
             {
                 price -= MembershipDiscount.getDiscount(price);
@@ -72,13 +72,13 @@ namespace Shopping
             }
             return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
         }
-        private int GetPriceSumWithoutDiscounts(string shopping_cart)
+        private int GetPriceSumWithoutDiscounts(Dictionary<char, int> productsInCart)
         {
-            return shopping_cart.Where(i => char.IsUpper(i)).Sum(i => products[i].price);
+            return productsInCart.Sum(i => i.Value * products[i.Key].price);
         }
-        private double GetDiscountSum(string shopping_cart)
+        private double GetDiscountSum(Dictionary<char, int> productsInCart, bool membership)
         {
-            return productDiscounts.Sum(d => d.Value.getDiscount(shopping_cart));
+            return productDiscounts.Sum(d => d.Value.getDiscount(productsInCart, membership));
         }
         private string GetUserID(string shopping_cart)
         {
