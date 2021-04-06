@@ -56,22 +56,21 @@ namespace Shopping
             {
                 price -= MembershipDiscount.getDiscount(price);
             }
-            int endPrice = Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
 
             if (hasSSId)
             {
                 bool superShopPayment = shopping_cart.Contains(superShopPaymentKey);
                 string userID = GetUserID(shopping_cart);
-                if (userID != null)
+                if (superShopPayment)
                 {
-                    endPrice -= (int)superShopPoints[userID].getDiscount(shopping_cart);
+                    price -= superShopPoints[userID].getDiscount(price);
                 }
                 if (userID != null)
                 {
-                    superShopPoints[userID].addPoints(endPrice);
+                    superShopPoints[userID].addPoints(price);
                 }
             }
-            return endPrice;
+            return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
         }
         private int GetPriceSumWithoutDiscounts(string shopping_cart)
         {

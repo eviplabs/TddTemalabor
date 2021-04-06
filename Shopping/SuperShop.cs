@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Shopping
 {
-    class SuperShop : Discount
+    class SuperShop
     {
         private int points;
         public SuperShop()
@@ -12,24 +12,24 @@ namespace Shopping
             points = 0;
         }
 
-        public override double getDiscount(string shopping_cart)
+        public int getDiscount(double price)
         {
             int discount = 0;
-            /*if (points > price)
+            if (points > price)
             {
                 points -= (int)price;
-                discount = price;
+                discount = (int)price;
             }
             else
             {
                 discount = points;
                 points = 0;
-            }*/
+            }
             return discount;
         }
-        public int addPoints(int price)
+        public void addPoints(double price)
         {
-            return points += (int)Math.Round(0.01 * price,MidpointRounding.AwayFromZero); 
+            this.points += (int)Math.Round(0.01 * price,MidpointRounding.AwayFromZero); 
         }
     }
 }
