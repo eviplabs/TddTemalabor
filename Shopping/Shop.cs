@@ -66,7 +66,6 @@ namespace Shopping
                 price -= MembershipDiscount.getDiscount(price);
             }
             
-
             int endPrice = Convert.ToInt32(Math.Round(
                 (memberShip) ? price * 0.9 : price, MidpointRounding.AwayFromZero));
 
@@ -87,14 +86,7 @@ namespace Shopping
         }
         private double GetDiscountSum(string shopping_cart)
         {
-            double sumOfDiscounts = 0;
-            (string, Discount) selectedComboDiscount = ("", null);
-            foreach (var item in productDiscounts)
-            {
-                sumOfDiscounts += item.Value.getDiscount(shopping_cart);
-            }
-            return selectedComboDiscount.Item1.Equals("") ? sumOfDiscounts : sumOfDiscounts + selectedComboDiscount.Item2.getDiscount(shopping_cart);
-
+            return productDiscounts.Sum(d => d.Value.getDiscount(shopping_cart));
         }
         private string GetUserID(string shopping_cart)
         {
