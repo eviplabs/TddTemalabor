@@ -47,19 +47,10 @@ namespace Shopping
         public int GetPrice(string shopping_cart)
         {
             bool memberShip = shopping_cart.Contains(membershipKey);
-            bool superShop = shopping_cart.Contains(superShopPaymentKey);
-
-            /*
-            if (superShop)
-            {
-                products[superShopPaymentKey] = 0;
-            }*/
-
+            bool hasSSId = shopping_cart.Where(i => char.IsDigit(i)).Any(); // has SuperShop ID
             
             double price = GetPriceSumWithoutDiscounts(shopping_cart);
-
             price -= GetDiscountSum(shopping_cart);
-
 
             if (memberShip)
             {
@@ -68,15 +59,18 @@ namespace Shopping
             string userID = GetUserID(shopping_cart);
             int endPrice = Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
 
-            if (superShop && userID != null)
+            if (hasSSId)
             {
-                endPrice -= (int)superShopPoints[userID].getDiscount(shopping_cart);
+                bool superShopPayment = shopping_cart.Contains(superShopPaymentKey);
+                if (userID != null)
+                {
+                    endPrice -= (int)superShopPoints[userID].getDiscount(shopping_cart);
+                }
+                if (userID != null)
+                {
+                    superShopPoints[userID].addPoints(endPrice);
+                }
             }
-            if(userID != null)
-            {
-                superShopPoints[userID].addPoints(endPrice);
-            }
-
             return endPrice;
         }
         private int GetPriceSumWithoutDiscounts(string shopping_cart)
