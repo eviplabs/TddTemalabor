@@ -263,6 +263,20 @@ namespace ShoppingTests
             sh.GetPrice("ABCD123"); //180
             Assert.Equal(178, sh.GetPrice("ABCD123p"));
         }
+
+        [Fact]
+        public void ToggleDiscountOnlyForClubMembers()
+        {
+            List<Product> productList1 = new List<Product>();
+            productList1.Add(sh.products['A']);
+            productList1.Add(sh.products['B']);
+            sh.RegisterDiscount("AB", new ComboDiscount(productList1, 20, true));
+            sh.RegisterSuperShopCard("1");
+            Assert.Equal(20, sh.GetPrice("AB1"));
+            Assert.Equal(30, sh.GetPrice("AB"));
+        }
+
+
         #endregion
     }
 }
