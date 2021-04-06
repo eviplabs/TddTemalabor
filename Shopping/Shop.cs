@@ -55,7 +55,7 @@ namespace Shopping
                 products[superShopPaymentKey] = 0;
             }*/
 
-            string userID = GetUserID(shopping_cart);
+            
             double price = GetPriceSumWithoutDiscounts(shopping_cart);
 
             price -= GetDiscountSum(shopping_cart);
@@ -65,9 +65,8 @@ namespace Shopping
             {
                 price -= MembershipDiscount.getDiscount(price);
             }
-            
-            int endPrice = Convert.ToInt32(Math.Round(
-                (memberShip) ? price * 0.9 : price, MidpointRounding.AwayFromZero));
+            string userID = GetUserID(shopping_cart);
+            int endPrice = Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
 
             if (superShop && userID != null)
             {
@@ -82,7 +81,7 @@ namespace Shopping
         }
         private int GetPriceSumWithoutDiscounts(string shopping_cart)
         {
-            return shopping_cart.Sum(i => products[i].price);
+            return shopping_cart.Where(i => char.IsUpper(i)).Sum(i => products[i].price);
         }
         private double GetDiscountSum(string shopping_cart)
         {
