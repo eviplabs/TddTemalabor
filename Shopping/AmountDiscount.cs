@@ -8,13 +8,15 @@ namespace Shopping
     public class AmountDiscount : Discount
     {
         #region Variables
+        private Product dcProduct;
         private int amount;
         private double multiplier;
         #endregion
 
         #region Init
-        public AmountDiscount(int amount, double multiplier)
+        public AmountDiscount(Product discountedProduct, int amount, double multiplier)
         {
+            dcProduct = discountedProduct;
             this.amount = amount;
             this.multiplier = multiplier;
         }
@@ -23,8 +25,8 @@ namespace Shopping
         #region Calculations
         public override double getDiscount(string shopping_cart, string item, int price)
         {
-            int relevants = getRelevantItemsFromCart(shopping_cart, char.Parse(item));
-            return (relevants >= amount) ? relevants * price * (1-multiplier) : 0;
+            int relevants = getRelevantItemsFromCart(shopping_cart, dcProduct.name);
+            return (relevants >= amount) ? relevants * dcProduct.price * (1-multiplier) : 0;
         }
         #endregion
     }
