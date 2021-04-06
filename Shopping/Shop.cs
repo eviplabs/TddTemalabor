@@ -51,12 +51,10 @@ namespace Shopping
             
             double price = GetPriceSumWithoutDiscounts(shopping_cart);
             price -= GetDiscountSum(shopping_cart);
-
             if (memberShip)
             {
                 price -= MembershipDiscount.getDiscount(price);
             }
-
             if (hasSSId)
             {
                 bool superShopPayment = shopping_cart.Contains(superShopPaymentKey);
@@ -86,7 +84,6 @@ namespace Shopping
             {
                 if (char.IsDigit(c))
                 {
-                    // products[c] = 0;
                     return c.ToString();
                 }
             }
