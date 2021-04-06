@@ -256,6 +256,13 @@ namespace ShoppingTests
             sh.RegisterDiscount("AC", new ComboDiscount(productList3, 20));
             Assert.Equal(140,sh.GetPrice("AABBCD")); // 210 - 60 - 10
         }
+        [Fact]
+        public void PayingWithSuperShopCardMultiDigitID()
+        {
+            sh.RegisterSuperShopCard("123");
+            sh.GetPrice("ABCD123"); //180
+            Assert.Equal(178, sh.GetPrice("ABCD1p"));
+        }
         #endregion
     }
 }
