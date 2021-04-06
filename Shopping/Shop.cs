@@ -66,7 +66,7 @@ namespace Shopping
 
             if (superShop && userID != null)
             {
-                endPrice -= (int)superShopPoints[userID].getDiscount(shopping_cart, "", endPrice);
+                endPrice -= (int)superShopPoints[userID].getDiscount(shopping_cart);
             }
             if(userID != null)
             {
@@ -85,9 +85,9 @@ namespace Shopping
             (string, Discount) selectedComboDiscount = ("", null);
             foreach (var item in productDiscounts)
             {
-                sumOfDiscounts += item.Value.getDiscount(shopping_cart, item.Key, GetPriceSumWithoutDiscounts(item.Key));
+                sumOfDiscounts += item.Value.getDiscount(shopping_cart);
             }
-            return selectedComboDiscount.Item1.Equals("") ? sumOfDiscounts : sumOfDiscounts + selectedComboDiscount.Item2.getDiscount(shopping_cart, selectedComboDiscount.Item1, GetPriceSumWithoutDiscounts(selectedComboDiscount.Item1));
+            return selectedComboDiscount.Item1.Equals("") ? sumOfDiscounts : sumOfDiscounts + selectedComboDiscount.Item2.getDiscount(shopping_cart);
 
         }
         private string GetUserID(string shopping_cart)

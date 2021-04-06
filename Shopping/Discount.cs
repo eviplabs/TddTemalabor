@@ -8,7 +8,7 @@ namespace Shopping
     public abstract class Discount
     {
         #region Abstracts
-        public abstract double getDiscount(string shopping_cart, string items, int price);
+        public abstract double getDiscount(string shopping_cart);
         #endregion
 
         #region Base Functions

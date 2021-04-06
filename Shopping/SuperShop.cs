@@ -12,10 +12,10 @@ namespace Shopping
             points = 0;
         }
 
-        public override double getDiscount(string shopping_cart, string items, int price)
+        public override double getDiscount(string shopping_cart)
         {
             int discount = 0;
-            if (points > price)
+            /*if (points > price)
             {
                 points -= (int)price;
                 discount = price;
@@ -24,7 +24,7 @@ namespace Shopping
             {
                 discount = points;
                 points = 0;
-            }
+            }*/
             return discount;
         }
         public int addPoints(int price)

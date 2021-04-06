@@ -24,7 +24,7 @@ namespace Shopping
         #endregion
 
         #region Calculations
-        public override double getDiscount(string shopping_cart, string items, int price)
+        public override double getDiscount(string shopping_cart)
         {
             if (!areConditionsFulfilled(shopping_cart))
             {
@@ -39,7 +39,7 @@ namespace Shopping
                     maxOccurence = currentOccurence;
                 }
             }
-            return (price - newPrice) * maxOccurence;
+            return (dcProducts.Sum(p => p.price) - newPrice) * maxOccurence;
         }
         private bool areConditionsFulfilled(string shopping_cart)
         {

@@ -23,7 +23,7 @@ namespace Shopping
         #endregion
 
         #region Calculations
-        public override double getDiscount(string shopping_cart, string item, int price)
+        public override double getDiscount(string shopping_cart)
         {
             return (getRelevantItemsFromCart(shopping_cart, dcProduct.name) / freeItem) * (freeItem - required) * dcProduct.price;
         }

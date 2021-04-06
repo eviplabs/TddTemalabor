@@ -6,9 +6,10 @@ namespace Shopping
 {
     class MembershipDiscount : Discount
     {
-        public override double getDiscount(string shopping_cart, string items, int price)
+        public override double getDiscount(string shopping_cart)
         {
-            return price * 0.1;
+            // TODO return price * 0.1;
+            return 0;
         }
     }
 }
