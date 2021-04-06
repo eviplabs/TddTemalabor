@@ -24,10 +24,16 @@ namespace Shopping
 
         #region Calculations
 
-        public override double getDiscount(Dictionary<char, int> productsInCart, bool hasMembership)
+        public override double getDiscount(ref Dictionary<char, int> productsInCart, bool hasMembership)
         {
             int relevants = getRelevantItemsFromCart(productsInCart, dcProduct.name);
+            removeFromCart(ref productsInCart, relevants);
             return (relevants / freeItem) * (freeItem - required) * dcProduct.price;
+        }
+
+        protected override void removeFromCart(ref Dictionary<char, int> productsInCart, int occurence)
+        {
+            productsInCart[dcProduct.name] -= occurence;
         }
         #endregion
     }

@@ -25,7 +25,7 @@ namespace Shopping
 
         #region Calculations
 
-        public override double getDiscount(Dictionary<char, int> productsInCart, bool hasMembership)
+        public override double getDiscount(ref Dictionary<char, int> productsInCart, bool hasMembership)
         {
             if (!areConditionsFulfilled(productsInCart, hasMembership))
             {
@@ -40,7 +40,19 @@ namespace Shopping
                     maxOccurence = currentOccurence;
                 }
             }
+            removeFromCart(ref productsInCart, maxOccurence);
             return (dcProducts.Sum(p => p.price) - newPrice) * maxOccurence;
+        }
+
+        protected override void removeFromCart(ref Dictionary<char, int> productsInCart, int occurence)
+        {
+            foreach(var product in dcProducts)
+            {
+                if (productsInCart.Keys.Contains(product.name))
+                {
+                   productsInCart[product.name] -= occurence;
+                }
+            }
         }
 
         private bool areConditionsFulfilled(Dictionary<char, int> productsInCart, bool hasMembership)

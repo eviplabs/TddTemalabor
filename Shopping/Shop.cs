@@ -52,7 +52,7 @@ namespace Shopping
             var productsInCart = getProductsFromCart(shopping_cart);
             
             double price = GetPriceSumWithoutDiscounts(productsInCart);
-            price -= GetDiscountSum(productsInCart, memberShip);
+            GetDiscountSum(ref price, ref productsInCart, memberShip);
             if (memberShip)
             {
                 price -= MembershipDiscount.getDiscount(price);
@@ -73,9 +73,12 @@ namespace Shopping
         {
             return productsInCart.Sum(i => i.Value * products[i.Key].price);
         }
-        private double GetDiscountSum(Dictionary<char, int> productsInCart, bool membership)
+        private void GetDiscountSum(ref double price, ref Dictionary<char, int> productsInCart, bool membership)
         {
-            return productDiscounts.Sum(d => d.Value.getDiscount(productsInCart, membership));
+            foreach(var dc in productDiscounts)
+            {
+                price -= dc.Value.getDiscount(ref productsInCart, membership);
+            }
         }
         private string GetUserID(string shopping_cart)
         {
