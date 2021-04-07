@@ -13,6 +13,7 @@ namespace Shopping
         public Dictionary<char, Product> products;
         private Dictionary<string, Discount> productDiscounts;
         private Dictionary<string, SuperShop> superShopPoints;
+        private List<Coupon> coupons;
 
         // Keywords
         private const char superShopPaymentKey = 'p';
@@ -24,6 +25,7 @@ namespace Shopping
             products = new Dictionary<char, Product>();
             productDiscounts = new Dictionary<string, Discount>();
             superShopPoints = new Dictionary<string, SuperShop>();
+            coupons = new List<Coupon>();
         }
         #endregion
 
@@ -40,16 +42,27 @@ namespace Shopping
         { 
             superShopPoints.Add(userID, new SuperShop());
         }
+
+        public void RegisterCoupon(string code, double price)
+        {
+            coupons.Add(new Coupon(code,price));
+        }
+
         #endregion
 
         #region Calculations
         public int GetPrice(string shopping_cart)
         {
-            bool hasSSId = shopping_cart.Where(i => char.IsDigit(i)).Any(); // has SuperShop ID
-
+            bool hasSSId = false;
+            if (!shopping_cart.Contains('k'))
+            {
+                hasSSId = shopping_cart.Where(i => char.IsDigit(i)).Any(); // has SuperShop ID
+            }
             var productsInCart = getProductsFromCart(shopping_cart);
-            
             double price = GetPriceSumWithoutDiscounts(productsInCart);
+
+            
+
             price = GetDiscountSum(price, ref productsInCart, hasSSId); // ref keyword helps in keeping the changes to the variables
             if (hasSSId)
             {
@@ -62,8 +75,27 @@ namespace Shopping
                 }
                 superShopPoints[userID].addPoints(price);
             }
+            price = CouponDiscount(shopping_cart, price);
             return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
         }
+
+        public double CouponDiscount(string shopping_cart, double price)
+        {
+            string codeInCart = shopping_cart.Substring(shopping_cart.IndexOf('k') + 1);
+
+            foreach (var coupon in coupons)
+            {
+                if (coupon.code==codeInCart)
+                {
+                    price *= coupon.value;
+                    coupons.Remove(coupon);
+                    return price;
+                }
+            }
+
+            return price;
+        }
+
         private int GetPriceSumWithoutDiscounts(Dictionary<char, int> productsInCart)
         {
             return productsInCart.Sum(i => i.Value * products[i.Key].price);

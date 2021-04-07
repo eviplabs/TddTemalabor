@@ -285,8 +285,6 @@ namespace ShoppingTests
         [Fact]
         public void RegisterCouponDiscount()
         {
-            sh.RegisterProduct('A', 10);
-            sh.RegisterProduct('B', 20);
             sh.RegisterCoupon("112554", 0.9); //10% kupon
             Assert.Equal(40*0.9, sh.GetPrice("AABk112554"));
             Assert.Equal(40, sh.GetPrice("AABk112554"));
