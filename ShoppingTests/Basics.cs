@@ -289,6 +289,15 @@ namespace ShoppingTests
             Assert.Equal(40*0.9, sh.GetPrice("AABk112554"));
             Assert.Equal(40, sh.GetPrice("AABk112554"));
         }
+
+        [Fact]
+        public void MoreOfTheSameProductByNumber()
+        {
+            Assert.Equal(230, sh.GetPrice("A2B8C"));
+            //10*2+20*8+50=230
+        }
+
+
         #endregion
     }
 }
