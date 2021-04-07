@@ -15,7 +15,6 @@ namespace Shopping
         private Dictionary<string, SuperShop> superShopPoints;
 
         // Keywords
-        private const char membershipKey = 't';
         private const char superShopPaymentKey = 'p';
         #endregion
 
@@ -46,21 +45,17 @@ namespace Shopping
         #region Calculations
         public int GetPrice(string shopping_cart)
         {
-            bool memberShip = shopping_cart.Contains(membershipKey);
             bool hasSSId = shopping_cart.Where(i => char.IsDigit(i)).Any(); // has SuperShop ID
 
             var productsInCart = getProductsFromCart(shopping_cart);
             
             double price = GetPriceSumWithoutDiscounts(productsInCart);
-            price = GetDiscountSum(price, ref productsInCart, memberShip); // ref keyword helps in keeping the changes to the variables
-            if (memberShip)
-            {
-                price -= MembershipDiscount.getDiscount(price);
-            }
+            price = GetDiscountSum(price, ref productsInCart, hasSSId); // ref keyword helps in keeping the changes to the variables
             if (hasSSId)
             {
                 bool superShopPayment = shopping_cart.Contains(superShopPaymentKey);
                 string userID = GetUserID(shopping_cart);
+                price -= superShopPoints[userID].getMembershipDiscount(price);
                 if (superShopPayment)
                 {
                     price -= superShopPoints[userID].getDiscount(price);

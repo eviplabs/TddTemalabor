@@ -20,12 +20,22 @@ namespace Shopping
             this.amount = amount;
             this.multiplier = multiplier;
         }
+        public AmountDiscount(Product discountedProduct, int amount, double multiplier, bool membershipNeeded) :base(membershipNeeded)
+        {
+            dcProduct = discountedProduct;
+            this.amount = amount;
+            this.multiplier = multiplier;
+        }
         #endregion
 
         #region Calculations
 
         public override double getDiscount(ref Dictionary<char, int> productsInCart, bool hasMembership)
         {
+            if (CheckIfIsnNotEligible(hasMembership))
+            {
+                return 0;
+            }
             int relevants = getRelevantItemsFromCart(productsInCart, dcProduct.name);
             if(relevants >= amount)
             {

@@ -11,15 +11,17 @@ namespace Shopping
         {
             points = 0;
         }
-
-        public int getDiscount(double price)
+        public double getMembershipDiscount(double price)
         {
-            price *= 0.1;
-            int discount = 0;
+            return price * 0.1;
+        }
+        public double getDiscount(double price)
+        {
+            double discount = 0;
             if (points > price)
             {
                 points -= (int)price;
-                discount = (int)price;
+                discount = price;
             }
             else
             {

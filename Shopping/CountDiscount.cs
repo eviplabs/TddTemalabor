@@ -20,12 +20,22 @@ namespace Shopping
             this.required = required;
             this.freeItem = freeItem;
         }
+        public CountDiscount(Product discountedProduct, int required, int freeItem, bool membershipNeeded) : base(membershipNeeded)
+        {
+            dcProduct = discountedProduct;
+            this.required = required;
+            this.freeItem = freeItem;
+        }
         #endregion
 
         #region Calculations
 
         public override double getDiscount(ref Dictionary<char, int> productsInCart, bool hasMembership)
         {
+            if (CheckIfIsnNotEligible(hasMembership))
+            {
+                return 0;
+            }
             int relevants = getRelevantItemsFromCart(productsInCart, dcProduct.name);
             if (relevants >= freeItem)
             {
