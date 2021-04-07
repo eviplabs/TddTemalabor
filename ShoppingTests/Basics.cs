@@ -265,18 +265,32 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void ToggleDiscountOnlyForClubMembers()
+        public void ToggleDiscountOnlyForClubMembersCombo()
         {
             List<Product> productList1 = new List<Product>();
             productList1.Add(sh.products['A']);
             productList1.Add(sh.products['B']);
             sh.RegisterDiscount("AB", new ComboDiscount(productList1, 20, true));
             sh.RegisterSuperShopCard("1");
-            Assert.Equal(20, sh.GetPrice("AB1"));
+            Assert.Equal(18, sh.GetPrice("AB1"));
             Assert.Equal(30, sh.GetPrice("AB"));
         }
-
-
+        [Fact]
+        public void ToggleDiscountOnlyForClubMembersAmount()
+        {
+            sh.RegisterDiscount("A", new AmountDiscount(sh.products['A'], 5, 0.9, true));
+            sh.RegisterSuperShopCard("1");
+            Assert.Equal(40, sh.GetPrice("AAAAA1"));
+            Assert.Equal(50, sh.GetPrice("AAAAA"));
+        }
+        [Fact]
+        public void ToggleDiscountOnlyForClubMembersCount()
+        {
+            sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 1, 2, true));
+            sh.RegisterSuperShopCard("1");
+            Assert.Equal(9, sh.GetPrice("AA1"));
+            Assert.Equal(20, sh.GetPrice("AA"));
+        }
         #endregion
     }
 }
