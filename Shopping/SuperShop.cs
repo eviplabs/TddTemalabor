@@ -14,6 +14,7 @@ namespace Shopping
 
         public int getDiscount(double price)
         {
+            price *= 0.1;
             int discount = 0;
             if (points > price)
             {
