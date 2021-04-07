@@ -14,13 +14,7 @@ namespace Shopping
         #endregion
 
         #region Init
-        public CountDiscount(Product discountedProduct, int required, int freeItem)
-        {
-            dcProduct = discountedProduct;
-            this.required = required;
-            this.freeItem = freeItem;
-        }
-        public CountDiscount(Product discountedProduct, int required, int freeItem, bool membershipNeeded) : base(membershipNeeded)
+        public CountDiscount(Product discountedProduct, int required, int freeItem, bool membershipRequired = false) : base(membershipRequired)
         {
             dcProduct = discountedProduct;
             this.required = required;

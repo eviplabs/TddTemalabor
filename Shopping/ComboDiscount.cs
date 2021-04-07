@@ -11,15 +11,13 @@ namespace Shopping
         #region Variables
         private List<Product> dcProducts;
         private int newPrice;
-        private bool membershipRequired;
         #endregion
 
         #region Init
-        public ComboDiscount(List<Product> discountedProducts, int newPrice, bool membershipRequired = false)
+        public ComboDiscount(List<Product> discountedProducts, int newPrice, bool membershipRequired = false) : base(membershipRequired)
         {
             dcProducts = discountedProducts;
             this.newPrice = newPrice;
-            this.membershipRequired = membershipRequired;
         }
         #endregion
 

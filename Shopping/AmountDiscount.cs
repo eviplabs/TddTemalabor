@@ -14,13 +14,7 @@ namespace Shopping
         #endregion
 
         #region Init
-        public AmountDiscount(Product discountedProduct, int amount, double multiplier)
-        {
-            dcProduct = discountedProduct;
-            this.amount = amount;
-            this.multiplier = multiplier;
-        }
-        public AmountDiscount(Product discountedProduct, int amount, double multiplier, bool membershipNeeded) :base(membershipNeeded)
+        public AmountDiscount(Product discountedProduct, int amount, double multiplier, bool membershipRequired = false) :base(membershipRequired)
         {
             dcProduct = discountedProduct;
             this.amount = amount;

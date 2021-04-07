@@ -8,24 +8,24 @@ namespace Shopping
 {
     public abstract class Discount
     {
+        protected bool membershipRequired;
         #region Abstracts
         public abstract double getDiscount(ref Dictionary<char, int> productsInCart, bool hasMembership);
         protected abstract void removeFromCart(ref Dictionary<char, int> productsInCart, int occurence);
         #endregion
 
         #region Init
-        public Discount(bool membershipNeeded = false)
+        public Discount(bool membershipRequired = false)
         {
-            this.membershipNeeded = membershipNeeded;
+            this.membershipRequired = membershipRequired;
         }
-        protected bool membershipNeeded;
         #endregion
 
         #region Base Functions
         
         protected bool CheckIfIsnNotEligible(bool hasMembership)
         {
-            return !hasMembership && membershipNeeded;
+            return !hasMembership && membershipRequired;
         }
         protected int getRelevantItemsFromCart(Dictionary<char, int> productsInCart, char item)
         {
