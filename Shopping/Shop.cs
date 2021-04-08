@@ -53,21 +53,17 @@ namespace Shopping
         #region Calculations
         public int GetPrice(string shopping_cart)
         {
-            bool hasSSId = false;
-            if (!shopping_cart.Contains('k'))
-            {
-                hasSSId = shopping_cart.Where(i => char.IsDigit(i)).Any(); // has SuperShop ID
-            }
+            string userID = GetUserID(shopping_cart);
+            bool hasSSId = userID != "";
+            shopping_cart = shopping_cart.Replace("v" + userID, "");
+
             var productsInCart = getProductsFromCart(shopping_cart);
             double price = GetPriceSumWithoutDiscounts(productsInCart);
-
-            
 
             price = GetDiscountSum(price, ref productsInCart, hasSSId); // ref keyword helps in keeping the changes to the variables
             if (hasSSId)
             {
                 bool superShopPayment = shopping_cart.Contains(superShopPaymentKey);
-                string userID = GetUserID(shopping_cart);
                 price -= superShopPoints[userID].getMembershipDiscount(price);
                 if (superShopPayment)
                 {
@@ -112,11 +108,19 @@ namespace Shopping
         private string GetUserID(string shopping_cart)
         {
             string id = "";
-            foreach (char c in shopping_cart)
+            int indexInCart = shopping_cart.IndexOf('v');
+            if (indexInCart != -1)   //'v' found in shopping_cart
             {
-                if (char.IsDigit(c))
+                foreach (char c in shopping_cart.Substring(indexInCart + 1))
                 {
-                    id += c;
+                    if (char.IsDigit(c))
+                    {
+                        id += c;
+                    }
+                    else
+                    {
+                        break; //after the UID there can be products / other things
+                    }
                 }
             }
             return id;

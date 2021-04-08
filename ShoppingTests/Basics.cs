@@ -157,7 +157,7 @@ namespace ShoppingTests
         public void ClubMemberShipDiscount()
         {
             sh.RegisterSuperShopCard("1");
-            Assert.Equal(18, sh.GetPrice("B1"));
+            Assert.Equal(18, sh.GetPrice("Bv1"));
         }
         
         [Fact]
@@ -172,32 +172,32 @@ namespace ShoppingTests
             //20+40+100=160 (comboDiscount csak tagoknak)
             Assert.Equal(160, sh.GetPrice("AABBCC"));
             //(60+60)*0,9  comboDiscount és MemberShipDiscount is
-            Assert.Equal(108, sh.GetPrice("AABBCC1"));
+            Assert.Equal(108, sh.GetPrice("AABBCCv1"));
         }
 
         [Fact]
         public void PayingWithSuperShopCard()
         {
             sh.RegisterSuperShopCard("1");
-            sh.GetPrice("ABCD1"); //180
-            Assert.Equal(160, sh.GetPrice("ABCD1p"));
+            sh.GetPrice("ABCDv1"); //180
+            Assert.Equal(160, sh.GetPrice("ABCDv1p"));
         }
 
         [Fact]
         public void PayingWithSuperShopCardWithoutPoints()
         {
             sh.RegisterSuperShopCard("1");
-            sh.GetPrice("A1"); //ezért 0 pont jár
-            Assert.Equal(162, sh.GetPrice("ABCD1p"));
+            sh.GetPrice("Av1"); //ezért 0 pont jár
+            Assert.Equal(162, sh.GetPrice("ABCDv1p"));
         }
 
         [Fact]
         public void PayingWithSuperShopCardRemainingPoints()
         {
             sh.RegisterSuperShopCard("1");
-            sh.GetPrice("DDDDDDDDDDD1"); //1100
-            Assert.Equal(0, sh.GetPrice("A1p")); //1 pontja marad, de az ár 0
-            Assert.Equal(8, sh.GetPrice("A1p"));
+            sh.GetPrice("DDDDDDDDDDDv1"); //1100
+            Assert.Equal(0, sh.GetPrice("Av1p")); //1 pontja marad, de az ár 0
+            Assert.Equal(8, sh.GetPrice("Av1p"));
         }
         [Fact]
         public void MultipleTypeDiscounts()
@@ -251,8 +251,8 @@ namespace ShoppingTests
         public void PayingWithSuperShopCardMultiDigitID()
         {
             sh.RegisterSuperShopCard("123");
-            sh.GetPrice("ABCD123"); //180
-            Assert.Equal(160, sh.GetPrice("ABCD123p"));
+            sh.GetPrice("ABCDv123"); //180
+            Assert.Equal(160, sh.GetPrice("ABCDv123p"));
         }
 
         [Fact]
@@ -263,7 +263,7 @@ namespace ShoppingTests
             productList1.Add(sh.products['B']);
             sh.RegisterDiscount("AB", new ComboDiscount(productList1, 20, true));
             sh.RegisterSuperShopCard("1");
-            Assert.Equal(18, sh.GetPrice("AB1"));
+            Assert.Equal(18, sh.GetPrice("ABv1"));
             Assert.Equal(30, sh.GetPrice("AB"));
         }
         [Fact]
@@ -271,7 +271,7 @@ namespace ShoppingTests
         {
             sh.RegisterDiscount("A", new AmountDiscount(sh.products['A'], 5, 0.9, true));
             sh.RegisterSuperShopCard("1");
-            Assert.Equal(41, sh.GetPrice("AAAAA1"));
+            Assert.Equal(41, sh.GetPrice("AAAAAv1"));
             Assert.Equal(50, sh.GetPrice("AAAAA"));
         }
         [Fact]
@@ -279,7 +279,7 @@ namespace ShoppingTests
         {
             sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 1, 2, true));
             sh.RegisterSuperShopCard("1");
-            Assert.Equal(9, sh.GetPrice("AA1"));
+            Assert.Equal(9, sh.GetPrice("AAv1"));
             Assert.Equal(20, sh.GetPrice("AA"));
         }
         [Fact]
