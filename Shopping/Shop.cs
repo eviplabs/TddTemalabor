@@ -14,6 +14,7 @@ namespace Shopping
         private ComboDiscountCalculator comboDiscountCalculator;
         private SupershopPointsCalculator supershopPointsCalculator;
         private List<SuperShopPoint> SupershopPoints;
+        private CouponCalculator CouponCalculator;
         public Shop()
         {
             Products = new List<Product>();
@@ -22,6 +23,7 @@ namespace Shopping
             comboDiscountCalculator = new ComboDiscountCalculator();
             supershopPointsCalculator = new SupershopPointsCalculator();
             SupershopPoints = new List<SuperShopPoint>();
+            CouponCalculator = new CouponCalculator();
         }
         public void RegisterProduct(char name, int price) 
         {
@@ -50,6 +52,12 @@ namespace Shopping
                 clubmember = true;
                 name = name.Replace(customer.Value, "");
                 id = customer.Groups[1].Value.ToInt();
+            }
+            Match couponmatch = Regex.Match(name, @"[k]([\d]+)");
+            if (couponmatch.Success)
+            {
+                name = name.Replace(couponmatch.Value, "");
+                CouponCalculator.setActiveCoupon(couponmatch.Groups[1].Value.ToInt());
             }
             if (name.Any(char.IsDigit))
             {
@@ -94,6 +102,7 @@ namespace Shopping
             {
                 supershopPointsCalculator.AddSupershopPoint(id, price);
             }
+            price =CouponCalculator.ActivateCoupon(price);
 
             return clubmember ? price * 0.9 - (supershoppointusedtopay ? supershopPointsCalculator.GetSupershopPoints(price): 0)
                 : price - (supershoppointusedtopay ? supershopPointsCalculator.GetSupershopPoints(price) : 0); 
@@ -115,6 +124,10 @@ namespace Shopping
 
         public double GetSupershopPoints(double price) {
             return supershopPointsCalculator.GetSupershopPoints(price);
+        }
+
+        public void RegisterCoupon(string id, double Discount) {
+            CouponCalculator.registerCoupon(Convert.ToInt32(id), Discount);
         }
     }
 }
