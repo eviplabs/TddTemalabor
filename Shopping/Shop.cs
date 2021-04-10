@@ -232,5 +232,10 @@ namespace Shopping
             var newCart = cart.Remove(cart.IndexOf(product),1);
             return GetPrice(cart) - GetPrice(newCart);
         }
+
+        public void AddToCart(char v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
