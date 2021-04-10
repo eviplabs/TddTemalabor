@@ -15,6 +15,7 @@ namespace Shopping
         private HashSet<char> weighBasedProducts = new HashSet<char>();
         private SuperShop superShop = new SuperShop();
         public InMemoryInventory inventory = new InMemoryInventory();
+        public Dictionary<char, int> cart = new Dictionary<char, int>();
 
 
         public bool ProductRegistered(char name)
@@ -233,9 +234,20 @@ namespace Shopping
             return GetPrice(cart) - GetPrice(newCart);
         }
 
-        public void AddToCart(char v)
+        public void AddToCart(char product)
         {
-            throw new NotImplementedException();
+            int price = productPrices[product];
+            cart.Add(product, price);
+        }
+
+        public double GetCartPrice()
+        {
+            double price = 0;
+            foreach (var item in cart)
+            {
+                price += item.Value;
+            }
+            return price;
         }
     }
 }

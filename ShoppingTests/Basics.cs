@@ -377,8 +377,7 @@ namespace ShoppingTests
             s.AddToCart('B');
             s.AddToCart('C');
             s.AddToCart('D');
-            //Assert.Equal(s.GetPrice("ABCD"), s.GetCartPrice()); // Ha marad a GetPrice
-            //Assert.Equal(100, s.GetCartPrice()); // Ha nem marad a GetPrice
+            Assert.Equal(s.GetPrice("ABCD"), s.GetCartPrice()); // Ha marad a GetPrice
         }
     }
 }
