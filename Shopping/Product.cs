@@ -10,12 +10,15 @@ namespace Shopping
 
         public char Name { get; set; }
 
+        public bool Weighted { get; set; }
+
         public Product(){}
 
-        public Product(char name,int price)
+        public Product(char name,double price, bool weighted = false)
         {
-            this.Price = price;
+            this.Price = weighted ? price / 1000 : price;
             this.Name = name;
+            this.Weighted = weighted;
         }
     }
 }

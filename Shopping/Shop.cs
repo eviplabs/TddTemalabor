@@ -25,9 +25,9 @@ namespace Shopping
             SupershopPoints = new List<SuperShopPoint>();
             CouponCalculator = new CouponCalculator();
         }
-        public void RegisterProduct(char name, int price) 
+        public void RegisterProduct(char name, double price, bool weighted = false) 
         {
-            Products.Add(new Product(name, price));
+            Products.Add(new Product(name, price, weighted));
         }
 
         public double GetPrice(string name) 
