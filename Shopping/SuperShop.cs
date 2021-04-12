@@ -68,11 +68,7 @@ namespace Shopping
             var result = new Regex(@"(\d+)").Match(name);
             if (result.Success)
             {
-                int userid = int.Parse(result.Value);
-                if (!supershopPoints.ContainsKey(userid))
-                {
-                    //Itt tul keso hozzaadni.
-                }
+                int userid = int.Parse(result.Value);                
                 supershopPoints[userid] += Convert.ToInt32(price) / 100;
             }
         }
@@ -88,14 +84,9 @@ namespace Shopping
             else
             {
                 int userid = int.Parse(result.Value);
-                if (supershopPoints[userid] > price)
-                {
-                    supershopPoints[userid] -= Convert.ToInt32(price);
-                    return 0; //A vevőnek több pontja van, mint a kosár ára, ezért csak a pontjaival fizet
-                }
-                price -= supershopPoints[userid]; //Ha van a vevőnek pontja levonja, ha nincs akkor nem csinál semmit.
-                supershopPoints[userid] = 0; //Volt a vevőnek pontja, nullázza, ha nem akkor nem csinál semmit.
-                return price; //A vevő pontjaival frissített ár
+                double newPrice = Math.Max(0, price - supershopPoints[userid]);
+                supershopPoints[userid] = Math.Max(0, supershopPoints[userid] - Convert.ToInt32(price));
+                return newPrice; //A vevő pontjaival frissített ár
             }
         }
 

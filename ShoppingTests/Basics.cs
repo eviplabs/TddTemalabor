@@ -243,27 +243,22 @@ namespace ShoppingTests
             var price = s.GetPrice("AACDDGv123");
             Assert.Equal(180, price); //A helyes osszeg a funkcio valtozasa miatt megvaltozott.
 
-            s.RegisterProduct('A', 10);
-            s.RegisterProduct('B', 20);
-            s.RegisterProduct('C', 30);
-            s.RegisterProduct('D', 40);
-            s.RegisterProduct('E', 50);
-            s.RegisterProduct('F', 60);
-            s.RegisterProduct('G', 70);
             // 1-es user vásárol, fel is használja az 1 pontot.
             var price2 = s.GetPrice("AACDDGv1p");
             Assert.Equal(179, price2);
-
-            s.RegisterProduct('A', 10);
-            s.RegisterProduct('B', 20);
-            s.RegisterProduct('C', 30);
-            s.RegisterProduct('D', 40);
-            s.RegisterProduct('E', 50);
-            s.RegisterProduct('F', 60);
-            s.RegisterProduct('G', 70);
             // 123-as user vásárol és fel is használja a pontokat, 1 + 1 pontot (előző vásárlásból)
             var price3 = s.GetPrice("AACDDGv123p");
             Assert.Equal(178, price3);//200 helyett 180 az ar a 10% alapkedvezmeny miatt, es arra jon ra 1-1 pont, ami levonodik.
+
+            // 123-as user 185 pontot gyűjt
+            for (int i = 1; i <= 185; i++)
+            {
+                s.GetPrice("AACDDGv123");
+            }
+            // 123-as user vásárol és fel is használja a pontokat, 185 + 1 pontot (előző vásárlásból)
+            var price4 = s.GetPrice("AACDDGv123p");
+            Assert.Equal(0, price4);
+            Assert.Equal(6, s.superShop.CustomerPoints[123]);
         }
 
         [Fact]

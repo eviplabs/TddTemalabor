@@ -13,7 +13,7 @@ namespace Shopping
         private Dictionary<char, CountDiscount> countDiscounts = new Dictionary<char, CountDiscount>();
         private List<ComboDiscount> comboDiscounts = new List<ComboDiscount>();
         private HashSet<char> weighBasedProducts = new HashSet<char>();
-        private SuperShop superShop = new SuperShop();
+        public SuperShop superShop = new SuperShop();
         public InMemoryInventory inventory = new InMemoryInventory();
         public Dictionary<char, int> cart = new Dictionary<char, int>();
 
