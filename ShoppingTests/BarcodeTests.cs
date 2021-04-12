@@ -19,5 +19,16 @@ namespace ShoppingTests
             Assert.Equal(price, price2);
 
         }
+
+        [Fact]
+        public void getPriceFromWeight() 
+        {
+            Shop.RegisterProduct('A', 10, false);
+            Shop.RegisterProduct('B', 100, true); //kilo ár 
+            Shop.RegisterProduct('C', 30, false);
+            var price = Shop.GetPrice("AB1200C");
+            Assert.Equal(160, price);
+            //10+100*1.2+30 = 160
+        }
     }
 }
