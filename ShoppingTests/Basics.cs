@@ -24,8 +24,8 @@ namespace ShoppingTests
         {
             s.RegisterProduct('A', 10);
             s.RegisterProduct('C', 20);
-            s.RegisterProduct('E', 50);
-            var price = s.GetPrice("AACEE");
+            s.RegisterProduct('Z', 50);
+            var price = s.GetPrice("AACZZ");
             Assert.Equal(140, price);
         }
 
@@ -43,7 +43,7 @@ namespace ShoppingTests
         public void RegistrationOfProductWithInvalidName()
         {
             Assert.False(s.RegisterProduct('@', 10)); //'@'='A'-1            
-            Assert.False(s.RegisterProduct('[', 10)); //'['='Z'+1            
+            Assert.False(s.RegisterProduct('[', 10)); //'['='Z'+1
         }
 
         [Fact]
@@ -150,6 +150,9 @@ namespace ShoppingTests
             s.RegisterComboDiscount("ABC", 55, false);     //Módosítottam a teszten, mert sehol nem kérték, hogy több kombó is legyen egyszerre.
             var price = s.GetPrice("ABCDEFG");
             Assert.Equal(275, price);
+
+            price = s.GetPrice("ABD");
+            Assert.Equal(70, price);
         }
 
         [Fact]
