@@ -59,6 +59,7 @@ namespace Shopping
                 name = name.Replace(couponmatch.Value, "");
                 CouponCalculator.setActiveCoupon(couponmatch.Groups[1].Value.ToInt());
             }
+            name = BarcodeHandler(name);
             if (name.Any(char.IsDigit))
             {
                 string path = "";
@@ -128,6 +129,22 @@ namespace Shopping
 
         public void RegisterCoupon(string id, double Discount) {
             CouponCalculator.registerCoupon(Convert.ToInt32(id), Discount);
+        }
+
+        private string BarcodeHandler(string name)
+        {
+            MatchCollection barcodeMatches = Regex.Matches(name, @"(\w)([\d]+)");
+            foreach (Match match in barcodeMatches)
+            {
+                GroupCollection groups = match.Groups;
+                string replace = "";
+                for (int i = 0; i < Convert.ToInt32(groups[2].Value); i++)
+                {
+                    replace += groups[1].Value;
+                }
+                name = name.Replace(match.ToString(), replace);
+            }
+            return name;
         }
     }
 }
