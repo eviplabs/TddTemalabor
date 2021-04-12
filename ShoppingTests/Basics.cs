@@ -349,6 +349,10 @@ namespace ShoppingTests
             var price = s.GetPrice("AB");
             var quantity = s.inventory.GetProductQuantity('A'); // Vásárlás után a darabszámnak eggyel csökkenni kell
             Assert.Equal(4, quantity);
+
+            s.GetPrice("AAAA");
+            quantity = s.inventory.GetProductQuantity('A');
+            Assert.Equal(0, quantity);
         }
 
         [Fact]
