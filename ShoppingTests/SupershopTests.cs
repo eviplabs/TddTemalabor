@@ -20,7 +20,7 @@ namespace ShoppingTests
             Assert.Equal(1, points);
         }
 
-        [Fact]
+        [Fact (Skip = "skipped due to CRDP012")]
         public void AddPointsToSupershopCardMoreNumberInProductsName()
         {
             Shop.RegisterProduct('A', 20);
@@ -52,8 +52,8 @@ namespace ShoppingTests
             Shop.RegisterProduct('B', 30);
             Shop.RegisterProduct('C', 50);
 
-            var price = Shop.GetPrice("ABCp230");
-            Assert.Equal(99, price);
+            var price = Shop.GetPrice("ABCpv230");
+            Assert.Equal(89, price);
         }
 
         [Fact (Skip = "skipped due to CRDP09")]
