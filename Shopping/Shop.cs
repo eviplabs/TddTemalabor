@@ -16,6 +16,7 @@ namespace Shopping
         public SuperShop superShop = new SuperShop();
         public InMemoryInventory inventory = new InMemoryInventory();
         public Dictionary<char, int> cart = new Dictionary<char, int>();
+        public IWeightScale weightScale = new WeightScale();
 
 
         public bool ProductRegistered(char name)

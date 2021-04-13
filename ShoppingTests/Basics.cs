@@ -381,5 +381,16 @@ namespace ShoppingTests
             s.AddToCart('D');
             Assert.Equal(s.GetPrice("ABCD"), s.GetCartPrice()); // Ha marad a GetPrice
         }
+
+        [Fact]
+        public void BarCodeReaderAndWeightScale()
+        {
+            s.RegisterProduct('A', 10);
+            s.RegisterProduct('B', 20, true);
+            s.AddToCart('A');
+            s.AddToCart('B'); // addToCart()-ban le kell merni a sulyt
+            string weightOfProductB = s.weightScale.LastMeasuredValue.ToString();            
+            Assert.Equal(s.GetPrice("AB"+weightOfProductB), s.GetCartPrice()); 
+        }
     }
 }
