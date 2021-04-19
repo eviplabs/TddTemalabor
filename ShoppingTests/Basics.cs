@@ -296,6 +296,12 @@ namespace ShoppingTests
             Assert.Equal(230, sh.GetPrice("A2B8C"));
             //10*2+20*8+50=230
         }
+        [Fact]
+        public void PriceByWeight()
+        {
+            sh.RegisterProduct('Q', 40); // Legyen 40/100g
+            Assert.Equal(580,sh.GetPrice("Q1200C")); // 1200/100=12. 12*40=480. 480+100=580.
+        }
 
 
         #endregion
