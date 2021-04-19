@@ -59,38 +59,6 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void ClubMemberShipDiscount()
-        {
-            sh.RegisterSuperShopCard("1");
-            Assert.Equal(18, sh.GetPrice("Bv1"));
-            AssertPrice(18, "Bv1");
-        }
-        
-        [Fact]
-        public void PayingWithSuperShopCard()
-        {
-            sh.RegisterSuperShopCard("1");
-            sh.GetPrice("ABCDv1"); //180
-            AssertPrice(160, "ABCDv1p");
-        }
-
-        [Fact]
-        public void PayingWithSuperShopCardWithoutPoints()
-        {
-            sh.RegisterSuperShopCard("1");
-            sh.GetPrice("Av1"); // ezért 0 pont jár
-            AssertPrice(162, "ABCDv1p");
-        }
-
-        [Fact]
-        public void PayingWithSuperShopCardRemainingPoints()
-        {
-            sh.RegisterSuperShopCard("1");
-            sh.GetPrice("DDDDDDDDDDDv1"); //1100
-            AssertPrice(0, "Av1p");//1 pontja marad, de az ár 0
-            AssertPrice(8, "Av1p");
-        }
-        [Fact]
         public void MultipleTypeDiscounts()
         {
             List<Product> productList = new List<Product>();
@@ -101,15 +69,6 @@ namespace ShoppingTests
             sh.RegisterDiscount("ABC", new ComboDiscount(productList, 50));
             sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 1, 2));
             AssertPrice(186, "AAAAAAABBBCCC"); //280 - 90 - 4 - 0
-        }
-
-
-        [Fact]
-        public void PayingWithSuperShopCardMultiDigitID()
-        {
-            sh.RegisterSuperShopCard("123");
-            sh.GetPrice("ABCDv123"); //180
-            AssertPrice(160, "ABCDv123p");
         }
 
         [Fact]
