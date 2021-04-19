@@ -17,8 +17,8 @@ namespace Shopping
         }
         public double processSuperShop(double price, bool sspay)
         {
-            double discount = price * 0.1;
-            price *= 0.9;
+            double discount = getClubDiscount(price);
+            price -= discount;
             if (sspay)
             {
                 if (points > price)
@@ -35,6 +35,10 @@ namespace Shopping
             }
             points += addPoints(price - discount);
             return discount;
+        }
+        private double getClubDiscount(double price)
+        {
+            return price * 0.1;
         }
         private int addPoints(double price)
         {
