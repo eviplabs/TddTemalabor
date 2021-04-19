@@ -54,11 +54,14 @@ namespace ShoppingTests
             sh.RegisterProduct('Q', 40); // Legyen 40/100g
             AssertPrice(580, "Q1200C"); // 1200/100=12. 12*40=480. 480+100=580.
         }
-        [Fact]
-        public void MoreOfTheSameProductByNumber()
+        [Theory]
+        [InlineData(280, "AB16C")]
+        [InlineData(1280, "A4B2C20DD")]
+        [InlineData(460, "AABBC2DDD")]
+        [InlineData(1080, "A100ABC")]
+        public void MoreOfTheSameProductByNumber(int expected, string cart)
         {
-            AssertPrice(230, "A2B8C");
-            //10*2+20*8+50=230
+            AssertPrice(expected, cart);
         }
     }
 }
