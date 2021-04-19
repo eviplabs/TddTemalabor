@@ -52,20 +52,6 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void AccuratePriceCalculation()
-        {
-            AssertPrice(120, "AAABBC");
-        }
-
-        [Fact]
-        public void AccuratePriceCalculationWithoutPreRegisteredProducts()
-        {
-            sh.RegisterProduct('G', 30);
-            sh.RegisterProduct('E', 60);
-            AssertPrice(230, "BGGGEE");
-        }
-
-        [Fact]
         public void IsProductNameCaseSensitive()
         {
             sh.RegisterProduct('z', 10);
