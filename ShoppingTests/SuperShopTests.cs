@@ -41,7 +41,7 @@ namespace ShoppingTests
         public void PayingWithSuperShopCard()
         {
             sh.RegisterSuperShopCard("1");
-            sh.GetPrice("ABCDv1"); //180
+            sh.GetPrice("AABCDv1"); //180
             AssertPrice(160, "ABCDv1p");
         }
 
@@ -56,17 +56,16 @@ namespace ShoppingTests
         public void PayingWithSuperShopCardRemainingPoints()
         {
             sh.RegisterSuperShopCard("1");
-            sh.GetPrice("DDDDDDDDDDDv1"); //1100
-            AssertPrice(0, "Av1p");//1 pontja marad, de az ár 0
+            sh.GetPrice("DDDDDDDDDDDDv1"); //1200
+            AssertPrice(0, "Av1p"); //1 pontja marad, de az ár 0
             AssertPrice(8, "Av1p");
         }
         [Fact]
         public void PayingWithSuperShopCardMultiDigitID()
         {
             sh.RegisterSuperShopCard("123");
-            sh.GetPrice("ABCDv123"); //180
+            sh.GetPrice("AABCDv123"); //180
             AssertPrice(160, "ABCDv123p");
         }
-
     }
 }

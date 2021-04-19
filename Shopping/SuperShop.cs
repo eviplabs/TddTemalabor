@@ -15,24 +15,30 @@ namespace Shopping
         {
             return price * 0.1;
         }
-        public double getDiscount(double price)
+        public double processSuperShop(double price, bool sspay)
         {
-            double discount = 0;
-            if (points > price)
+            double discount = price * 0.1;
+            price *= 0.9;
+            if (sspay)
             {
-                points -= (int)price;
-                discount = price;
+                if (points > price)
+                {
+                    points -= (int)price;
+                    discount += price;
+                }
+                else
+                {
+                    discount += points;
+                    points = 0;
+                }
+
             }
-            else
-            {
-                discount = points;
-                points = 0;
-            }
+            points += addPoints(price - discount);
             return discount;
         }
-        public void addPoints(double price)
+        private int addPoints(double price)
         {
-            this.points += (int)Math.Round(0.01 * price,MidpointRounding.AwayFromZero); 
+            return (int)Math.Round(0.01 * price,MidpointRounding.AwayFromZero); 
         }
     }
 }

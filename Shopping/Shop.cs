@@ -69,12 +69,7 @@ namespace Shopping
             // SS calc
             if (userID != null)
             {
-                price -= superShopPoints[userID].getMembershipDiscount(price);
-                if (SSpay)
-                {
-                    price -= superShopPoints[userID].getDiscount(price);
-                }
-                superShopPoints[userID].addPoints(price);
+                price -= superShopPoints[userID].processSuperShop(price, SSpay);
             }
             //Coupon calc
             price = CouponDiscount(price, code);
