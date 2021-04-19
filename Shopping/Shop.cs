@@ -69,9 +69,8 @@ namespace Shopping
             // SS calc
             if (userID != null)
             {
-                bool superShopPayment = shopping_cart.Contains(superShopPaymentKey);
                 price -= superShopPoints[userID].getMembershipDiscount(price);
-                if (superShopPayment)
+                if (SSpay)
                 {
                     price -= superShopPoints[userID].getDiscount(price);
                 }
