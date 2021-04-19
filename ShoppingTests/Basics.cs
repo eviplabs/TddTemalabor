@@ -59,20 +59,6 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterCountDiscount()
-        {
-            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 2, 3));
-            AssertPrice(120, "AAAD");
-        }
-
-        [Fact]
-        public void RegisterCountDiscountWithoutClaimingFreeProducts()
-        {
-            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 2, 3));
-            AssertPrice(120, "AAD");
-        }
-
-        [Fact]
         public void RegisterComboDiscount()
         {
             List<Product> productList = new List<Product>();
