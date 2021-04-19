@@ -53,15 +53,15 @@ namespace Shopping
         #region Calculations
         public int GetPrice(string shopping_cart)
         {
-            string userID = GetUserID(shopping_cart);
-            bool hasSSId = userID != "";
-            shopping_cart = shopping_cart.Replace("v" + userID, "");
+            string userID;
+            Dictionary<char, int> productsInCart;
+            bool SSpay;
+            CartProcessor.processData(shopping_cart, out userID, out productsInCart, out SSpay);
 
-            var productsInCart = getProductsFromCart(shopping_cart);
             double price = GetPriceSumWithoutDiscounts(productsInCart);
 
-            price = GetDiscountSum(price, ref productsInCart, hasSSId); // ref keyword helps in keeping the changes to the variables
-            if (hasSSId)
+            price = GetDiscountSum(price, ref productsInCart, (userID != null)); // ref keyword helps in keeping the changes to the variables
+            if (userID != null)
             {
                 bool superShopPayment = shopping_cart.Contains(superShopPaymentKey);
                 price -= superShopPoints[userID].getMembershipDiscount(price);
