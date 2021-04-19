@@ -53,14 +53,19 @@ namespace Shopping
         #region Calculations
         public int GetPrice(string shopping_cart)
         {
+            // Getprice Variables
             string userID;
             Dictionary<char, int> productsInCart;
             bool SSpay;
+
+            // init for the variables
             CartProcessor.processData(shopping_cart, out userID, out productsInCart, out SSpay);
 
+            // initial price calculation
             double price = GetPriceSumWithoutDiscounts(productsInCart);
-
             price = GetDiscountSum(price, ref productsInCart, (userID != null)); // ref keyword helps in keeping the changes to the variables
+
+            // SS calc
             if (userID != null)
             {
                 bool superShopPayment = shopping_cart.Contains(superShopPaymentKey);
@@ -71,7 +76,9 @@ namespace Shopping
                 }
                 superShopPoints[userID].addPoints(price);
             }
+            //Coupon calc
             price = CouponDiscount(shopping_cart, price);
+
             return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
         }
 
