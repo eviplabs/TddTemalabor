@@ -59,40 +59,6 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterComboDiscount()
-        {
-            List<Product> productList = new List<Product>();
-            productList.Add(sh.products['A']);
-            productList.Add(sh.products['B']);
-            productList.Add(sh.products['C']);
-            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 60));
-            AssertPrice(110, "CAAAABB");
-        }
-
-        [Fact]
-        public void RegisterComboDiscountWithFalseDiscount()
-        {
-            List<Product> productList = new List<Product>();
-            productList.Add(sh.products['A']);
-            productList.Add(sh.products['B']);
-            productList.Add(sh.products['C']);
-            productList.Add(sh.products['D']);
-            sh.RegisterDiscount("ABCD", new ComboDiscount(productList, 60));
-            AssertPrice(130, "CAAAABB");
-        }
-
-        [Fact]
-        public void RegisterComboDiscountWithMultipleAppliableDiscounts()
-        {
-            List<Product> productList = new List<Product>();
-            productList.Add(sh.products['A']);
-            productList.Add(sh.products['B']);
-            productList.Add(sh.products['C']);
-            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 60));
-            AssertPrice(130, "AABBCCA");
-        }
-
-        [Fact]
         public void RoundingGetPrice()
         {
             sh.RegisterProduct('Z', 5);
