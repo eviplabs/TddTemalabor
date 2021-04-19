@@ -77,12 +77,12 @@ namespace Shopping
                 superShopPoints[userID].addPoints(price);
             }
             //Coupon calc
-            price = CouponDiscount(shopping_cart, price, code);
+            price = CouponDiscount(price, code);
 
             return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
         }
 
-        public double CouponDiscount(string shopping_cart, double price, string code)
+        public double CouponDiscount(double price, string code)
         {
             foreach (var coupon in coupons)
             {
