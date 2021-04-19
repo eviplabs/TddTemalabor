@@ -59,29 +59,6 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RegisterAmountDiscount()
-        {
-            sh.RegisterDiscount("A", new AmountDiscount(sh.products['A'], 5, 0.9));
-            AssertPrice(154, "AAAAAAD");
-        }
-
-        [Fact]
-        public void RegisterAmountDiscountWithFalseDiscount()
-        {
-            sh.RegisterDiscount("B", new AmountDiscount(sh.products['B'], 5, 0.9));
-            AssertPrice(160, "AAAAAAD");
-        }
-
-        [Fact]
-        public void RegisterAmountDiscountWithDifferentCharacters()
-        {
-            sh.RegisterProduct('E', 10);
-            sh.RegisterProduct('G', 100);
-            sh.RegisterDiscount("E", new AmountDiscount(sh.products['E'], 5, 0.9));
-            AssertPrice(154, "EEEEEEG");
-        }
-
-        [Fact]
         public void RegisterCountDiscount()
         {
             sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 2, 3));
