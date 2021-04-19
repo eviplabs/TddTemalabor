@@ -7,6 +7,7 @@ namespace Shopping
     public static partial class CartProcessor
     {
         private static CartProcessorEvents readingState;
+
         public static void processData(string cart, out string userID, out Dictionary<char, int> productsInCart, out bool SSpay, out string code)
         {
             
@@ -14,18 +15,26 @@ namespace Shopping
             string ID = null;
             bool SSpaymentReading = false;
             string coupon = null;
+            string numberSubstring = "";
+            char currentProduct = '0';
 
             for (int i = 0; i < cart.Length; i++)
             {
                 readingState = getReadingEvent(readingState, cart[i]);
                 if(readingState == CartProcessorEvents.ProductReading)
                 {
-                    cartManager = addProduct(cartManager, cart[i]);
+                    currentProduct = cart[i];
+                    cartManager = addProduct(cartManager, currentProduct);
                 }
                 else if(readingState == CartProcessorEvents.MassProductReading)
                 {
-                    int mass = Convert.ToInt32(cart[i].ToString()); // horrible conversion but you can't directly convert from char to int
-                    cartManager[cart[i - 1]] += mass - 1;
+                    numberSubstring += cart[i];
+                    if(!char.IsDigit(cart[i + 1]))
+                    {
+                        int mass = Convert.ToInt32(numberSubstring); // horrible conversion but you can't directly convert from char to int
+                        cartManager[currentProduct] += mass - 1;
+                        numberSubstring = "";
+                    }
                 }
                 else if(readingState == CartProcessorEvents.UserIDReading)
                 {
@@ -61,11 +70,6 @@ namespace Shopping
                 {
                     return CartProcessorEvents.MassProductReading;
                 }
-                else if(state == CartProcessorEvents.UserIDReading || state == CartProcessorEvents.CouponReading)
-                {
-                    // returns itself since we are still reading the SS ID
-                    return state;
-                }
             }
             else if (char.IsUpper(element))
             {
@@ -86,7 +90,7 @@ namespace Shopping
                 return CartProcessorEvents.CouponReading;
             }
             // default setting
-            return CartProcessorEvents.ProductReading;
+            return state;
         }
         private static Dictionary<char, int> addProduct(Dictionary<char, int> cartManager, char element)
         {

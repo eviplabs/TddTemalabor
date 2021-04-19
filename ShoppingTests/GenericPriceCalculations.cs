@@ -55,7 +55,7 @@ namespace ShoppingTests
             AssertPrice(580, "Q1200C"); // 1200/100=12. 12*40=480. 480+100=580.
         }
         [Theory]
-        [InlineData(280, "AB16C")]
+        [InlineData(380, "AB16C")]
         [InlineData(1280, "A4B2C20DD")]
         [InlineData(460, "AABBC2DDD")]
         [InlineData(1080, "A100ABC")]
