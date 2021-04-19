@@ -57,6 +57,14 @@ namespace ShoppingTests
             sh.RegisterProduct('z', 10);
             AssertPrice(10, "Z");
         }
+        [Fact]
+        public void RoundingGetPrice()
+        {
+            sh.RegisterProduct('Z', 5);
+            sh.RegisterDiscount("Z", new AmountDiscount(sh.products['Z'], 5, 0.9));
+            Assert.Equal(23, sh.GetPrice("ZZZZZ"));
+            AssertPrice(23, "ZZZZZ");
+        }
         #endregion
     }
 }

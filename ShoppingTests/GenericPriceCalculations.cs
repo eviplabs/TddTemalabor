@@ -30,10 +30,14 @@ namespace ShoppingTests
         }
         #endregion
 
-        [Fact]
-        public void PriceCalculation()
+        [Theory]
+        [InlineData(120,"AAABBC")]
+        [InlineData(180,"ABCD")]
+        [InlineData(50,"AAAAA")]
+        [InlineData(1800,"AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDD")]
+        public void PriceCalculationTheory(int expected, string cart)
         {
-            AssertPrice(120, "AAABBC");
+            AssertPrice(expected, cart);
         }
 
         [Fact]
@@ -43,14 +47,7 @@ namespace ShoppingTests
             sh.RegisterProduct('E', 60);
             AssertPrice(230, "BGGGEE");
         }
-        [Fact]
-        public void RoundingGetPrice()
-        {
-            sh.RegisterProduct('Z', 5);
-            sh.RegisterDiscount("Z", new AmountDiscount(sh.products['Z'], 5, 0.9));
-            Assert.Equal(23, sh.GetPrice("ZZZZZ"));
-            AssertPrice(23, "ZZZZZ");
-        }
+
         [Fact]
         public void PriceByWeight()
         {
