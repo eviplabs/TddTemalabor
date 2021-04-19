@@ -12,9 +12,6 @@ namespace Shopping
         private Dictionary<string, Discount> productDiscounts;
         private Dictionary<string, SuperShop> superShopPoints;
         private List<Coupon> coupons;
-
-        // Keywords
-        private const char superShopPaymentKey = 'p';
         #endregion
 
         #region Init
