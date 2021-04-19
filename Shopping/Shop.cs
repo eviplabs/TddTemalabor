@@ -12,7 +12,7 @@ namespace Shopping
         private Dictionary<char, AmountDiscount> amountDiscounts = new Dictionary<char, AmountDiscount>();
         private Dictionary<char, CountDiscount> countDiscounts = new Dictionary<char, CountDiscount>();
         private List<ComboDiscount> comboDiscounts = new List<ComboDiscount>();
-        private HashSet<char> weighBasedProducts = new HashSet<char>();
+        private HashSet<char> weightBasedProducts = new HashSet<char>();
         public SuperShop superShop = new SuperShop();
         public InMemoryInventory inventory = new InMemoryInventory();
         public Dictionary<char, int> cart = new Dictionary<char, int>();
@@ -25,14 +25,14 @@ namespace Shopping
         }
 
         // suly alapu termeknel 1kg arat taroljuk
-        public bool RegisterProduct(char name, int price, bool isWeighBased = false, int quantity=0)
+        public bool RegisterProduct(char name, int price, bool isWeightBased = false, int quantity = 0)
         {
             if ((name < 'A' || name > 'Z') || price <= 0) return false;
             if (ProductRegistered(name)) return false;
 
             productPrices.Add(name, price);
 
-            if (isWeighBased) { weighBasedProducts.Add(name); }
+            if (isWeightBased) { weightBasedProducts.Add(name); }
             else { inventory.Products.Add(name, quantity); }
             return true;
         }
@@ -45,7 +45,7 @@ namespace Shopping
             // suly alapu termekek eltavolitasa a kosarbol
             cart = Regex.Replace(cart,
                 @"(['A-Z'])(['1-9']['0-9']*)",
-                m => (weighBasedProducts.Contains(m.Groups[1].Value[0])) ?
+                m => (weightBasedProducts.Contains(m.Groups[1].Value[0])) ?
                 "" :
                 m.Groups[1].Value + m.Groups[2].Value
                 );
@@ -95,7 +95,7 @@ namespace Shopping
             {
                 char product = match.Groups[1].Value[0];
                 int weighInGrams = Int32.Parse(match.Groups[2].Value);
-                if (weighBasedProducts.Contains(product))
+                if (weightBasedProducts.Contains(product))
                 {
                     weightBasedPrice += productPrices[product] * (weighInGrams / 1000.0);
                 }
@@ -231,7 +231,7 @@ namespace Shopping
         public double Storno(string cart, char product)
         {
             inventory.RefreshProduct(product, inventory.GetProductQuantity(product) + 1);
-            var newCart = cart.Remove(cart.IndexOf(product),1);
+            var newCart = cart.Remove(cart.IndexOf(product), 1);
             return GetPrice(cart) - GetPrice(newCart);
         }
 
