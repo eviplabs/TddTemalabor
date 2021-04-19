@@ -61,7 +61,7 @@ namespace Shopping
                 {
                     return CartProcessorEvents.MassProductReading;
                 }
-                else if(state == CartProcessorEvents.UserIDReading)
+                else if(state == CartProcessorEvents.UserIDReading || state == CartProcessorEvents.CouponReading)
                 {
                     // returns itself since we are still reading the SS ID
                     return state;

@@ -94,7 +94,6 @@ namespace Shopping
                     return price;
                 }
             }
-
             return price;
         }
 
