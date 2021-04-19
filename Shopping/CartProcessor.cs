@@ -4,10 +4,8 @@ using System.Text;
 
 namespace Shopping
 {
-    public static partial class CartProcessor
+    public partial class CartProcessor
     {
-        private static CartProcessorEvents readingState;
-
         public static void processData(string cart, out string userID, out Dictionary<char, int> productsInCart, out bool SSpay, out string code)
         {
             
@@ -38,7 +36,7 @@ namespace Shopping
                 }
                 else if(readingState == CartProcessorEvents.UserIDReading)
                 {
-                    if(element == 'v')
+                    if(element == userIDKey)
                     {
                         continue;
                     }
@@ -50,7 +48,7 @@ namespace Shopping
                 }
                 else if(readingState == CartProcessorEvents.CouponReading)
                 {
-                    if (element == 'k')
+                    if (element == couponKey)
                     {
                         continue;
                     }
@@ -76,16 +74,16 @@ namespace Shopping
                 return CartProcessorEvents.ProductReading;
             }
             // signal for userIDReading
-            else if(element == 'v')
+            else if(element == userIDKey)
             {
                 return CartProcessorEvents.UserIDReading;
             }
             // signal for SuperShop payments
-            else if (element == 'p')
+            else if (element == superShopPaymentKey)
             {
                 return CartProcessorEvents.SuperShopPayment;
             }
-            else if(element == 'k')
+            else if(element == couponKey)
             {
                 return CartProcessorEvents.CouponReading;
             }
