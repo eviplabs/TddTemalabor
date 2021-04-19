@@ -19,10 +19,6 @@ namespace ShoppingTests
         #region Init
         public Basics()
         {
-            sh.RegisterProduct('A', 10);
-            sh.RegisterProduct('B', 20);
-            sh.RegisterProduct('C', 50);
-            sh.RegisterProduct('D', 100);
         }
         #endregion
 
@@ -44,6 +40,7 @@ namespace ShoppingTests
         [Fact]
         public void IsPriceInt()
         {
+            sh.RegisterProduct('A', 10);
             var price = sh.GetPrice("AAA");
             //Ellenörzi, hogy a price objektum integer-e
             Assert.IsType<int>(price);
