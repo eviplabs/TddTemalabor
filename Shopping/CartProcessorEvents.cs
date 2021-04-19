@@ -7,7 +7,8 @@
             ProductReading,
             MassProductReading,
             UserIDReading,
-            SuperShopPayment
+            SuperShopPayment,
+            CouponReading,
         }
     }
 }

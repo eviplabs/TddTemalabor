@@ -57,9 +57,10 @@ namespace Shopping
             string userID;
             Dictionary<char, int> productsInCart;
             bool SSpay;
+            string code;
 
             // init for the variables
-            CartProcessor.processData(shopping_cart, out userID, out productsInCart, out SSpay);
+            CartProcessor.processData(shopping_cart, out userID, out productsInCart, out SSpay, out code);
 
             // initial price calculation
             double price = GetPriceSumWithoutDiscounts(productsInCart);
@@ -77,18 +78,16 @@ namespace Shopping
                 superShopPoints[userID].addPoints(price);
             }
             //Coupon calc
-            price = CouponDiscount(shopping_cart, price);
+            price = CouponDiscount(shopping_cart, price, code);
 
             return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
         }
 
-        public double CouponDiscount(string shopping_cart, double price)
+        public double CouponDiscount(string shopping_cart, double price, string code)
         {
-            string codeInCart = shopping_cart.Substring(shopping_cart.IndexOf('k') + 1);
-
             foreach (var coupon in coupons)
             {
-                if (coupon.code==codeInCart)
+                if (coupon.code==code)
                 {
                     price *= coupon.value;
                     coupons.Remove(coupon);
@@ -111,31 +110,6 @@ namespace Shopping
                 price -= dc.Value.getDiscount(ref productsInCart, membership);
             }
             return price;
-        }
-        private string GetUserID(string shopping_cart)
-        {
-            string id = "";
-            int indexInCart = shopping_cart.IndexOf('v');
-            if (indexInCart != -1)   //'v' found in shopping_cart
-            {
-                foreach (char c in shopping_cart.Substring(indexInCart + 1))
-                {
-                    if (char.IsDigit(c))
-                    {
-                        id += c;
-                    }
-                    else
-                    {
-                        break; //after the UID there can be products / other things
-                    }
-                }
-            }
-            return id;
-        }
-        private Dictionary<char, int> getProductsFromCart(string shopping_cart)
-        {
-            return shopping_cart.Where(c => char.IsUpper(c)).GroupBy(p => p)
-                            .Select(p => new { p.Key, Count = p.Count() }).ToDictionary(p => p.Key, p => p.Count);
         }
         #endregion
     }

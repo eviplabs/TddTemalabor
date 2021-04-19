@@ -7,12 +7,13 @@ namespace Shopping
     public static partial class CartProcessor
     {
         private static CartProcessorEvents readingState;
-        public static void processData(string cart, out string userID, out Dictionary<char, int> productsInCart, out bool SSpay)
+        public static void processData(string cart, out string userID, out Dictionary<char, int> productsInCart, out bool SSpay, out string code)
         {
             
             Dictionary<char, int> cartManager = new Dictionary<char, int>();
             string ID = null;
             bool SSpaymentReading = false;
+            string coupon = null;
 
             for (int i = 0; i < cart.Length; i++)
             {
@@ -23,7 +24,8 @@ namespace Shopping
                 }
                 else if(readingState == CartProcessorEvents.MassProductReading)
                 {
-                    cartManager = massAddProduct(cartManager, Convert.ToInt32(cart[i]), cart[i - 1]);
+                    int mass = Convert.ToInt32(cart[i].ToString()); // horrible conversion but you can't directly convert from char to int
+                    cartManager[cart[i - 1]] += mass - 1;
                 }
                 else if(readingState == CartProcessorEvents.UserIDReading)
                 {
@@ -37,14 +39,20 @@ namespace Shopping
                 {
                     SSpaymentReading = true;
                 }
+                else if(readingState == CartProcessorEvents.CouponReading)
+                {
+                    if (cart[i] == 'k')
+                    {
+                        continue;
+                    }
+                    coupon += cart[i];
+                }
             }
             userID = ID;
             SSpay = SSpaymentReading;
             productsInCart = cartManager;
+            code = coupon;
         }
-
-
-
         private static CartProcessorEvents getReadingEvent(CartProcessorEvents state, char element)
         {
             if(char.IsDigit(element))
@@ -73,6 +81,10 @@ namespace Shopping
             {
                 return CartProcessorEvents.SuperShopPayment;
             }
+            else if(element == 'k')
+            {
+                return CartProcessorEvents.CouponReading;
+            }
             // default setting
             return CartProcessorEvents.ProductReading;
         }
@@ -86,11 +98,6 @@ namespace Shopping
             {
                 cartManager[element]++;
             }
-            return cartManager;
-        }
-        private static Dictionary<char, int> massAddProduct(Dictionary<char, int> cartManager, int mass, char product)
-        {
-            cartManager[product] += mass - 1; // the -1 is added in the previous state
             return cartManager;
         }
     }
