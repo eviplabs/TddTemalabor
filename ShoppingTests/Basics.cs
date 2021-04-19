@@ -59,15 +59,6 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void RoundingGetPrice()
-        {
-            sh.RegisterProduct('Z', 5);
-            sh.RegisterDiscount("Z", new AmountDiscount(sh.products['Z'], 5, 0.9));
-            Assert.Equal(23, sh.GetPrice("ZZZZZ"));
-            AssertPrice(23, "ZZZZZ");
-        }
-
-        [Fact]
         public void ClubMemberShipDiscount()
         {
             sh.RegisterSuperShopCard("1");
@@ -75,21 +66,6 @@ namespace ShoppingTests
             AssertPrice(18, "Bv1");
         }
         
-        [Fact]
-        public void ComboDiscountWithMemberShip()
-        {
-            List<Product> productList = new List<Product>();
-            productList.Add(sh.products['A']);
-            productList.Add(sh.products['B']);
-            productList.Add(sh.products['C']);
-            sh.RegisterSuperShopCard("1");
-            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 60, true)); // 3. taggal (bool) megadható hogy a kedvezmény csak klubtagoknak jár-e
-            //20+40+100=160 (comboDiscount csak tagoknak)
-            AssertPrice(160, "AABBCC");
-            //(60+60)*0,9  comboDiscount és MemberShipDiscount is
-            AssertPrice(108, "AABBCCv1");
-        }
-
         [Fact]
         public void PayingWithSuperShopCard()
         {
@@ -126,42 +102,8 @@ namespace ShoppingTests
             sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 1, 2));
             AssertPrice(186, "AAAAAAABBBCCC"); //280 - 90 - 4 - 0
         }
-        [Fact]
-        public void MultipleComboDiscounts()
-        {
-            List<Product> productList1 = new List<Product>();
-            List<Product> productList2 = new List<Product>();
-            List<Product> productList3 = new List<Product>();
-            productList1.Add(sh.products['A']);
-            productList1.Add(sh.products['B']);
-            sh.RegisterDiscount("AB", new ComboDiscount(productList1, 20));
-            productList2.Add(sh.products['A']);
-            productList2.Add(sh.products['B']);
-            productList2.Add(sh.products['C']);
-            sh.RegisterDiscount("ABC", new ComboDiscount(productList2, 20));
-            productList3.Add(sh.products['A']);
-            productList3.Add(sh.products['C']);
-            sh.RegisterDiscount("AC", new ComboDiscount(productList3, 20));
-            AssertPrice(120, "ABCD"); // 180 - 60
-        }
-        [Fact]
-        public void MultipleAppliableComboDiscounts()
-        {
-            List<Product> productList1 = new List<Product>();
-            List<Product> productList2 = new List<Product>();
-            List<Product> productList3 = new List<Product>();
-            productList1.Add(sh.products['A']);
-            productList1.Add(sh.products['B']);
-            sh.RegisterDiscount("AB", new ComboDiscount(productList1, 20));
-            productList2.Add(sh.products['A']);
-            productList2.Add(sh.products['B']);
-            productList2.Add(sh.products['C']);
-            sh.RegisterDiscount("ABC", new ComboDiscount(productList2, 20));
-            productList3.Add(sh.products['A']);
-            productList3.Add(sh.products['C']);
-            sh.RegisterDiscount("AC", new ComboDiscount(productList3, 20));
-            AssertPrice(140, "AABBCD"); // 210 - 60 - 10
-        }
+
+
         [Fact]
         public void PayingWithSuperShopCardMultiDigitID()
         {
@@ -171,33 +113,6 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void ToggleDiscountOnlyForClubMembersCombo()
-        {
-            List<Product> productList1 = new List<Product>();
-            productList1.Add(sh.products['A']);
-            productList1.Add(sh.products['B']);
-            sh.RegisterDiscount("AB", new ComboDiscount(productList1, 20, true));
-            sh.RegisterSuperShopCard("1");
-            AssertPrice(18, "ABv1");
-            AssertPrice(30, "AB");
-        }
-        [Fact]
-        public void ToggleDiscountOnlyForClubMembersAmount()
-        {
-            sh.RegisterDiscount("A", new AmountDiscount(sh.products['A'], 5, 0.9, true));
-            sh.RegisterSuperShopCard("1");
-            AssertPrice(41, "AAAAAv1");
-            AssertPrice(50, "AAAAA");
-        }
-        [Fact]
-        public void ToggleDiscountOnlyForClubMembersCount()
-        {
-            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 1, 2, true));
-            sh.RegisterSuperShopCard("1");
-            AssertPrice(9, "AAv1");
-            AssertPrice(20, "AA");
-        }
-        [Fact]
         public void RegisterCouponDiscount()
         {
             sh.RegisterCoupon("112554", 0.9); //10% kupon
@@ -205,18 +120,7 @@ namespace ShoppingTests
             AssertPrice(40, "AABk112554");
         }
 
-        [Fact]
-        public void MoreOfTheSameProductByNumber()
-        {
-            AssertPrice(230, "A2B8C");
-            //10*2+20*8+50=230
-        }
-        [Fact]
-        public void PriceByWeight()
-        {
-            sh.RegisterProduct('Q', 40); // Legyen 40/100g
-            AssertPrice(580, "Q1200C"); // 1200/100=12. 12*40=480. 480+100=580.
-        }
+
         #endregion
     }
 }

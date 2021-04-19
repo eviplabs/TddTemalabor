@@ -52,5 +52,13 @@ namespace ShoppingTests
             sh.RegisterDiscount("E", new AmountDiscount(sh.products['E'], 5, 0.9));
             AssertPrice(154, "EEEEEEG");
         }
+        [Fact]
+        public void ToggleDiscountOnlyForClubMembersAmount()
+        {
+            sh.RegisterDiscount("A", new AmountDiscount(sh.products['A'], 5, 0.9, true));
+            sh.RegisterSuperShopCard("1");
+            AssertPrice(41, "AAAAAv1");
+            AssertPrice(50, "AAAAA");
+        }
     }
 }

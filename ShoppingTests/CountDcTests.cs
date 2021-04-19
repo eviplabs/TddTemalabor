@@ -43,5 +43,13 @@ namespace ShoppingTests
             sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 2, 3));
             AssertPrice(120, "AAD");
         }
+        [Fact]
+        public void ToggleDiscountOnlyForClubMembersCount()
+        {
+            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 1, 2, true));
+            sh.RegisterSuperShopCard("1");
+            AssertPrice(9, "AAv1");
+            AssertPrice(20, "AA");
+        }
     }
 }
