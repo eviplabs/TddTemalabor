@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Shopping
+﻿namespace Shopping
 {
     public class Coupon
     {
@@ -10,7 +6,7 @@ namespace Shopping
         public double value { get; set; }
         public Coupon(string couponCode, double value)
         {
-            this.code = couponCode;
+            code = couponCode;
             this.value = value;
         }
     }

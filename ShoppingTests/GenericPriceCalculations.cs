@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Shopping;
+﻿using Shopping;
 using Xunit;
 
 namespace ShoppingTests

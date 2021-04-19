@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Shopping
 {
@@ -26,7 +23,7 @@ namespace Shopping
 
         public override double getDiscount(ref Dictionary<char, int> productsInCart, bool hasMembership)
         {
-            if (CheckIfIsnNotEligible(hasMembership))
+            if (CheckIfIsNotEligible(hasMembership))
             {
                 return 0;
             }

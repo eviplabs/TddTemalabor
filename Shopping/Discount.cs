@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection.Metadata.Ecma335;
+﻿using System.Collections.Generic;
 
 namespace Shopping
 {
@@ -23,7 +19,7 @@ namespace Shopping
 
         #region Base Functions
         
-        protected bool CheckIfIsnNotEligible(bool hasMembership)
+        protected bool CheckIfIsNotEligible(bool hasMembership)
         {
             return !hasMembership && membershipRequired;
         }
