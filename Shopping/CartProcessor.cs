@@ -18,31 +18,31 @@ namespace Shopping
             string numberSubstring = "";
             char currentProduct = '0';
 
-            for (int i = 0; i < cart.Length; i++)
+            foreach(var element in cart)
             {
-                readingState = getReadingEvent(readingState, cart[i]);
-                if(readingState == CartProcessorEvents.ProductReading)
+                readingState = getReadingEvent(readingState, element);
+                if (numberSubstring != "" && readingState != CartProcessorEvents.MassProductReading)
                 {
-                    currentProduct = cart[i];
+                    int mass = Convert.ToInt32(numberSubstring); // horrible conversion but you can't directly convert from char to int
+                    cartManager[currentProduct] += mass - 1;
+                    numberSubstring = "";
+                }
+                if (readingState == CartProcessorEvents.ProductReading)
+                {
+                    currentProduct = element;
                     cartManager = addProduct(cartManager, currentProduct);
                 }
                 else if(readingState == CartProcessorEvents.MassProductReading)
                 {
-                    numberSubstring += cart[i];
-                    if(!char.IsDigit(cart[i + 1]))
-                    {
-                        int mass = Convert.ToInt32(numberSubstring); // horrible conversion but you can't directly convert from char to int
-                        cartManager[currentProduct] += mass - 1;
-                        numberSubstring = "";
-                    }
+                    numberSubstring += element;
                 }
                 else if(readingState == CartProcessorEvents.UserIDReading)
                 {
-                    if(cart[i] == 'v')
+                    if(element == 'v')
                     {
                         continue;
                     }
-                    ID += cart[i];
+                    ID += element;
                 }
                 else if(readingState == CartProcessorEvents.SuperShopPayment)
                 {
@@ -50,11 +50,11 @@ namespace Shopping
                 }
                 else if(readingState == CartProcessorEvents.CouponReading)
                 {
-                    if (cart[i] == 'k')
+                    if (element == 'k')
                     {
                         continue;
                     }
-                    coupon += cart[i];
+                    coupon += element;
                 }
             }
             userID = ID;

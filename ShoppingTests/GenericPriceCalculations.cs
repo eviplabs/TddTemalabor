@@ -58,7 +58,7 @@ namespace ShoppingTests
         [InlineData(380, "AB16C")]
         [InlineData(1280, "A4B2C20DD")]
         [InlineData(460, "AABBC2DDD")]
-        [InlineData(1080, "A100ABC")]
+        [InlineData(1080, "A100ABC1")]
         public void MoreOfTheSameProductByNumber(int expected, string cart)
         {
             AssertPrice(expected, cart);
