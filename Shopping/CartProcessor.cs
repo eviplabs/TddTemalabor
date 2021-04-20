@@ -23,7 +23,8 @@ namespace Shopping
                     int mass = Convert.ToInt32(numberSubstring); // horrible conversion but you can't directly convert from char to int
                     if (products[currentProduct].priceInKilo)
                     {
-                        cartManager[currentProduct] += (mass - 1) / 100;
+                        double count = (mass - 1) / 100;
+                        cartManager[currentProduct] += Convert.ToInt32(Math.Round(count, MidpointRounding.AwayFromZero));
                     }
                     else
                     {
