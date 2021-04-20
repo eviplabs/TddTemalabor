@@ -46,10 +46,15 @@ namespace ShoppingTests
             AssertPrice(230, "BGGGEE");
         }
 
-        [Fact]
-        public void PriceByWeight()
+        [Theory]
+        [InlineData(580, "Q1200D")] // 1200/100=12; 12*40=480; 480+100=580.
+        [InlineData(580, "Q1249D")]
+        [InlineData(580, "Q1201D")]
+        [InlineData(620, "Q1250D")]
+        [InlineData(140, "Q120D")]
+        public void PriceByWeight(int expected, string cart)
         {
-            AssertPrice(580, "Q1200D"); // 1200/100=12; 12*40=480; 480+100=580.
+            AssertPrice(expected, cart);
         }
         [Theory]
         [InlineData(380, "AB16C")]
