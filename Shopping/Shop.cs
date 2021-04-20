@@ -25,9 +25,9 @@ namespace Shopping
         #endregion
 
         #region Registration
-        public void RegisterProduct(char name, int price)
+        public void RegisterProduct(char name, int price, bool priceInKilo = false)
         {
-            products.Add(Char.ToUpper(name), new Product(name, price));
+            products.Add(Char.ToUpper(name), new Product(name, price, priceInKilo));
         }
         public void RegisterDiscount(string name, Discount dc)
         {
@@ -55,7 +55,7 @@ namespace Shopping
             string code;
 
             // init for the variables
-            CartProcessor.processData(shopping_cart, out userID, out productsInCart, out SSpay, out code);
+            CartProcessor.processData(shopping_cart, out userID, out productsInCart, out SSpay, out code, this.products);
 
             // initial price calculation
             double price = GetPriceSumWithoutDiscounts(productsInCart);

@@ -16,7 +16,7 @@ namespace ShoppingTests
             sh.RegisterProduct('B', 20);
             sh.RegisterProduct('C', 50);
             sh.RegisterProduct('D', 100);
-            sh.RegisterProduct('Q', 40); // Legyen 40/100g
+            sh.RegisterProduct('Q', 40, true); // Legyen 40/100g
         }
         #endregion
 
@@ -49,7 +49,7 @@ namespace ShoppingTests
         [Fact]
         public void PriceByWeight()
         {
-            AssertPrice(580, "Q1200C"); // 1200/100=12. 12*40=480. 480+100=580.
+            AssertPrice(580, "Q1200D"); // 1200/100=12; 12*40=480; 480+100=580.
         }
         [Theory]
         [InlineData(380, "AB16C")]

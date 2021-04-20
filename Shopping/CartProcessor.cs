@@ -5,7 +5,7 @@ namespace Shopping
 {
     public partial class CartProcessor
     {
-        public static void processData(string cart, out string userID, out Dictionary<char, int> productsInCart, out bool SSpay, out string code)
+        public static void processData(string cart, out string userID, out Dictionary<char, int> productsInCart, out bool SSpay, out string code, Dictionary<char, Product> products)
         {
             
             Dictionary<char, int> cartManager = new Dictionary<char, int>();
@@ -21,7 +21,14 @@ namespace Shopping
                 if (numberSubstring != "" && readingState != CartProcessorEvents.MassProductReading)
                 {
                     int mass = Convert.ToInt32(numberSubstring); // horrible conversion but you can't directly convert from char to int
-                    cartManager[currentProduct] += mass - 1;
+                    if (products[currentProduct].priceInKilo)
+                    {
+                        cartManager[currentProduct] += (mass - 1) / 100;
+                    }
+                    else
+                    {
+                        cartManager[currentProduct] += mass - 1;
+                    }
                     numberSubstring = "";
                 }
                 if (readingState == CartProcessorEvents.ProductReading)
