@@ -2,7 +2,7 @@
 {
     public partial class CartProcessor
     {
-        private static CartProcessorEvents readingState;
+        private CartProcessorEvents readingState;
         private enum CartProcessorEvents
         {
             ProductReading,

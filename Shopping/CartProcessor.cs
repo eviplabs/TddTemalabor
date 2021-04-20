@@ -5,7 +5,7 @@ namespace Shopping
 {
     public partial class CartProcessor
     {
-        public static void processData(string cart, out string userID, out Dictionary<char, int> productsInCart, out bool SSpay, out string code, Dictionary<char, Product> products)
+        public void processData(string cart, out string userID, out Dictionary<char, int> productsInCart, out bool SSpay, out string code, Dictionary<char, Product> products)
         {
             
             Dictionary<char, int> cartManager = new Dictionary<char, int>();
@@ -62,6 +62,19 @@ namespace Shopping
                     coupon += element;
                 }
             }
+            if(numberSubstring != "")
+            {
+                int mass = Convert.ToInt32(numberSubstring); // horrible conversion but you can't directly convert from char to int
+                if (products[currentProduct].priceInKilo)
+                {
+                    double count = mass / 10.0;
+                    cartManager[currentProduct] += (int)Math.Round(count, MidpointRounding.AwayFromZero) - 1;
+                }
+                else
+                {
+                    cartManager[currentProduct] += mass - 1;
+                }
+            }
             userID = ID;
             SSpay = SSpaymentReading;
             productsInCart = cartManager;
@@ -97,7 +110,7 @@ namespace Shopping
             // default setting
             return state;
         }
-        private static Dictionary<char, int> addProduct(Dictionary<char, int> cartManager, char element)
+        private Dictionary<char, int> addProduct(Dictionary<char, int> cartManager, char element)
         {
             if (!cartManager.ContainsKey(element))
             {

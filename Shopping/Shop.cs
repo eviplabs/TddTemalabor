@@ -55,7 +55,8 @@ namespace Shopping
             string code;
 
             // init for the variables
-            CartProcessor.processData(shopping_cart, out userID, out productsInCart, out SSpay, out code, this.products);
+            CartProcessor cartProcessor = new CartProcessor();
+            cartProcessor.processData(shopping_cart, out userID, out productsInCart, out SSpay, out code, this.products);
 
             // initial price calculation
             double price = GetPriceSumWithoutDiscounts(productsInCart);

@@ -47,6 +47,8 @@ namespace ShoppingTests
         }
 
         [Theory]
+        [InlineData(1000, "D10")]
+        [InlineData(20000, "D200")]
         [InlineData(580, "Q1200D")] // 1200/10=120; 120*4=480; 480+100=580.
         [InlineData(580, "Q1204D")]
         [InlineData(580, "Q1201D")]
