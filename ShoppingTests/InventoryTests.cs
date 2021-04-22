@@ -8,23 +8,23 @@ namespace ShoppingTests
 {
     public class InventoryTests
     {
-        public readonly Shop Shop = new Shop();
-        public readonly IInventory Inventory = new Inventory();
+
 
 
         [Fact]
         public void GetInventoryQuantity()
         {
-            Shop.RegisterProduct('A', 10);
+            Inventory Inventory = new Inventory();
+            Shop Shop = new Shop(Inventory);
+
             Inventory.SetQuanity('A', 5);
-            Assert.Equal(5, Inventory.Products["A"]);
+            Shop.RegisterProduct('A', 10);
+            
+            Assert.Equal(5, Inventory.products['A']);
             var price = Shop.GetPrice("A");
-            Assert.Equal(4, Inventory.Products["A"]);
+            Assert.Equal(4, Inventory.products['A']);
 
             Assert.Equal(10, price);
-            
-
         }
-
     }
 }

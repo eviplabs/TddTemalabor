@@ -15,6 +15,7 @@ namespace Shopping
         private SupershopPointsCalculator supershopPointsCalculator;
         private List<SuperShopPoint> SupershopPoints;
         private CouponCalculator CouponCalculator;
+        private Inventory Inventory;
         public Shop()
         {
             Products = new List<Product>();
@@ -25,6 +26,17 @@ namespace Shopping
             SupershopPoints = new List<SuperShopPoint>();
             CouponCalculator = new CouponCalculator();
         }
+        public Shop(Inventory inventory)
+        {
+            Products = new List<Product>();
+            amountDiscounts = new AmountDiscounts();
+            countDiscountsCalculator = new CountDiscountsCalculator();
+            comboDiscountCalculator = new ComboDiscountCalculator();
+            supershopPointsCalculator = new SupershopPointsCalculator();
+            SupershopPoints = new List<SuperShopPoint>();
+            CouponCalculator = new CouponCalculator();
+            Inventory = inventory;
+        }
         public void RegisterProduct(char name, double price, bool weighted = false) 
         {
             Products.Add(new Product(name, price, weighted));
@@ -32,6 +44,7 @@ namespace Shopping
 
         public double GetPrice(string name) 
         {
+
             bool supershoppointusedtopay = false;
             bool clubmember = false;
             double price = 0;
@@ -97,6 +110,10 @@ namespace Shopping
             foreach (var key in ProductCount.Keys)
             {
                 price += ProductCount[key].Item1 * key.GetPriceByProductChar(Products);
+                if (Inventory!=null) {
+                    Inventory.SetQuanity(key, Inventory.products[key] - ProductCount[key].Item1);
+                }
+                
             }
 
             if (SupershopPoints.Count > 0)
