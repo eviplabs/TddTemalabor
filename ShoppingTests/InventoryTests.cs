@@ -37,12 +37,12 @@ namespace ShoppingTests
             Shop.RegisterProduct('A', 10);
 
             Assert.Equal(5, Inventory.products['A']);
-            var price = Shop.GetPrice("AAAAA");
-            Assert.Equal(50, price);
+            var originalPrice = Shop.GetPrice("AAAAA");
+            Assert.Equal(50, originalPrice);
 
-            Shop.ReturnItem('A', 1);
+            var priceAfterReturn=Shop.ReturnItem("A");
             Assert.Equal(1, Inventory.products['A']);
-            Assert.Equal(40, price);
+            Assert.Equal(40, priceAfterReturn);
         }
     }
 }
