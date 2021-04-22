@@ -26,5 +26,23 @@ namespace ShoppingTests
 
             Assert.Equal(10, price);
         }
+
+        [Fact]
+        public void ReturnItem()
+        {
+            Inventory Inventory = new Inventory();
+            Shop Shop = new Shop(Inventory);
+
+            Inventory.SetQuanity('A', 5);
+            Shop.RegisterProduct('A', 10);
+
+            Assert.Equal(5, Inventory.products['A']);
+            var price = Shop.GetPrice("AAAAA");
+            Assert.Equal(50, price);
+
+            Shop.ReturnItem('A', 1);
+            Assert.Equal(1, Inventory.products['A']);
+            Assert.Equal(40, price);
+        }
     }
 }
