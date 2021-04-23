@@ -7,7 +7,7 @@ namespace ShoppingTests
 {
     public abstract class ShoppingTestBase
     {
-        protected readonly Shop s = new Shop();
+        protected readonly Shop s = new Shop(new InMemoryInventory(), new WeightScaleMock());
 
         /**
          * Termékek ABC sorrendben, betűnként 10-el növekvő értékben.

@@ -9,5 +9,9 @@ namespace Shopping
         void RefreshProduct(char product, int quantity);
 
         int GetProductQuantity(char product);
+
+        void RemoveProducts(string cart);
+
+        void Add(char product, int quantity);
     }
 }

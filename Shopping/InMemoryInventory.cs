@@ -32,5 +32,10 @@ namespace Shopping
                 RefreshProduct(group.Key, group.Count());
             }
         }
+
+        public void Add(char product, int quantity)
+        {
+            Products.Add(product, quantity);
+        }
     }
 }

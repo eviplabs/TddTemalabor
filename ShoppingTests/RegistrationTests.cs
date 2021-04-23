@@ -94,5 +94,15 @@ namespace ShoppingTests
 
         }
 
+        [Fact]
+        public void RegisterPurchase()
+        {
+            s.RegisterProduct('E', 75, false, 3);
+            s.Cart.Add("E");
+            var amountPaid = s.GetCartPrice();
+            //Assert.Equal(...LatestPurchase, amountPaid);
+            //ICashflowControl vagy tetszoleges interface hasznalata.
+        }
+
     }
 }

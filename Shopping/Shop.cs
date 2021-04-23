@@ -8,18 +8,23 @@ namespace Shopping
 {
     public class Shop
     {
-        private Dictionary<char, int> productPrices = new Dictionary<char, int>();
-        public Dictionary<char, int> cart = new Dictionary<char, int>();
-
-        private HashSet<char> weightBasedProducts = new HashSet<char>();
+        private ProductData productData = new ProductData();
+        public Cart Cart;
         public SuperShop superShop = new SuperShop();
-        public InMemoryInventory inventory = new InMemoryInventory();
-        public IWeightScale weightScale = new WeightScale();
+
+        public IInventory inventory;
+        public IWeightScale weightScale;
 
         public AmountDiscount amountDiscount = new AmountDiscount();
         public CountDiscount countDiscount = new CountDiscount();
         public ComboDiscount comboDiscount = new ComboDiscount();
 
+        public Shop(IInventory inventory, IWeightScale scale)
+        {
+            this.inventory = inventory;
+            weightScale = scale;
+            Cart = new Cart(productData, weightScale);
+        }
 
         // suly alapu termeknel 1kg arat taroljuk
         public bool RegisterProduct(char name, int price, bool isWeightBased = false, int quantity = 0)
@@ -27,10 +32,10 @@ namespace Shopping
             if ((name < 'A' || name > 'Z') || price <= 0) return false;
             if (ProductRegistered(name)) return false;
 
-            productPrices.Add(name, price);
+            productData.Prices.Add(name, price);
 
-            if (isWeightBased) { weightBasedProducts.Add(name); }
-            else { inventory.Products.Add(name, quantity); }
+            if (isWeightBased) { productData.ProductsToWeigh.Add(name); }
+            else { inventory.Add(name, quantity); }
             return true;
         }
 
@@ -65,16 +70,17 @@ namespace Shopping
             // suly alapu termekek eltavolitasa a kosarbol
             cart = Regex.Replace(cart,
                 @"(['A-Z'])(['1-9']['0-9']*)",
-                m => (weightBasedProducts.Contains(m.Groups[1].Value[0])) ?
+                m => (productData.ProductsToWeigh.Contains(m.Groups[1].Value[0])) ?
                 "" :
                 m.Groups[1].Value + m.Groups[2].Value
                 );
+
 
             // handling barcodes (CRD P012) (test: MoreProductWithOneCode)
             cart = Regex.Replace(cart, @"(['A-Z'])(['1-9']['0-9']*)", m => new String(m.Groups[1].Value[0], Int32.Parse(m.Groups[2].Value)));
             foreach (char item in cart)
             {
-                if (!productPrices.ContainsKey(item)) continue;
+                if (!productData.Prices.ContainsKey(item)) continue;
 
                 if (!productCounts.ContainsKey(item))
                 {
@@ -94,11 +100,11 @@ namespace Shopping
 
             CheckNewMember(cart);
 
-            prices.Add(amountDiscount.CalculatePrice(productCounts, productPrices, superShop.IsAClubMember(cart)));
+            prices.Add(amountDiscount.CalculatePrice(productCounts, productData.Prices, superShop.IsAClubMember(cart)));
 
-            prices.Add(countDiscount.CalculatePrice(productCounts, productPrices, superShop.IsAClubMember(cart)));
+            prices.Add(countDiscount.CalculatePrice(productCounts, productData.Prices, superShop.IsAClubMember(cart)));
 
-            prices.Add(comboDiscount.CalculatePrice(productCounts, productPrices, superShop.IsAClubMember(cart)));
+            prices.Add(comboDiscount.CalculatePrice(productCounts, productData.Prices, superShop.IsAClubMember(cart)));
 
             double price = weightBasedPrice + prices.Min();
 
@@ -115,9 +121,9 @@ namespace Shopping
             {
                 char product = match.Groups[1].Value[0];
                 int weighInGrams = Int32.Parse(match.Groups[2].Value);
-                if (weightBasedProducts.Contains(product))
+                if (productData.ProductsToWeigh.Contains(product))
                 {
-                    weightBasedPrice += productPrices[product] * (weighInGrams / 1000.0);
+                    weightBasedPrice += productData.Prices[product] * (weighInGrams / 1000.0);
                 }
             }
             return weightBasedPrice;
@@ -145,25 +151,16 @@ namespace Shopping
             return GetPrice(cart) - GetPrice(newCart);
         }
 
-        public void AddToCart(char product)
-        {
-            int price = productPrices[product];
-            cart.Add(product, price);
-        }
-
         public double GetCartPrice()
         {
-            double price = 0;
-            foreach (var item in cart)
-            {
-                price += item.Value;
-            }
-            return price;
+            inventory.RemoveProducts(Cart.Receipt);
+            return Cart.GetTotal();
         }
 
         public bool ProductRegistered(char name)
         {
-            return productPrices.ContainsKey(name);
+            return productData.Prices.ContainsKey(name);
         }
+
     }
 }

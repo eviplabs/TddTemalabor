@@ -33,10 +33,10 @@ namespace ShoppingTests
             s.RegisterProduct('B', 20, false, 3);
             s.RegisterProduct('C', 30, false, 3);
             s.RegisterProduct('D', 40, false, 3);
-            s.AddToCart('A');
-            s.AddToCart('B');
-            s.AddToCart('C');
-            s.AddToCart('D');
+            s.Cart.Add("A");
+            s.Cart.Add("B");
+            s.Cart.Add("C");
+            s.Cart.Add("D");
             Assert.Equal(s.GetPrice("ABCD"), s.GetCartPrice()); // Ha marad a GetPrice
         }
 
@@ -45,8 +45,8 @@ namespace ShoppingTests
         {
             s.RegisterProduct('A', 10);
             s.RegisterProduct('B', 20, true);
-            s.AddToCart('A');
-            s.AddToCart('B'); // addToCart()-ban le kell merni a sulyt
+            s.Cart.Add("A");
+            s.Cart.Add("B"); // addToCart()-ban le kell merni a sulyt
             string weightOfProductB = s.weightScale.LastMeasuredValue.ToString();
             Assert.Equal(s.GetPrice("AB" + weightOfProductB), s.GetCartPrice());
         }
