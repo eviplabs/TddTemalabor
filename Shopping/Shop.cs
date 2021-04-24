@@ -14,15 +14,17 @@ namespace Shopping
 
         public IInventory inventory;
         public IWeightScale weightScale;
+        public ICashflowControl cashflowControl;
 
         public AmountDiscount amountDiscount = new AmountDiscount();
         public CountDiscount countDiscount = new CountDiscount();
         public ComboDiscount comboDiscount = new ComboDiscount();
 
-        public Shop(IInventory inventory, IWeightScale scale)
+        public Shop(IInventory inventory, IWeightScale scale, ICashflowControl cashflowControl)
         {
             this.inventory = inventory;
             weightScale = scale;
+            this.cashflowControl = cashflowControl;
             Cart = new Cart(productData, weightScale);
         }
 
@@ -154,7 +156,9 @@ namespace Shopping
         public double GetCartPrice()
         {
             inventory.RemoveProducts(Cart.Receipt);
-            return Cart.GetTotal();
+            var price = Cart.GetTotal();
+            cashflowControl.RecordPurchase(price);
+            return price;
         }
 
         public bool ProductRegistered(char name)

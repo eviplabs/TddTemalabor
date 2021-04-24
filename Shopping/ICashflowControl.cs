@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Shopping
 {
-    interface ICashflowControl
+    public interface ICashflowControl
     {
         public double LatestPurchase { get; set; }
         void RecordPurchase(double amountPaid);

@@ -100,7 +100,7 @@ namespace ShoppingTests
             s.RegisterProduct('E', 75, false, 3);
             s.Cart.Add("E");
             var amountPaid = s.GetCartPrice();
-            //Assert.Equal(...LatestPurchase, amountPaid);
+            Assert.Equal(s.cashflowControl.LatestPurchase, amountPaid);
             //ICashflowControl vagy tetszoleges interface hasznalata.
         }
 
