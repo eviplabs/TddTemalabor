@@ -20,12 +20,15 @@ namespace Shopping
         public CountDiscount countDiscount = new CountDiscount();
         public ComboDiscount comboDiscount = new ComboDiscount();
 
+        public event EventHandler CashPayment;
+
         public Shop(IInventory inventory, IWeightScale scale, ICashflowControl cashflowControl)
         {
             this.inventory = inventory;
             weightScale = scale;
             this.cashflowControl = cashflowControl;
             Cart = new Cart(productData, weightScale);
+            CashPayment += OnCashPayment;
         }
 
         // suly alapu termeknel 1kg arat taroljuk
@@ -155,10 +158,9 @@ namespace Shopping
 
         public double GetCartPrice()
         {
+            CashPayment.Invoke(this, EventArgs.Empty);
             inventory.RemoveProducts(Cart.Receipt);
-            var price = Cart.GetTotal();
-            cashflowControl.RecordPurchase(price);
-            return price;
+            return Cart.GetTotal();
         }
 
         public bool ProductRegistered(char name)
@@ -166,5 +168,9 @@ namespace Shopping
             return productData.Prices.ContainsKey(name);
         }
 
+        public void OnCashPayment(Object sender, EventArgs e)
+        {
+            cashflowControl.RecordPurchase(Cart.GetTotal());
+        }
     }
 }

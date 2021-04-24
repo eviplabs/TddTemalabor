@@ -104,5 +104,14 @@ namespace ShoppingTests
             //ICashflowControl vagy tetszoleges interface hasznalata.
         }
 
+        [Fact]
+        public void PayUsingPOS()
+        {
+            s.RegisterProduct('P', 125, false, 1);
+            s.Cart.Add("P");
+            var amountPaid = s.GetCartPrice();
+            s.GetCartPrice("POS"); //Fizetési módszer
+            Assert.Equal(s.cashflowControl.LatestPurchase, amountPaid);
+        }
     }
 }
