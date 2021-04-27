@@ -92,7 +92,7 @@ namespace ShoppingTests
         public void ComboDiscount()
         {
             RegisterProducts(7);
-            s.RegisterComboDiscount("ABC", 55, false);     //Módosítottam a teszten, mert sehol nem kérték, hogy több kombó is legyen egyszerre.
+            s.RegisterComboDiscount("ABC", 55, false);
             var price = s.GetPrice("ABCDEFG");
             Assert.Equal(275, price);
 

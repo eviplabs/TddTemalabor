@@ -10,7 +10,6 @@ namespace ShoppingTests
     //  https://github.com/moq/moq4
     public class RegistrationTests : ShoppingTestBase
     {
-        private readonly IInventory inventory = new InMemoryInventory();
 
         [Fact]
         public void Instantiation()
@@ -102,16 +101,6 @@ namespace ShoppingTests
             var amountPaid = s.GetCartPrice();
             Assert.Equal(s.cashflowControl.LatestPurchase, amountPaid);
             //ICashflowControl vagy tetszoleges interface hasznalata.
-        }
-
-        [Fact]
-        public void PayUsingPOS()
-        {
-            s.RegisterProduct('P', 125, false, 1);
-            s.Cart.Add("P");
-            var amountPaid = s.GetCartPrice();
-            s.GetCartPrice("POS"); //Fizetési módszer
-            Assert.Equal(s.cashflowControl.LatestPurchase, amountPaid);
         }
     }
 }

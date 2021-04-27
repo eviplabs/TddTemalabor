@@ -31,7 +31,7 @@ namespace ShoppingTests
         {
             RegisterProducts(7);
 
-            s.RegisterComboDiscount("ABC", 55, true);     //Módosítottam a teszten, mert sehol nem kérték, hogy több kombó is legyen egyszerre.
+            s.RegisterComboDiscount("ABC", 55, true);
             var price = s.GetPrice("ABCDEFG");
             Assert.Equal(280, price);
         }
