@@ -78,7 +78,7 @@ namespace Shopping
                 string path = "";
                 foreach (var c in name)
                     path = char.IsDigit(c) ? path += c : null;
-                id = Convert.ToInt32(path);
+                id = path.ToInt();
                 name = name.ReplaceNumbersFromName();
             }
 
@@ -151,7 +151,7 @@ namespace Shopping
             {
                 GroupCollection groups = match.Groups;
                 string replace = "";
-                for (int i = 0; i < Convert.ToInt32(groups[2].Value); i++)
+                for (int i = 0; i < groups[2].Value.ToInt() ; i++)
                 {
                     replace += groups[1].Value;
                 }
