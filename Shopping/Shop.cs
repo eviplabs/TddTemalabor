@@ -10,7 +10,7 @@ namespace Shopping
     {
         public List<Product> Products;
         public Dictionary<char, (int, int)> ProductCount;
-        private AmountDiscounts amountDiscounts;
+        private AmountDiscountCalculator amountDiscountCalculator;
         private CountDiscountsCalculator countDiscountsCalculator;
         private ComboDiscountCalculator comboDiscountCalculator;
         private SupershopPointsCalculator supershopPointsCalculator;
@@ -18,23 +18,11 @@ namespace Shopping
         private Inventory Inventory;
         public Shop()
         {
-            Products = new List<Product>();
-            ProductCount = new Dictionary<char, (int, int)>();
-            amountDiscounts = new AmountDiscounts();
-            countDiscountsCalculator = new CountDiscountsCalculator();
-            comboDiscountCalculator = new ComboDiscountCalculator();
-            supershopPointsCalculator = new SupershopPointsCalculator();
-            CouponCalculator = new CouponCalculator();
+            Init();
         }
         public Shop(Inventory inventory)
         {
-            Products = new List<Product>();
-            ProductCount = new Dictionary<char, (int, int)>();
-            amountDiscounts = new AmountDiscounts();
-            countDiscountsCalculator = new CountDiscountsCalculator();
-            comboDiscountCalculator = new ComboDiscountCalculator();
-            supershopPointsCalculator = new SupershopPointsCalculator();
-            CouponCalculator = new CouponCalculator();
+            Init();
             Inventory = inventory;
         }
         public void RegisterProduct(char name, double price, bool weighted = false)
@@ -84,9 +72,9 @@ namespace Shopping
 
             this.ConvertStringToDictionary(name);
 
-            if (amountDiscounts.Discounts.Count > 0)
+            if (amountDiscountCalculator.Discounts.Count > 0)
             {
-                amountDiscounts.getPrice(ProductCount, price, Products);
+                amountDiscountCalculator.getPrice(ProductCount, price, Products);
             }
             if (countDiscountsCalculator.Discounts.Count > 0)
             {
@@ -124,7 +112,7 @@ namespace Shopping
 
         public void RegisterAmountDiscount(char name, int amount, double percent, bool clubMembershipExclusive = false)
         {
-            amountDiscounts.RegisterAmountDiscount(name, amount, percent, clubMembershipExclusive);
+            amountDiscountCalculator.RegisterAmountDiscount(name, amount, percent, clubMembershipExclusive);
         }
 
         public void RegisterCountDiscount(char name, int count, int bonus, bool isDiscountclubMembershipExclusive = false)
@@ -174,6 +162,17 @@ namespace Shopping
             double count = ProductCount[c].Item1 - 1;
             double price = Products.First(p => p.Name.Equals(c)).Price;
             return count * price;
+        }
+
+        private void Init() 
+        {
+            Products = new List<Product>();
+            ProductCount = new Dictionary<char, (int, int)>();
+            amountDiscountCalculator = new AmountDiscountCalculator();
+            countDiscountsCalculator = new CountDiscountsCalculator();
+            comboDiscountCalculator = new ComboDiscountCalculator();
+            supershopPointsCalculator = new SupershopPointsCalculator();
+            CouponCalculator = new CouponCalculator();
         }
     }
 }

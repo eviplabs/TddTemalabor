@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Shopping
 {
-    class AmountDiscounts
+    class AmountDiscountCalculator
     {
-        public Dictionary<char, (int amount, double percent)> Discounts { get; }
+        public Dictionary<char, AmountDiscount> Discounts { get; }
 
         public bool clubMembershipExclusive { get; set; }
-        public AmountDiscounts()
+        public AmountDiscountCalculator()
         {
-            Discounts = new Dictionary<char, (int, double)>();
+            Discounts = new Dictionary<char, AmountDiscount>();
         }
 
         public void RegisterAmountDiscount(char name, int amount, double percent, bool clubMembershipExclusive = false)
         {
-            Discounts[name] = (amount, percent);
+            Discounts[name] = new AmountDiscount(amount, percent);
             this.clubMembershipExclusive = clubMembershipExclusive;
         }
 
-        public void getPrice(Dictionary<char, (int,int)> ProductCount, double price, List<Product> Products) 
+        public void getPrice(Dictionary<char, (int, int)> ProductCount, double price, List<Product> Products)
         {
             Dictionary<char, (int, int)> forfor = new Dictionary<char, (int, int)>(ProductCount);
             foreach (var key in forfor.Keys)
@@ -29,9 +28,10 @@ namespace Shopping
                 if (Discounts.ContainsKey(key) && ProductCount[key].Item2 >= Discounts[key].amount)
                 {
                     Products.ForEach(p => { if (p.Name == key) p.Price = ProductCount[key].Item1 * Discounts[key].percent * key.GetPriceByProductChar(Products); });
-                    ProductCount[key] = (1,ProductCount[key].Item2-Discounts[key].amount);
+                    ProductCount[key] = (1, ProductCount[key].Item2 - Discounts[key].amount);
                 }
             }
         }
+
     }
 }
