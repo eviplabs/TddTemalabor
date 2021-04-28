@@ -25,7 +25,6 @@ namespace ShoppingTests
         {           
             var price = Shop.GetPrice("AB2C3D1");
             var points = Shop.GetSupershopPoints(price);
-            //20+30+50+70 = 170 * 0.01 = 1.7
             Assert.Equal(1, points);
         }
 

@@ -34,9 +34,7 @@ namespace ShoppingTests
         public void RegisterCountDiscount()
         {            
             Shop.RegisterCountDiscount('A', 3, 4);
-            // 3 áráért 4-et vihet​
             var price = Shop.GetPrice("AAAAAEEE");
-            // 5*10+3*50 helyett 4*10+3*50​
             Assert.Equal(190, price);
         }
 
@@ -46,7 +44,6 @@ namespace ShoppingTests
             Shop.RegisterCountDiscount('A', 3, 4);
             Shop.RegisterCountDiscount('B', 2, 3);
             var price = Shop.GetPrice("AAAABBBC");
-            // 4*10 + 3​*20 + 30 --> 3*10 + 2*20 + 30
             Assert.Equal(100, price);
         }
 
@@ -64,7 +61,6 @@ namespace ShoppingTests
         {          
             Shop.RegisterComboDiscount("ABC", 50);
             var price = Shop.GetPrice("CAAAABB");
-            // ABC+AAAB -> 60+3*10+20​
             Assert.Equal(100, price);
         }
 
@@ -74,7 +70,6 @@ namespace ShoppingTests
             Shop.RegisterComboDiscount("ABC", 50);
             Shop.RegisterComboDiscount("BBB", 40);
             var price = Shop.GetPrice("CAAAABBBB");
-            // ABC+AAAB -> 60+3*10+20​
             Assert.Equal(120, price);
         }
 
@@ -83,7 +78,6 @@ namespace ShoppingTests
         {            
             Shop.RegisterComboDiscount("ABC", 50);
             var price = Shop.GetPrice("ABCABC");
-            // ABC+AAAB -> 60+3*10+20​
             Assert.Equal(100, price);
         }
 
@@ -102,7 +96,6 @@ namespace ShoppingTests
             Shop.RegisterCountDiscount('A', 3, 5);
             Shop.RegisterComboDiscount("ABC", 50, false);
             var price = Shop.GetPrice("AAAAABC");
-            //20*3+30+50 = 140
             Assert.Equal(80, price);
         }
 
@@ -112,7 +105,6 @@ namespace ShoppingTests
             Shop.RegisterCountDiscount('A', 3, 5);
             Shop.RegisterComboDiscount("BBB", 50, false);
             var price = Shop.GetPrice("AAAAABBBC");
-            //20*3+60+50 = 170
             Assert.Equal(110, price);
         }
 
@@ -122,7 +114,6 @@ namespace ShoppingTests
             Shop.RegisterCountDiscount('A', 3, 5, true);
             Shop.RegisterComboDiscount("BBB", 50, false);
             var price = Shop.GetPrice("AAAAABBBC");
-            //(20*5+60+50) = 210
             Assert.Equal(130, price);
         }
 
@@ -133,7 +124,6 @@ namespace ShoppingTests
             Shop.RegisterComboDiscount("BBB", 50, false);
             Shop.RegisterAmountDiscount('A', 3, 0.5, false);
             var price = Shop.GetPrice("AAAAABBBC");
-            //(5*(20*0.5)+60+50) = 160
             Assert.Equal(105, price);
         }
     }

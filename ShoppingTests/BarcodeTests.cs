@@ -27,7 +27,6 @@ namespace ShoppingTests
             Shop.RegisterProduct('C', 30, false);
             var price = Shop.GetPrice("AB1200C");
             Assert.Equal(160, price);
-            //10+100*1.2+30 = 160
         }
     }
 }
