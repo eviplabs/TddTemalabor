@@ -18,32 +18,6 @@ namespace Shopping
         {
            ComboDiscounts[name] = new ComboDiscount(newprice, clubMembership);
         }
-       /* public void getPrice(Dictionary<char, (int, int)> ProductCount) {
-            string name = null; ;
-            foreach (var a in ProductCount.Keys)
-            {
-                for (int i = 0; i < ProductCount[a].Item2; i++)
-                {
-                    name += a;
-                }
-            }
-            Dictionary<char, (int, int)> Product = name.GroupBy(c => c)
-               .Select(c => new { c.Key, Count = c.Count(), Remains = c.Count() })
-               .ToDictionary(t => t.Key, t => (t.Count, t.Remains));
-
-            try { 
-                
-
-
-
-            }
-            catch(){
-            
-            }
-            
-        }*/
-
-
         public double getPrice(string name, bool clubmember, double price,List<Product> products)
         {
             string comboString;
