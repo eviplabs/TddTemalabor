@@ -12,8 +12,7 @@ namespace ShoppingTests
 
         [Fact]
         public void A2B2equalsAABB() {
-            Shop.RegisterProduct('A', 10);
-            Shop.RegisterProduct('B', 20);
+            SetupTestEnvironment.SetupEnvironment(Shop);
             var price = Shop.GetPrice("A2B2");
             var price2 = Shop.GetPrice("AABB");
             Assert.Equal(price, price2);

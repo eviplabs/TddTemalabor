@@ -12,8 +12,7 @@ namespace ShoppingTests
         [Fact]
         public void RegisterUniqueCoupon() 
         {
-            Shop.RegisterProduct('A', 10);
-            Shop.RegisterProduct('B', 20);
+            SetupTestEnvironment.SetupEnvironment(Shop);
             Shop.RegisterCoupon("112554", 0.9);
             //-10% kupon
 
