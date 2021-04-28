@@ -14,16 +14,16 @@ namespace Shopping
         private CountDiscountsCalculator countDiscountsCalculator;
         private ComboDiscountCalculator comboDiscountCalculator;
         private SupershopPointsCalculator supershopPointsCalculator;
-        private CouponCalculator CouponCalculator;
-        private Inventory Inventory;
+        private CouponCalculator couponCalculator;
+        private Inventory Inventory ;
         public Shop()
         {
             Init();
         }
-        public Shop(Inventory inventory)
+        public Shop(Inventory Inventory)
         {
             Init();
-            Inventory = inventory;
+            this.Inventory = Inventory;
         }
         public void RegisterProduct(char name, double price, bool weighted = false)
         {
@@ -58,7 +58,7 @@ namespace Shopping
             if (couponmatch.Success)
             {
                 name = name.Replace(couponmatch.Value, "");
-                CouponCalculator.setActiveCoupon(couponmatch.Groups[1].Value.ToInt());
+                couponCalculator.setActiveCoupon(couponmatch.Groups[1].Value.ToInt());
             }
             name = BarcodeHandler(name);
             if (name.Any(char.IsDigit))
@@ -72,24 +72,19 @@ namespace Shopping
 
             this.ConvertStringToDictionary(name);
 
-            if (amountDiscountCalculator.Discounts.Count > 0)
-            {
-                amountDiscountCalculator.getPrice(ProductCount, price, Products);
-            }
-            if (countDiscountsCalculator.Discounts.Count > 0)
-            {
-                countDiscountsCalculator.getPrice(ProductCount, clubmember);
-            }
+            amountDiscountCalculator.ApplyDiscount(ProductCount, price, Products);
+            countDiscountsCalculator.getPrice(ProductCount, clubmember);
+
             name = null;
-            foreach (var a in ProductCount.Keys) {
-                for (int i = 0; i < ProductCount[a].Item2; i++) {
+            foreach (var a in ProductCount.Keys) 
+            {
+                for (int i = 0; i < ProductCount[a].Item2; i++) 
+                {
                     name += a;
                 }
             }
-            if (comboDiscountCalculator.ComboDiscounts.Count > 0)
-            {
-                price = comboDiscountCalculator.getPrice(name, clubmember, price, Products);
-            }
+
+            price = comboDiscountCalculator.getPrice(name, clubmember, price, Products);
 
             foreach (var key in ProductCount.Keys)
             {
@@ -100,11 +95,9 @@ namespace Shopping
 
             }
 
-            if (supershopPointsCalculator.GetSupershopPointsList().Count > 0)
-            {
-                supershopPointsCalculator.AddSupershopPoint(id, price);
-            }
-            price = CouponCalculator.ActivateCoupon(price);
+            supershopPointsCalculator.AddSupershopPoint(id, price);
+
+            price = couponCalculator.ActivateCoupon(price);
 
             return clubmember ? price * 0.9 - (supershoppointusedtopay ? supershopPointsCalculator.GetSupershopPoints(price) : 0)
                 : price - (supershoppointusedtopay ? supershopPointsCalculator.GetSupershopPoints(price) : 0);
@@ -129,7 +122,7 @@ namespace Shopping
         }
 
         public void RegisterCoupon(string id, double Discount) {
-            CouponCalculator.registerCoupon(Convert.ToInt32(id), Discount);
+            couponCalculator.registerCoupon(Convert.ToInt32(id), Discount);
         }
 
         private string BarcodeHandler(string name)
@@ -172,7 +165,7 @@ namespace Shopping
             countDiscountsCalculator = new CountDiscountsCalculator();
             comboDiscountCalculator = new ComboDiscountCalculator();
             supershopPointsCalculator = new SupershopPointsCalculator();
-            CouponCalculator = new CouponCalculator();
+            couponCalculator = new CouponCalculator();
         }
     }
 }

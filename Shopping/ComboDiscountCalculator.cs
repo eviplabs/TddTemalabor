@@ -7,48 +7,55 @@ namespace Shopping
 {
     class ComboDiscountCalculator
     {
-        public Dictionary<string, ComboDiscount> ComboDiscounts { get; }
+        private Dictionary<string, ComboDiscount> Discounts { get; }
 
         public ComboDiscountCalculator()
         {
-            ComboDiscounts = new Dictionary<string, ComboDiscount>();
+            Discounts = new Dictionary<string, ComboDiscount>();
         }
 
         public void RegisterComboDiscount(string name, int newprice, bool clubMembership = false)
         {
-           ComboDiscounts[name] = new ComboDiscount(newprice, clubMembership);
+           Discounts[name] = new ComboDiscount(newprice, clubMembership);
         }
         public double getPrice(string name, bool clubmember, double price,List<Product> products)
         {
-            string comboString;
-            int count = name.GroupBy(c => c).Min(c => c.Count());
 
-            foreach (var item in ComboDiscounts)
+            if (Discounts.Count > 0) 
             {
-                if (item.Value.clubMembershipOnly == false || (item.Value.clubMembershipOnly == true && clubmember))
+                string comboString;
+                int count = name.GroupBy(c => c).Min(c => c.Count());
+
+                foreach (var item in Discounts)
                 {
-                    comboString = new string(name);
-                    int combo = 0;
-                    try
+                    if (item.Value.clubMembershipOnly == false || (item.Value.clubMembershipOnly == true && clubmember))
                     {
-                        for (int i = 0; i < count; i++)
+                        comboString = new string(name);
+                        int combo = 0;
+                        try
                         {
-                            combo = 0;
-                            foreach (var c in item.Key)
+                            for (int i = 0; i < count; i++)
                             {
-                                comboString = comboString.Remove(comboString.IndexOf(c), c.ToString().Length);
-                                price -= c.GetPriceByProductChar(products);
-                                combo++;
+                                combo = 0;
+                                foreach (var c in item.Key)
+                                {
+                                    comboString = comboString.Remove(comboString.IndexOf(c), c.ToString().Length);
+                                    price -= c.GetPriceByProductChar(products);
+                                    combo++;
+                                }
+                            }
+                            if (combo == item.Key.Length)
+                            {
+                                price += item.Value.newprice * count;
                             }
                         }
-                        if (combo == item.Key.Length)
+                        catch(Exception e) 
                         {
-                            price += item.Value.newprice * count;
+                            Console.WriteLine(e.StackTrace);
                         }
                     }
-                    catch { }
                 }
-            }
+            }            
             return price;
         }
     }

@@ -14,12 +14,10 @@ namespace Shopping
 
         public void AddSupershopPoint(int id, double price)
         {
-            SupershopPoints.Add(new SuperShopPoint(id, GetSupershopPoints(price)));
-        }
-
-        public List<SuperShopPoint> GetSupershopPointsList() 
-        {
-            return SupershopPoints;
+            if(SupershopPoints.Count > 0) 
+            {
+                SupershopPoints.Add(new SuperShopPoint(id, GetSupershopPoints(price)));
+            }
         }
 
         public double GetSupershopPoints(double price) 
