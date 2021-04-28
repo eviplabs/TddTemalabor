@@ -28,7 +28,7 @@ namespace Shopping
             return (pc - (pc / b) * (b - a),pc-b);
         }
 
-        public void ApplyDiscount(Dictionary<char, (int, int)> ProductCount, bool isUserClubMember)
+        public void ApplyDiscount(Dictionary<char, (int Actual, int ToCountBy)> ProductCount, bool isUserClubMember)
         {
             if(Discounts.Count > 0) 
             {
@@ -37,7 +37,7 @@ namespace Shopping
                 foreach (var key in forfor.Keys)
                 {
 
-                    if (Discounts.ContainsKey(key) && ProductCount[key].Item2 >= Discounts[key].bonus)
+                    if (Discounts.ContainsKey(key) && ProductCount[key].ToCountBy >= Discounts[key].bonus)
                     {
                         if (Discounts[key].clubMembershipExclusive == false || Discounts[key].clubMembershipExclusive == true && isUserClubMember)
                         {

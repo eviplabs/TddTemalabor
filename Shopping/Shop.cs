@@ -9,7 +9,7 @@ namespace Shopping
     public class Shop
     {
         public List<Product> Products;
-        public Dictionary<char, (int actual, int ToCountBy)> ProductCount;
+        public Dictionary<char, (int Actual, int ToCountBy)> ProductCount;
         private AmountDiscountCalculator amountDiscountCalculator;
         private CountDiscountsCalculator countDiscountsCalculator;
         private ComboDiscountCalculator comboDiscountCalculator;
@@ -88,9 +88,9 @@ namespace Shopping
 
                 if (Inventory != null)
                 {
-                    if (Inventory.products[key] >= ProductCount[key].actual)
+                    if (Inventory.products[key] >= ProductCount[key].Actual)
                     {
-                        Inventory.SetQuanity(key, Inventory.products[key] - ProductCount[key].actual);
+                        Inventory.SetQuanity(key, Inventory.products[key] - ProductCount[key].Actual);
                         price += ProductCount[key].Item1 * key.GetPriceByProductChar(Products);
                     }
                 }
