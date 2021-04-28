@@ -14,7 +14,6 @@ namespace Shopping
         private CountDiscountsCalculator countDiscountsCalculator;
         private ComboDiscountCalculator comboDiscountCalculator;
         private SupershopPointsCalculator supershopPointsCalculator;
-        private List<SuperShopPoint> SupershopPoints;
         private CouponCalculator CouponCalculator;
         private Inventory Inventory;
         public Shop()
@@ -25,7 +24,6 @@ namespace Shopping
             countDiscountsCalculator = new CountDiscountsCalculator();
             comboDiscountCalculator = new ComboDiscountCalculator();
             supershopPointsCalculator = new SupershopPointsCalculator();
-            SupershopPoints = new List<SuperShopPoint>();
             CouponCalculator = new CouponCalculator();
         }
         public Shop(Inventory inventory)
@@ -36,7 +34,6 @@ namespace Shopping
             countDiscountsCalculator = new CountDiscountsCalculator();
             comboDiscountCalculator = new ComboDiscountCalculator();
             supershopPointsCalculator = new SupershopPointsCalculator();
-            SupershopPoints = new List<SuperShopPoint>();
             CouponCalculator = new CouponCalculator();
             Inventory = inventory;
         }
@@ -115,7 +112,7 @@ namespace Shopping
 
             }
 
-            if (SupershopPoints.Count > 0)
+            if (supershopPointsCalculator.GetSupershopPointsList().Count > 0)
             {
                 supershopPointsCalculator.AddSupershopPoint(id, price);
             }
