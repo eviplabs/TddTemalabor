@@ -28,7 +28,7 @@ namespace Shopping
             return (pc - (pc / b) * (b - a),pc-b);
         }
 
-        public void getPrice(Dictionary<char, (int, int)> ProductCount, bool isUserClubMember)
+        public void ApplyDiscount(Dictionary<char, (int, int)> ProductCount, bool isUserClubMember)
         {
             if(Discounts.Count > 0) 
             {

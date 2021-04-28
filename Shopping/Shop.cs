@@ -9,7 +9,7 @@ namespace Shopping
     public class Shop
     {
         public List<Product> Products;
-        public Dictionary<char, (int, int)> ProductCount;
+        public Dictionary<char, (int actual, int ToCountBy)> ProductCount;
         private AmountDiscountCalculator amountDiscountCalculator;
         private CountDiscountsCalculator countDiscountsCalculator;
         private ComboDiscountCalculator comboDiscountCalculator;
@@ -32,11 +32,11 @@ namespace Shopping
 
         public double GetPrice(string name)
         {
-
             bool supershoppointusedtopay = false;
             bool clubmember = false;
             double price = 0;
             int id = 0;
+
             if (name.Contains("p"))
             {
                 supershoppointusedtopay = true;
@@ -60,47 +60,89 @@ namespace Shopping
                 name = name.Replace(couponmatch.Value, "");
                 couponCalculator.setActiveCoupon(couponmatch.Groups[1].Value.ToInt());
             }
-            name = BarcodeHandler(name);
-            if (name.Any(char.IsDigit))
-            {
-                string path = "";
-                foreach (var c in name)
-                    path = char.IsDigit(c) ? path += c : null;
-                id = path.ToInt();
-                name = name.ReplaceNumbersFromName();
-            }
 
-            this.ConvertStringToDictionary(name);
+            name = BarcodeHandler(name);
+
+            ProductCount = name.ConvertStringToDictionary();
 
             amountDiscountCalculator.ApplyDiscount(ProductCount, price, Products);
-            countDiscountsCalculator.getPrice(ProductCount, clubmember);
+            countDiscountsCalculator.ApplyDiscount(ProductCount, clubmember);
 
-            name = null;
-            foreach (var a in ProductCount.Keys) 
-            {
-                for (int i = 0; i < ProductCount[a].Item2; i++) 
-                {
-                    name += a;
-                }
-            }
+            name = ProductCount.RebuildName();
 
-            price = comboDiscountCalculator.getPrice(name, clubmember, price, Products);
+            price = comboDiscountCalculator.ApplyDiscount(name, clubmember, price, Products);
 
-            foreach (var key in ProductCount.Keys)
-            {
-                price += ProductCount[key].Item1 * key.GetPriceByProductChar(Products);
-                if (Inventory != null) {
-                    Inventory.SetQuanity(key, Inventory.products[key] - ProductCount[key].Item1);
-                }
-
-            }
+            price = SumPrice(price);
 
             supershopPointsCalculator.AddSupershopPoint(id, price);
 
             price = couponCalculator.ActivateCoupon(price);
 
-            return clubmember ? price * 0.9 - (supershoppointusedtopay ? supershopPointsCalculator.GetSupershopPoints(price) : 0)
-                : price - (supershoppointusedtopay ? supershopPointsCalculator.GetSupershopPoints(price) : 0);
+            return FinalPrice(price, supershoppointusedtopay, clubmember);
+        }
+
+        private double SumPrice(double price) 
+        {
+            foreach (var key in ProductCount.Keys)
+            {
+
+                if (Inventory != null)
+                {
+                    if (Inventory.products[key] >= ProductCount[key].actual)
+                    {
+                        Inventory.SetQuanity(key, Inventory.products[key] - ProductCount[key].actual);
+                        price += ProductCount[key].Item1 * key.GetPriceByProductChar(Products);
+                    }
+                }
+                else
+                {
+                    price += ProductCount[key].Item1 * key.GetPriceByProductChar(Products);
+                }
+            }
+
+            return price;
+        }
+
+        private double FinalPrice(double price, bool supershoppointusedtopay, bool clubmember) 
+        {
+            double supershopPoints = (supershoppointusedtopay ? supershopPointsCalculator.GetSupershopPoints(price) : 0);
+            return clubmember ? price * 0.9 - supershopPoints : price - supershopPoints;
+        }
+
+        private string BarcodeHandler(string name)
+        {
+            MatchCollection barcodeMatches = Regex.Matches(name, @"(\w)([\d]+)");
+            foreach (Match match in barcodeMatches)
+            {
+                GroupCollection groups = match.Groups;
+                string replace = "";
+                for (int i = 0; i < groups[2].Value.ToInt(); i++)
+                {
+                    replace += groups[1].Value;
+                }
+                name = name.Replace(match.ToString(), replace);
+            }
+            return name;
+        }
+
+        public double ReturnItem(string product)
+        {
+            char c = Convert.ToChar(product);
+            Inventory.SetQuanity(c, 1);
+            double count = ProductCount[c].Item1 - 1;
+            double price = Products.First(p => p.Name.Equals(c)).Price;
+            return count * price;
+        }
+
+        private void Init()
+        {
+            Products = new List<Product>();
+            ProductCount = new Dictionary<char, (int, int)>();
+            amountDiscountCalculator = new AmountDiscountCalculator();
+            countDiscountsCalculator = new CountDiscountsCalculator();
+            comboDiscountCalculator = new ComboDiscountCalculator();
+            supershopPointsCalculator = new SupershopPointsCalculator();
+            couponCalculator = new CouponCalculator();
         }
 
         public void RegisterAmountDiscount(char name, int amount, double percent, bool clubMembershipExclusive = false)
@@ -117,55 +159,14 @@ namespace Shopping
             comboDiscountCalculator.RegisterComboDiscount(name, newprice, clubMembership);
         }
 
-        public double GetSupershopPoints(double price) {
-            return supershopPointsCalculator.GetSupershopPoints(price);
-        }
-
-        public void RegisterCoupon(string id, double Discount) {
+        public void RegisterCoupon(string id, double Discount)
+        {
             couponCalculator.registerCoupon(Convert.ToInt32(id), Discount);
         }
 
-        private string BarcodeHandler(string name)
+        public double GetSupershopPoints(double price) 
         {
-            MatchCollection barcodeMatches = Regex.Matches(name, @"(\w)([\d]+)");
-            foreach (Match match in barcodeMatches)
-            {
-                GroupCollection groups = match.Groups;
-                string replace = "";
-                for (int i = 0; i < groups[2].Value.ToInt() ; i++)
-                {
-                    replace += groups[1].Value;
-                }
-                name = name.Replace(match.ToString(), replace);
-            }
-            return name;
-        }
-
-        private void ConvertStringToDictionary(string name) 
-        {
-            this.ProductCount = name.GroupBy(c => c)
-                .Select(c => new { c.Key, Count = c.Count(), Remains = c.Count() })
-                .ToDictionary(t => t.Key, t => (t.Count, t.Remains));
-        }
-
-        public double ReturnItem(string product)
-        {
-            char c = Convert.ToChar(product);
-            Inventory.SetQuanity(c, 1);
-            double count = ProductCount[c].Item1 - 1;
-            double price = Products.First(p => p.Name.Equals(c)).Price;
-            return count * price;
-        }
-
-        private void Init() 
-        {
-            Products = new List<Product>();
-            ProductCount = new Dictionary<char, (int, int)>();
-            amountDiscountCalculator = new AmountDiscountCalculator();
-            countDiscountsCalculator = new CountDiscountsCalculator();
-            comboDiscountCalculator = new ComboDiscountCalculator();
-            supershopPointsCalculator = new SupershopPointsCalculator();
-            couponCalculator = new CouponCalculator();
+            return supershopPointsCalculator.GetSupershopPoints(price);
         }
     }
 }

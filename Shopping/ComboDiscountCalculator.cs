@@ -18,7 +18,7 @@ namespace Shopping
         {
            Discounts[name] = new ComboDiscount(newprice, clubMembership);
         }
-        public double getPrice(string name, bool clubmember, double price,List<Product> products)
+        public double ApplyDiscount(string name, bool clubmember, double price,List<Product> products)
         {
 
             if (Discounts.Count > 0) 
