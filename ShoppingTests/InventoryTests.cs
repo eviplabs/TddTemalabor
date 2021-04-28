@@ -8,9 +8,6 @@ namespace ShoppingTests
 {
     public class InventoryTests
     {
-
-
-
         [Fact]
         public void GetInventoryQuantity()
         {
@@ -40,7 +37,7 @@ namespace ShoppingTests
             var originalPrice = Shop.GetPrice("AAAAA");
             Assert.Equal(50, originalPrice);
 
-            var priceAfterReturn=Shop.ReturnItem("A");
+            var priceAfterReturn = Shop.ReturnItem("A");
             Assert.Equal(1, Inventory.products['A']);
             Assert.Equal(40, priceAfterReturn);
         }
