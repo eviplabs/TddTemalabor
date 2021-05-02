@@ -32,34 +32,32 @@ namespace Shopping
                     }
                     numberSubstring = "";
                 }
-                if (readingState == CartProcessorEvents.ProductReading)
+                switch (readingState)
                 {
-                    currentProduct = element;
-                    cartManager = addProduct(cartManager, currentProduct);
-                }
-                else if(readingState == CartProcessorEvents.MassProductReading)
-                {
-                    numberSubstring += element;
-                }
-                else if(readingState == CartProcessorEvents.UserIDReading)
-                {
-                    if(element == userIDKey)
-                    {
-                        continue;
-                    }
-                    ID += element;
-                }
-                else if(readingState == CartProcessorEvents.SuperShopPayment)
-                {
-                    SSpaymentReading = true;
-                }
-                else if(readingState == CartProcessorEvents.CouponReading)
-                {
-                    if (element == couponKey)
-                    {
-                        continue;
-                    }
-                    coupon += element;
+                    case CartProcessorEvents.ProductReading:
+                        currentProduct = element;
+                        cartManager = addProduct(cartManager, currentProduct);
+                        break;
+                    case CartProcessorEvents.MassProductReading:
+                        numberSubstring += element;
+                        break;
+                    case CartProcessorEvents.UserIDReading:
+                        if (element == userIDKey)
+                        {
+                            continue;
+                        }
+                        ID += element;
+                        break;
+                    case CartProcessorEvents.SuperShopPayment:
+                        SSpaymentReading = true;
+                        break;
+                    case CartProcessorEvents.CouponReading:
+                        if (element == couponKey)
+                        {
+                            continue;
+                        }
+                        coupon += element;
+                        break;
                 }
             }
             if(numberSubstring != "")
