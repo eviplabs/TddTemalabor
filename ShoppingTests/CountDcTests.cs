@@ -73,20 +73,22 @@ namespace ShoppingTests
             sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 3));
             AssertPrice(200, "C6");
         }
-        [Fact]
-        public void RegisterCountDiscountAppliedOnceAndAHalf()
+
+        [Theory]
+        [InlineData(100, "C4")]
+        [InlineData(150, "C5")]
+        [InlineData(200, "C6")]
+        [InlineData(200, "C7")]
+        [InlineData(200, "C8")]
+        [InlineData(250, "C9")]
+        [InlineData(300, "C10")]
+        [InlineData(300, "C11")]
+        [InlineData(300, "C12")]
+        [InlineData(350, "C13")]
+        public void RegisterCountDiscountWithoutAppliedTheWhole(int expected, string cart)
         {
             sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 4));
-            AssertPrice(100, "C4");
-            AssertPrice(150, "C5");
-            AssertPrice(200, "C6");
-            AssertPrice(200, "C7");
-            AssertPrice(200, "C8");
-            AssertPrice(250, "C9");
-            AssertPrice(300, "C10");
-            AssertPrice(300, "C11");
-            AssertPrice(300, "C12");
-            AssertPrice(350, "C13");
+            AssertPrice(expected, cart);
         }
     }
 }
