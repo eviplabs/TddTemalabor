@@ -16,6 +16,11 @@ namespace Shopping
         private SupershopPointsCalculator supershopPointsCalculator;
         private CouponCalculator couponCalculator;
         private Inventory Inventory ;
+
+        private bool SuperShopPointUsedToPay = false;
+        private bool ClubMember = false;
+        private int id = 0;
+
         public Shop()
         {
             Init();
@@ -32,45 +37,20 @@ namespace Shopping
 
         public double GetPrice(string name)
         {
-            bool supershoppointusedtopay = false;
-            bool clubmember = false;
+            ResetFields();
+
             double price = 0;
-            int id = 0;
 
-            if (name.Contains("p"))
-            {
-                supershoppointusedtopay = true;
-                name = name.Replace("p", "");
-            }
-            if (name.Contains("t"))
-            {
-                clubmember = true;
-                name = name.Replace("t", "");
-            }
-            Match customer = Regex.Match(name, @"[v]([\d]+)");
-            if (customer.Success)
-            {
-                clubmember = true;
-                name = name.Replace(customer.Value, "");
-                id = customer.Groups[1].Value.ToInt();
-            }
-            Match couponmatch = Regex.Match(name, @"[k]([\d]+)");
-            if (couponmatch.Success)
-            {
-                name = name.Replace(couponmatch.Value, "");
-                couponCalculator.setActiveCoupon(couponmatch.Groups[1].Value.ToInt());
-            }
-
-            name = BarcodeHandler(name);
+            name = NameChecks(name);
 
             ProductCount = name.ConvertStringToDictionary();
 
-            amountDiscountCalculator.ApplyDiscount(ProductCount, price, Products);
-            countDiscountsCalculator.ApplyDiscount(ProductCount, clubmember);
+            amountDiscountCalculator.ApplyDiscount(ProductCount, Products);
+            countDiscountsCalculator.ApplyDiscount(ProductCount, ClubMember);
 
             name = ProductCount.RebuildName();
 
-            price = comboDiscountCalculator.ApplyDiscount(name, clubmember, price, Products);
+            price = comboDiscountCalculator.ApplyDiscount(name, ClubMember, price, Products);
 
             price = SumPrice(price);
 
@@ -78,7 +58,7 @@ namespace Shopping
 
             price = couponCalculator.ActivateCoupon(price);
 
-            return FinalPrice(price, supershoppointusedtopay, clubmember);
+            return FinalPrice(price, SuperShopPointUsedToPay, ClubMember); ;
         }
 
         private double SumPrice(double price) 
@@ -144,6 +124,76 @@ namespace Shopping
             supershopPointsCalculator = new SupershopPointsCalculator();
             couponCalculator = new CouponCalculator();
         }
+
+
+        private string CheckIfSuperPointsUsed(string name)
+        {
+            if (name.Contains("p"))
+            {
+                SuperShopPointUsedToPay = true;
+                name = name.Replace("p", "");
+            }
+
+            return name;
+        }
+
+        private string CheckIfClubMember(string name)
+        {
+            if (name.Contains("t"))
+            {
+                ClubMember = true;
+                name = name.Replace("t", "");
+            }
+
+            return name;
+        }
+
+        private string CheckIfUserIdUsed(string name)
+        {
+            Match customer = Regex.Match(name, @"[v]([\d]+)");
+            if (customer.Success)
+            {
+                ClubMember = true;
+                name = name.Replace(customer.Value, "");
+                id = customer.Groups[1].Value.ToInt();
+            }
+
+            return name;
+        }
+
+
+
+        private string CheckIfCouponUsed(string name)
+        {
+            Match couponmatch = Regex.Match(name, @"[k]([\d]+)");
+            if (couponmatch.Success)
+            {
+                name = name.Replace(couponmatch.Value, "");
+                couponCalculator.setActiveCoupon(couponmatch.Groups[1].Value.ToInt());
+            }
+
+            return name;
+        }
+
+
+        private string NameChecks(string name)
+        {
+            name = CheckIfSuperPointsUsed(name);
+            name = CheckIfClubMember(name);
+            name = CheckIfUserIdUsed(name);
+            name = CheckIfCouponUsed(name);
+            name = BarcodeHandler(name);
+
+            return name;
+        }
+
+        private void ResetFields()
+        {
+            SuperShopPointUsedToPay = false;
+            ClubMember = false;
+            id = 0;
+        }
+
 
         public void RegisterAmountDiscount(char name, int amount, double percent, bool clubMembershipExclusive = false)
         {

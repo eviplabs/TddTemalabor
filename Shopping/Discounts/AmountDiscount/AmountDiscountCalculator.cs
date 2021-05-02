@@ -20,7 +20,7 @@ namespace Shopping
             this.clubMembershipExclusive = clubMembershipExclusive;
         }
 
-        public void ApplyDiscount(Dictionary<char, (int Actual, int ToCountBy)> ProductCount, double price, List<Product> Products)
+        public void ApplyDiscount(Dictionary<char, (int Actual, int ToCountBy)> ProductCount, List<Product> Products)
         {
             if(Discounts.Count > 0) 
             {
