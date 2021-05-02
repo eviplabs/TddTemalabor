@@ -43,7 +43,7 @@ namespace Shopping
             return (dcProducts.Sum(p => p.price) - newPrice) * maxOccurence;
         }
 
-        protected override void removeFromCart(ref Dictionary<char, int> productsInCart, int occurence)
+        private void removeFromCart(ref Dictionary<char, int> productsInCart, int occurence)
         {
             foreach(var product in dcProducts)
             {

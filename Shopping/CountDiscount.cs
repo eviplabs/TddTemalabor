@@ -30,16 +30,10 @@ namespace Shopping
             int relevants = getRelevantItemsFromCart(productsInCart, dcProduct.name);
             if (relevants > required)
             {
-                removeFromCart(ref productsInCart, relevants);
                 int discountedExtras = relevants % freeItem > required ? relevants % freeItem - required : 0;
                 return ((relevants / freeItem) * (freeItem - required) + discountedExtras) * dcProduct.price;
             }
             return 0;
-        }
-
-        protected override void removeFromCart(ref Dictionary<char, int> productsInCart, int occurence)
-        {
-            productsInCart[dcProduct.name] -= occurence;
         }
         #endregion
     }

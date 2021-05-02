@@ -30,15 +30,9 @@ namespace Shopping
             int relevants = getRelevantItemsFromCart(productsInCart, dcProduct.name);
             if(relevants >= amount)
             {
-                removeFromCart(ref productsInCart, relevants);
                 return relevants * dcProduct.price * (1 - multiplier);
             }
             return 0;
-        }
-
-        protected override void removeFromCart(ref Dictionary<char, int> productsInCart, int occurence)
-        {
-            productsInCart[dcProduct.name] -= occurence;
         }
         #endregion
     }

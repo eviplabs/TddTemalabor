@@ -7,7 +7,6 @@ namespace Shopping
         protected bool membershipRequired;
         #region Abstracts
         public abstract double getDiscount(ref Dictionary<char, int> productsInCart, bool hasMembership);
-        protected abstract void removeFromCart(ref Dictionary<char, int> productsInCart, int occurence);
         #endregion
 
         #region Init
