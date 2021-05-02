@@ -70,5 +70,13 @@ namespace ShoppingTests
             AssertPrice(90, "A10");
         }
 
+        [Fact]
+        public void RegisterAmountDiscountWithMultipleDiscounts()
+        {
+            sh.RegisterDiscount("A", new AmountDiscount(sh.products['A'], 5, 0.9));
+            sh.RegisterDiscount("B", new AmountDiscount(sh.products['B'], 5, 0.9));
+            AssertPrice(180, "A10B5");
+        }
+
     }
 }
