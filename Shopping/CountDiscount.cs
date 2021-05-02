@@ -31,18 +31,8 @@ namespace Shopping
             if (relevants > required)
             {
                 removeFromCart(ref productsInCart, relevants);
-                if ((double)relevants / freeItem % 1 == 0)
-                //if the customer claimed the full discount
-                {
-                    return (relevants / freeItem) * (freeItem - required) * dcProduct.price;
-                }
-                else
-                //if the customer claimed the discount only partly
-                //forExample: if you pay for 2, you could take 4 but you only take 3
-                {
-                    int discountedExtras = relevants % freeItem > required ? relevants % freeItem - required : 0;
-                    return ( (relevants / freeItem) * (freeItem - required) + discountedExtras) * dcProduct.price; // + (freeItem - relevants) * dcProduct.price;
-                }
+                int discountedExtras = relevants % freeItem > required ? relevants % freeItem - required : 0;
+                return ((relevants / freeItem) * (freeItem - required) + discountedExtras) * dcProduct.price;
             }
             return 0;
         }
