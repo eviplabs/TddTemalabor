@@ -31,7 +31,6 @@ namespace Shopping
             if (relevants > required)
             {
                 removeFromCart(ref productsInCart, relevants);
-                double tmp = (double)relevants / freeItem;
                 if ((double)relevants / freeItem % 1 == 0)
                 //if the customer claimed the full discount
                 {
@@ -41,7 +40,8 @@ namespace Shopping
                 //if the customer claimed the discount only partly
                 //forExample: if you pay for 2, you could take 4 but you only take 3
                 {
-                    return (relevants / freeItem) * (freeItem - required) * dcProduct.price + (freeItem - relevants) * dcProduct.price;
+                    int discountedExtras = relevants % freeItem > required ? relevants % freeItem - required : 0;
+                    return ( (relevants / freeItem) * (freeItem - required) + discountedExtras) * dcProduct.price; // + (freeItem - relevants) * dcProduct.price;
                 }
             }
             return 0;
