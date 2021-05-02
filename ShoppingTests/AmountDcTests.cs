@@ -57,5 +57,18 @@ namespace ShoppingTests
             AssertPrice(41, "AAAAAv1");
             AssertPrice(50, "AAAAA");
         }
+        [Fact]
+        public void RegisterAmountDiscountWithOnlyRequiquedProducts()
+        {
+            sh.RegisterDiscount("A", new AmountDiscount(sh.products['A'], 5, 0.9));
+            AssertPrice(45, "A5");
+        }
+        [Fact]
+        public void RegisterAmountDiscountWithTwiceTheRequiquedProducts()
+        {
+            sh.RegisterDiscount("A", new AmountDiscount(sh.products['A'], 5, 0.9));
+            AssertPrice(90, "A10");
+        }
+
     }
 }
