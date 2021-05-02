@@ -121,5 +121,15 @@ namespace ShoppingTests
             AssertPrice(18, "ABv1");
             AssertPrice(30, "AB");
         }
+        [Fact]
+        public void RegisterComboDiscountWithOnlyOneProduct()
+        //it is the same if we would have lowered/raised the product's price (but should not be used for that reason, beacuse it is still a type of discount)
+        {
+            List<Product> productList = new List<Product>();
+            productList.Add(sh.products['C']);
+            sh.RegisterDiscount("C", new ComboDiscount(productList, 60));
+            AssertPrice(60, "C");
+            AssertPrice(120, "CC");
+        }
     }
 }
