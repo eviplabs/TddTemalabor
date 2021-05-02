@@ -48,5 +48,35 @@ namespace ShoppingTests
             AssertPrice(9, "AAv1");
             AssertPrice(20, "AA");
         }
+        [Fact]
+        public void RegisterCountDiscountWithoutReleventProductsInCart()
+        {
+            sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 3));
+            AssertPrice(440, "AAAADDDD");
+        }
+        [Fact]
+        public void RegisterCountDiscountMultipleCountDiscounts()
+        {
+            sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 4));
+            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 3, 4));
+            AssertPrice(130, "A4C4");
+        }
+        [Fact]
+        public void RegisterCountDiscountWithOnlyOneFreeItem()
+        {
+            sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 4));
+            AssertPrice(100, "C3");
+        }
+        [Fact]
+        public void RegisterCountDiscountAppliedTwice()
+        {
+            sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 3));
+            AssertPrice(200, "C6");
+        }
+        public void RegisterCountDiscountAppliedOnceAndAHalf()
+        {
+            sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 4));
+            AssertPrice(200, "C7");
+        }
     }
 }

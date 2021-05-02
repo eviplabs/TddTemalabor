@@ -28,10 +28,21 @@ namespace Shopping
                 return 0;
             }
             int relevants = getRelevantItemsFromCart(productsInCart, dcProduct.name);
-            if (relevants >= freeItem)
+            if (relevants > required)
             {
                 removeFromCart(ref productsInCart, relevants);
-                return (relevants / freeItem) * (freeItem - required) * dcProduct.price;
+                double tmp = (double)relevants / freeItem;
+                if ((double)relevants / freeItem % 1 == 0)
+                //if the customer claimed the full discount
+                {
+                    return (relevants / freeItem) * (freeItem - required) * dcProduct.price;
+                }
+                else
+                //if the customer claimed the discount only partly
+                //forExample: if you pay for 2, you could take 4 but you only take 3
+                {
+                    return (relevants / freeItem) * (freeItem - required) * dcProduct.price + (freeItem - relevants) * dcProduct.price;
+                }
             }
             return 0;
         }
