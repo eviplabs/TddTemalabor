@@ -30,7 +30,8 @@ namespace Shopping
             {
                 return 0;
             }
-            int maxOccurence = productsInCart.Sum(i => i.Value);
+
+            int maxOccurence = productsInCart.Max(i => i.Value);
             foreach (var product in dcProducts)
             {
                 int currentOccurence = productsInCart[product.name];

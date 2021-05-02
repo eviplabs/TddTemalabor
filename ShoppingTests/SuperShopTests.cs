@@ -83,5 +83,13 @@ namespace ShoppingTests
             sh.GetPrice("AABCDv1"); //180
             AssertPrice(160, "v1ABCDp");
         }
+        [Fact]
+        public void PayingWithSuperShopCardRemainingPointsWithCounts()
+        {
+            sh.RegisterSuperShopCard("1");
+            sh.GetPrice("D12v1"); //1200
+            AssertPrice(0, "Av1p"); //1 pontja marad, de az ár 0
+            AssertPrice(8, "Av1p");
+        }
     }
 }
