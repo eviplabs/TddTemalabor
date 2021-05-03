@@ -1,5 +1,6 @@
 ﻿using Xunit;
 using Shopping;
+using System.Collections.Generic;
 
 namespace ShoppingTests
 {
@@ -16,6 +17,83 @@ namespace ShoppingTests
             sh.RegisterProduct('B', 20);
             sh.RegisterProduct('C', 50);
             sh.RegisterProduct('D', 100);
+            sh.RegisterDiscount("D", new CountDiscount(sh.products['D'], 2, 3)); // default test dc
+        }
+        #endregion
+
+        #region Data
+        public static IEnumerable<object[]> GetProductDcData(int numTests)
+        {
+            var data = new List<object[]>
+            {
+                // dc properly functions
+                new object[] { 10, "A2", 1, 2},
+                new object[] { 20, "A3", 2, 3},
+                new object[] { 20, "A4", 2, 4},
+                new object[] { 30, "A5", 3, 5},
+                // dc functions with more than necessery products
+                new object[] { 20, "A3", 1, 2},
+                new object[] { 30, "A4", 2, 3},
+                new object[] { 30, "A5", 2, 4},
+                new object[] { 40, "A6", 3, 5},
+                // dc properly functions with other products
+                new object[] { 180, "A2BCD", 1, 2},
+                new object[] { 190, "A3BCD", 2, 3},
+                new object[] { 190, "A4BCD", 2, 4},
+                new object[] { 200, "A5BCD", 3, 5},
+                // dc properly functions with other products and more than necessary products
+                new object[] { 190, "A3BCD", 1, 2},
+                new object[] { 200, "A4BCD", 2, 3},
+                new object[] { 200, "A5BCD", 2, 4},
+                new object[] { 210, "A6BCD", 3, 5},
+            };
+            return data;
+        }
+        public static IEnumerable<object[]> GetInvalidDcData(int numTests)
+        {
+            var data = new List<object[]>
+            {
+                // dc with not enough products
+                new object[] { 20, "AA", 2, 3},
+                new object[] { 20, "AA", 2, 4},
+                new object[] { 30, "AAA", 3, 5},
+                new object[] { 10, "A", 2, 3},
+                new object[] { 10, "A", 2, 4},
+                new object[] { 20, "AA", 3, 5},
+                // dc with not enough products + other products
+                new object[] { 190, "AABCD", 2, 3},
+                new object[] { 190, "AABCD", 2, 4},
+                new object[] { 200, "AAABCD", 3, 5},
+                new object[] { 180, "ABCD", 2, 3},
+                new object[] { 180, "ABCD", 2, 4},
+                new object[] { 190, "AABCD", 3, 5},
+            };
+            return data;
+        }
+        public static IEnumerable<object[]> GetUserIDData(int numTests)
+        {
+            var data = new List<object[]>
+            {
+                new object[] { 9, "AAv1", 1}, // 1-digint userID
+                new object[] { 9, "AAv123", 123}, // multidigit userID
+                new object[] { 20, "AA", 1}, // no userID
+            };
+            return data;
+        }
+        public static IEnumerable<object[]> GetDataForMultipleDc(int numTests)
+        {
+            var data = new List<object[]>
+            {
+                // none of them works
+                new object[] { 50, "AB2", (2U, 3U), (2U, 3U)},
+                new object[] { 40, "A2B", (2U, 3U), (2U, 3U)},
+                // only one valid data for dc
+                new object[] { 70, "AB4", (3U, 4U), (3U, 4U)},
+                new object[] { 50, "A4B", (3U, 4U), (3U, 4U)},
+                // both dc valid
+                new object[] { 60, "A3B3", (2U, 3U), (2U, 3U)},
+            };
+            return data;
         }
         #endregion
 
@@ -27,51 +105,52 @@ namespace ShoppingTests
         }
         #endregion
 
-        [Fact]
-        public void RegisterCountDiscount()
+        [Theory]
+        [MemberData(nameof(GetProductDcData), parameters: 4)]
+        public void PriceCalcWithDc(uint expected, string cart, uint payedFor, uint value)
         {
-            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 2, 3));
-            AssertPrice(120, "AAAD");
+            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], payedFor, value));
+            AssertPrice(expected, cart);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetInvalidDcData), parameters: 4)]
+        public void PriceCalcWithoutValidDc(uint expected, string cart, uint payedFor, uint value)
+        {
+            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], payedFor, value));
+            AssertPrice(expected, cart);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetUserIDData), parameters: 3)]
+        public void DcForSSOnly(uint expected, string cart, string userID)
+        {
+            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 1, 2, true));
+            sh.RegisterSuperShopCard(userID);
+            AssertPrice(expected, cart);
         }
 
         [Fact]
-        public void RegisterCountDiscountWithoutClaimingFreeProducts()
+        public void CalculateCountDcWithoutReleventProducts()
         {
-            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 2, 3));
-            AssertPrice(120, "AAD");
+            AssertPrice(240, "AAAACCCC");
         }
-        [Fact]
-        public void ToggleDiscountOnlyForClubMembersCount()
+
+        [Theory]
+        [MemberData(nameof(GetDataForMultipleDc), parameters: 4)]
+        public void MultipleCountDc(uint expected, string cart,
+                (uint payedFor, uint value) productA, (uint payedFor, uint value) productB)
         {
-            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 1, 2, true));
-            sh.RegisterSuperShopCard("1");
-            AssertPrice(9, "AAv1");
-            AssertPrice(20, "AA");
+            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], productA.payedFor, productA.value));
+            sh.RegisterDiscount("B", new CountDiscount(sh.products['B'], productB.payedFor, productB.value));
+            AssertPrice(expected, cart);
         }
-        [Fact]
-        public void RegisterCountDiscountWithoutReleventProductsInCart()
-        {
-            sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 3));
-            AssertPrice(440, "AAAADDDD");
-        }
-        [Fact]
-        public void RegisterCountDiscountMultipleCountDiscounts()
-        {
-            sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 4));
-            sh.RegisterDiscount("A", new CountDiscount(sh.products['A'], 3, 4));
-            AssertPrice(130, "A4C4");
-        }
+
         [Fact]
         public void RegisterCountDiscountWithOnlyOneFreeItem()
         {
             sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 4));
             AssertPrice(100, "C3");
-        }
-        [Fact]
-        public void RegisterCountDiscountAppliedTwice()
-        {
-            sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 3));
-            AssertPrice(200, "C6");
         }
 
         [Theory]
