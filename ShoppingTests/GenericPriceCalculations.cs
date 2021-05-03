@@ -48,6 +48,8 @@ namespace ShoppingTests
 
         [Theory]
         [InlineData(4, "Q10")]
+        [InlineData(4, "Q14")]
+        [InlineData(8, "Q15")]
         [InlineData(1000, "D10")]
         [InlineData(20000, "D200")]
         [InlineData(580, "Q1200D")] // 1200/10=120; 120*4=480; 480+100=580.
@@ -55,10 +57,12 @@ namespace ShoppingTests
         [InlineData(580, "Q1201D")]
         [InlineData(584, "Q1205D")]
         [InlineData(104, "Q12D")]
+        [InlineData(208, "DQ12DQ12")]
         public void PriceByWeight(int expected, string cart)
         {
             AssertPrice(expected, cart);
         }
+
         [Theory]
         [InlineData(380, "AB16C")]
         [InlineData(1280, "A4B2C20DD")]
