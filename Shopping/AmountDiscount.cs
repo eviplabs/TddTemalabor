@@ -23,7 +23,7 @@ namespace Shopping
 
         public override double getDiscount(ref Dictionary<char, uint> productsInCart, bool hasMembership)
         {
-            if (CheckIfIsNotEligible(hasMembership))
+            if (CheckIfEligible(hasMembership))
             {
                 return 0;
             }

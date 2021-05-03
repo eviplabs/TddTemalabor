@@ -60,10 +60,10 @@ namespace Shopping
 
             // initial price calculation
             double price = GetPriceSumWithoutDiscounts(productsInCart);
-            price = GetDiscountSum(price, ref productsInCart, (userID != null)); // ref keyword helps in keeping the changes to the variables
+            price = GetDiscountSum(price, ref productsInCart, (userID != "")); // ref keyword helps in keeping the changes to the variables
 
             // SS calc
-            if (userID != null)
+            if (userID != "")
             {
                 price -= superShopPoints[userID].processSuperShop(price, SSpay);
             }

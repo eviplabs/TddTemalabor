@@ -5,78 +5,71 @@ namespace Shopping
 {
     public partial class CartProcessor
     {
-        public void processData(string cart, out string userID, out Dictionary<char, uint> productsInCart, out bool SSpay, out string code, Dictionary<char, Product> products)
+        public void processData(string cart, out string userID, out Dictionary<char, uint> productsInCart, 
+                                        out bool SSpay, out string code, Dictionary<char, Product> products)
         {
-            
-            Dictionary<char, uint> cartManager = new Dictionary<char, uint>();
-            string ID = null;
-            bool SSpaymentReading = false;
-            string coupon = null;
-            string numberSubstring = "";
-            char currentProduct = '0';
-
-            foreach(var element in cart)
+            foreach (var element in cart)
             {
                 readingState = getReadingEvent(readingState, element);
-                if (numberSubstring != "" && readingState != CartProcessorEvents.MassProductReading)
+                if (dh.numberSubstring != "" && readingState != CartProcessorEvents.MassProductReading)
                 {
-                    uint mass = Convert.ToUInt32(numberSubstring); // horrible conversion but you can't directly convert from char to int
-                    if (products[currentProduct].priceInKilo)
+                    uint mass = Convert.ToUInt32(dh.numberSubstring); // horrible conversion but you can't directly convert from char to int
+                    if (products[dh.currentProduct].priceInKilo)
                     {
                         double count = mass / 10.0;
-                        cartManager[currentProduct] += (uint)Math.Round(count, MidpointRounding.AwayFromZero) - 1;
+                        dh.cartManager[dh.currentProduct] += (uint)Math.Round(count, MidpointRounding.AwayFromZero) - 1;
                     }
                     else
                     {
-                        cartManager[currentProduct] += mass - 1;
+                        dh.cartManager[dh.currentProduct] += mass - 1;
                     }
-                    numberSubstring = "";
+                    dh.numberSubstring = "";
                 }
                 switch (readingState)
                 {
                     case CartProcessorEvents.ProductReading:
-                        currentProduct = element;
-                        cartManager = addProduct(cartManager, currentProduct);
+                        dh.currentProduct = element;
+                        addProduct();
                         break;
                     case CartProcessorEvents.MassProductReading:
-                        numberSubstring += element;
+                        dh.numberSubstring += element;
                         break;
                     case CartProcessorEvents.UserIDReading:
                         if (element == userIDKey)
                         {
                             continue;
                         }
-                        ID += element;
+                        dh.ID += element;
                         break;
                     case CartProcessorEvents.SuperShopPayment:
-                        SSpaymentReading = true;
+                        dh.SSpaymentReading = true;
                         break;
                     case CartProcessorEvents.CouponReading:
                         if (element == couponKey)
                         {
                             continue;
                         }
-                        coupon += element;
+                        dh.coupon += element;
                         break;
                 }
             }
-            if(numberSubstring != "")
+            if(dh.numberSubstring != "")
             {
-                uint mass = Convert.ToUInt32(numberSubstring); // horrible conversion but you can't directly convert from char to int
-                if (products[currentProduct].priceInKilo)
+                uint mass = Convert.ToUInt32(dh.numberSubstring); // horrible conversion but you can't directly convert from char to int
+                if (products[dh.currentProduct].priceInKilo)
                 {
                     double count = mass / 10.0;
-                    cartManager[currentProduct] += (uint)Math.Round(count, MidpointRounding.AwayFromZero) - 1;
+                    dh.cartManager[dh.currentProduct] += (uint)Math.Round(count, MidpointRounding.AwayFromZero) - 1;
                 }
                 else
                 {
-                    cartManager[currentProduct] += mass - 1;
+                    dh.cartManager[dh.currentProduct] += mass - 1;
                 }
             }
-            userID = ID;
-            SSpay = SSpaymentReading;
-            productsInCart = cartManager;
-            code = coupon;
+            userID = dh.ID;
+            SSpay = dh.SSpaymentReading;
+            productsInCart = dh.cartManager;
+            code = dh.coupon;
         }
         private static CartProcessorEvents getReadingEvent(CartProcessorEvents state, char element)
         {
@@ -108,17 +101,16 @@ namespace Shopping
             // default setting
             return state;
         }
-        private Dictionary<char, uint> addProduct(Dictionary<char, uint> cartManager, char element)
+        private void addProduct()
         {
-            if (!cartManager.ContainsKey(element))
+            if (!dh.cartManager.ContainsKey(dh.currentProduct))
             {
-                cartManager[element] = 1;
+                dh.cartManager[dh.currentProduct] = 1;
             }
             else
             {
-                cartManager[element]++;
+                dh.cartManager[dh.currentProduct]++;
             }
-            return cartManager;
         }
     }
 }

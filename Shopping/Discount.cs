@@ -18,9 +18,9 @@ namespace Shopping
 
         #region Base Functions
         
-        protected bool CheckIfIsNotEligible(bool hasMembership)
+        protected bool CheckIfEligible(bool hasMembership)
         {
-            return !hasMembership && membershipRequired;
+            return !((!membershipRequired) || (membershipRequired && hasMembership));
         }
         protected uint getRelevantItemsFromCart(Dictionary<char, uint> productsInCart, char item)
         {
