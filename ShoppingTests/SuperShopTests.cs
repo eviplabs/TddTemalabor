@@ -6,80 +6,86 @@ namespace ShoppingTests
     public class SuperShopTests : TestBase
     {
         #region Init
-        public SuperShopTests() {}
+        public SuperShopTests() 
+        { 
+            sh.RegisterSuperShopCard("1");
+            sh.RegisterSuperShopCard("123");
+        }
         #endregion
 
-        [Fact]
-        public void SuperShopBaseDiscount()
+        #region Helper Methods
+        private void AssertPriceSSBuffer(uint expected, string bufferCart, string cart)
         {
-            sh.RegisterSuperShopCard("1");
-            AssertPrice(18, "Bv1");
+            sh.GetPrice(bufferCart);
+            AssertPrice(expected, cart);
+        }
+        #endregion
+
+        [Theory]
+        [InlineData("Bv1")]
+        [InlineData("Bv123")]
+        public void SuperShopBaseDiscount(string cart)
+        {
+            AssertPrice(18, cart);
         }
 
-        [Fact]
-        public void PayingWithSuperShopCard()
+        [Theory]
+        [InlineData(8, "Dv1", "Av1p")]
+        [InlineData(88, "ABCDv1", "Dv1p")]
+        public void PayingWithSuperShopCard(uint expected, string bufferCart, string cart)
         {
-            sh.RegisterSuperShopCard("1");
-            sh.GetPrice("AABCDv1"); //180
-            AssertPrice(160, "ABCDv1p");
+            AssertPriceSSBuffer(expected, bufferCart, cart);
         }
+
         [Fact]
         public void PayingWithSuperShopCardWithoutPoints()
         {
-            sh.RegisterSuperShopCard("1");
-            sh.GetPrice("Av1"); // ezért 0 pont jár
-            AssertPrice(162, "ABCDv1p");
+            AssertPriceSSBuffer(162, "Av1", "ABCDv1p");
         }
+
         [Fact]
         public void PayingWithSuperShopCardRemainingPoints()
         {
-            sh.RegisterSuperShopCard("1");
-            sh.GetPrice("D12v1"); //1200*0.9 => 11 pont
-            AssertPrice(0, "Av1p"); //2 pontja marad, de az ár 0
+            AssertPriceSSBuffer(0, "D12v1", "Av1p"); //1200*0.9 => 11 pont, 2 pontja marad, de az ár 0
             AssertPrice(7, "Av1p");
         }
+
         [Fact]
         public void PayingWithSuperShopCardNoRemainingPointsAndPrice()
         {
-            sh.RegisterSuperShopCard("1");
-            sh.GetPrice("D10v1"); //1100*0.9=990 => 10 point
-            AssertPrice(0, "Av1p");
+            AssertPriceSSBuffer(0, "D10v1", "Av1p");  //1100*0.9=990 => 10 point
             AssertPrice(9, "Av1p");
         }
+
         [Fact]
         public void PayingWithSuperShopCardMultiDigitID()
         {
-            sh.RegisterSuperShopCard("123");
-            sh.GetPrice("AABCDv123"); //180
-            AssertPrice(160, "ABCDv123p");
+            AssertPriceSSBuffer(160, "AABCDv123", "ABCDv123p");
         }
+
         [Fact]
-        public void SuperShopDiscountWithDiscountFirst()
+        public void SuperShopDiscountWithIDFirst()
         {
-            sh.RegisterSuperShopCard("1");
             AssertPrice(18, "v1B");
         }
+
         [Fact]
         public void PayingWithSuperShopCardPaymentSignFirst()
         {
-            sh.RegisterSuperShopCard("1");
-            sh.GetPrice("AABCDv1"); //180
-            AssertPrice(160, "pABCDv1");
+            AssertPriceSSBuffer(160, "AABCDv1", "pABCDv1");
         }
+
         [Fact]
         public void PayingWithSuperShopCartUserIdSignFirst()
         {
-            sh.RegisterSuperShopCard("1");
-            sh.GetPrice("AABCDv1"); //180
-            AssertPrice(160, "v1ABCDp");
+            AssertPriceSSBuffer(160, "AABCDv1", "v1ABCDp");
         }
+
         [Fact]
         public void PayingWithSuperShopCardRemainingPointsWithCounts()
         {
-            sh.RegisterSuperShopCard("1");
-            sh.GetPrice("D12v1"); //1200
-            AssertPrice(0, "Av1p"); //2 pontja marad, de nem fizet vele
-            AssertPrice(9, "Av1");
+            AssertPriceSSBuffer(0, "D12v1", "Av1p");
+            AssertPrice(9, "Av1");            
         }
     }
 }
