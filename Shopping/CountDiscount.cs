@@ -6,12 +6,12 @@ namespace Shopping
     {
         #region Variables
         private Product dcProduct;
-        private int required;
-        private int freeItem;
+        private uint required;
+        private uint freeItem;
         #endregion
 
         #region Init
-        public CountDiscount(Product discountedProduct, int required, int freeItem, bool membershipRequired = false) : base(membershipRequired)
+        public CountDiscount(Product discountedProduct, uint required, uint freeItem, bool membershipRequired = false) : base(membershipRequired)
         {
             dcProduct = discountedProduct;
             this.required = required;
@@ -21,16 +21,16 @@ namespace Shopping
 
         #region Calculations
 
-        public override double getDiscount(ref Dictionary<char, int> productsInCart, bool hasMembership)
+        public override double getDiscount(ref Dictionary<char, uint> productsInCart, bool hasMembership)
         {
             if (CheckIfIsNotEligible(hasMembership))
             {
                 return 0;
             }
-            int relevants = getRelevantItemsFromCart(productsInCart, dcProduct.name);
+            uint relevants = getRelevantItemsFromCart(productsInCart, dcProduct.name);
             if (relevants > required)
             {
-                int discountedExtras = relevants % freeItem > required ? relevants % freeItem - required : 0;
+                uint discountedExtras = relevants % freeItem > required ? relevants % freeItem - required : 0;
                 return ((relevants / freeItem) * (freeItem - required) + discountedExtras) * dcProduct.price;
             }
             return 0;

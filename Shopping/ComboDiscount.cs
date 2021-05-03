@@ -7,11 +7,11 @@ namespace Shopping
     {
         #region Variables
         private List<Product> dcProducts;
-        private int newPrice;
+        private uint newPrice;
         #endregion
 
         #region Init
-        public ComboDiscount(List<Product> discountedProducts, int newPrice, bool membershipRequired = false) : base(membershipRequired)
+        public ComboDiscount(List<Product> discountedProducts, uint newPrice, bool membershipRequired = false) : base(membershipRequired)
         {
             dcProducts = discountedProducts;
             this.newPrice = newPrice;
@@ -20,7 +20,7 @@ namespace Shopping
 
         #region Calculations
 
-        public override double getDiscount(ref Dictionary<char, int> productsInCart, bool hasMembership)
+        public override double getDiscount(ref Dictionary<char, uint> productsInCart, bool hasMembership)
         {
             if (CheckIfIsNotEligible(hasMembership))
             {
@@ -31,10 +31,10 @@ namespace Shopping
                 return 0;
             }
 
-            int maxOccurence = productsInCart.Max(i => i.Value);
+            uint maxOccurence = productsInCart.Max(i => i.Value);
             foreach (var product in dcProducts)
             {
-                int currentOccurence = productsInCart[product.name];
+                uint currentOccurence = productsInCart[product.name];
                 if (maxOccurence > currentOccurence)
                 {
                     maxOccurence = currentOccurence;
@@ -44,7 +44,7 @@ namespace Shopping
             return (dcProducts.Sum(p => p.price) - newPrice) * maxOccurence;
         }
 
-        private void removeFromCart(ref Dictionary<char, int> productsInCart, int occurence)
+        private void removeFromCart(ref Dictionary<char, uint> productsInCart, uint occurence)
         {
             foreach(var product in dcProducts)
             {
@@ -55,7 +55,7 @@ namespace Shopping
             }
         }
 
-        private bool areConditionsFulfilled(Dictionary<char, int> productsInCart, bool hasMembership)
+        private bool areConditionsFulfilled(Dictionary<char, uint> productsInCart, bool hasMembership)
         {
             if (membershipRequired && (!hasMembership)
                 || dcProducts.Where(i => !productsInCart.Keys.Contains(i.name)).Any())

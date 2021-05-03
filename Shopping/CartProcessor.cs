@@ -5,10 +5,10 @@ namespace Shopping
 {
     public partial class CartProcessor
     {
-        public void processData(string cart, out string userID, out Dictionary<char, int> productsInCart, out bool SSpay, out string code, Dictionary<char, Product> products)
+        public void processData(string cart, out string userID, out Dictionary<char, uint> productsInCart, out bool SSpay, out string code, Dictionary<char, Product> products)
         {
             
-            Dictionary<char, int> cartManager = new Dictionary<char, int>();
+            Dictionary<char, uint> cartManager = new Dictionary<char, uint>();
             string ID = null;
             bool SSpaymentReading = false;
             string coupon = null;
@@ -20,11 +20,11 @@ namespace Shopping
                 readingState = getReadingEvent(readingState, element);
                 if (numberSubstring != "" && readingState != CartProcessorEvents.MassProductReading)
                 {
-                    int mass = Convert.ToInt32(numberSubstring); // horrible conversion but you can't directly convert from char to int
+                    uint mass = Convert.ToUInt32(numberSubstring); // horrible conversion but you can't directly convert from char to int
                     if (products[currentProduct].priceInKilo)
                     {
                         double count = mass / 10.0;
-                        cartManager[currentProduct] += (int)Math.Round(count, MidpointRounding.AwayFromZero) - 1;
+                        cartManager[currentProduct] += (uint)Math.Round(count, MidpointRounding.AwayFromZero) - 1;
                     }
                     else
                     {
@@ -62,11 +62,11 @@ namespace Shopping
             }
             if(numberSubstring != "")
             {
-                int mass = Convert.ToInt32(numberSubstring); // horrible conversion but you can't directly convert from char to int
+                uint mass = Convert.ToUInt32(numberSubstring); // horrible conversion but you can't directly convert from char to int
                 if (products[currentProduct].priceInKilo)
                 {
                     double count = mass / 10.0;
-                    cartManager[currentProduct] += (int)Math.Round(count, MidpointRounding.AwayFromZero) - 1;
+                    cartManager[currentProduct] += (uint)Math.Round(count, MidpointRounding.AwayFromZero) - 1;
                 }
                 else
                 {
@@ -108,7 +108,7 @@ namespace Shopping
             // default setting
             return state;
         }
-        private Dictionary<char, int> addProduct(Dictionary<char, int> cartManager, char element)
+        private Dictionary<char, uint> addProduct(Dictionary<char, uint> cartManager, char element)
         {
             if (!cartManager.ContainsKey(element))
             {

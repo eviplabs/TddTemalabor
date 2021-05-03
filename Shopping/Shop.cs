@@ -46,11 +46,11 @@ namespace Shopping
         #endregion
 
         #region Calculations
-        public int GetPrice(string shopping_cart)
+        public uint GetPrice(string shopping_cart)
         {
             // Getprice Variables
             string userID;
-            Dictionary<char, int> productsInCart;
+            Dictionary<char, uint> productsInCart;
             bool SSpay;
             string code;
 
@@ -70,7 +70,7 @@ namespace Shopping
             //Coupon calc
             price = CouponDiscount(price, code);
 
-            return Convert.ToInt32(Math.Round(price, MidpointRounding.AwayFromZero));
+            return Convert.ToUInt32(Math.Round(price, MidpointRounding.AwayFromZero));
         }
 
         public double CouponDiscount(double price, string code)
@@ -87,11 +87,11 @@ namespace Shopping
             return price;
         }
 
-        private int GetPriceSumWithoutDiscounts(Dictionary<char, int> productsInCart)
+        private long GetPriceSumWithoutDiscounts(Dictionary<char, uint> productsInCart)
         {
             return productsInCart.Sum(i => i.Value * products[i.Key].price);
         }
-        private double GetDiscountSum(double price, ref Dictionary<char, int> productsInCart, bool membership)
+        private double GetDiscountSum(double price, ref Dictionary<char, uint> productsInCart, bool membership)
         {
             var orderedDiscounts = productDiscounts.OrderByDescending(d => d.Key.Length).ToDictionary(d => d.Key, d => d.Value);
             foreach (var dc in orderedDiscounts)

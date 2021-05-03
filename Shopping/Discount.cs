@@ -6,7 +6,7 @@ namespace Shopping
     {
         protected bool membershipRequired;
         #region Abstracts
-        public abstract double getDiscount(ref Dictionary<char, int> productsInCart, bool hasMembership);
+        public abstract double getDiscount(ref Dictionary<char, uint> productsInCart, bool hasMembership);
         #endregion
 
         #region Init
@@ -22,7 +22,7 @@ namespace Shopping
         {
             return !hasMembership && membershipRequired;
         }
-        protected int getRelevantItemsFromCart(Dictionary<char, int> productsInCart, char item)
+        protected uint getRelevantItemsFromCart(Dictionary<char, uint> productsInCart, char item)
         {
             try
             {
