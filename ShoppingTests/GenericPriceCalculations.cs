@@ -86,21 +86,21 @@ namespace ShoppingTests
         #region Theories
         [Theory]
         [MemberData(nameof(GetBasicCalcData), parameters: 2)]
-        public void BasicPriceCalculation(int expected, string cart)
+        public void BasicPriceCalculation(uint expected, string cart)
         {
             AssertPrice(expected, cart);
         }
 
         [Theory]
         [MemberData(nameof(GetWeightedProductData), parameters: 2)]
-        public void PriceByWeight(int expected, string cart)
+        public void PriceByWeight(uint expected, string cart)
         {
             AssertPrice(expected, cart);
         }
 
         [Theory]
         [MemberData(nameof(GetMassProductData), parameters: 2)]
-        public void MoreOfTheSameProductByNumber(int expected, string cart)
+        public void MoreOfTheSameProductByNumber(uint expected, string cart)
         {
             AssertPrice(expected, cart);
         }
