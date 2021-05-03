@@ -19,9 +19,9 @@ namespace Shopping
             public DataHolder(int dummy)
             {
                 cartManager = new Dictionary<char, uint>();
-                ID = "";
+                ID = null;
                 SSpaymentReading = false;
-                coupon = "";
+                coupon = null;
                 numberSubstring = "";
                 currentProduct = '0';
             }
