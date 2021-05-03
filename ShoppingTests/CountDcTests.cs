@@ -17,7 +17,7 @@ namespace ShoppingTests
             sh.RegisterProduct('B', 20);
             sh.RegisterProduct('C', 50);
             sh.RegisterProduct('D', 100);
-            sh.RegisterDiscount("D", new CountDiscount(sh.products['D'], 2, 3)); // default test dc
+            sh.RegisterDiscount("D", new CountDiscount(sh.products['D'], 2, 4)); // default test dc
         }
         #endregion
 
@@ -149,8 +149,7 @@ namespace ShoppingTests
         [Fact]
         public void RegisterCountDiscountWithOnlyOneFreeItem()
         {
-            sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 4));
-            AssertPrice(100, "C3");
+            AssertPrice(200, "D3");
         }
 
         [Theory]
