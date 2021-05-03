@@ -9,10 +9,6 @@ namespace Shopping
         {
             points = 0;
         }
-        public double getMembershipDiscount(double price)
-        {
-            return price * 0.1;
-        }
         public double processSuperShop(double price, bool sspay)
         {
             double discount = getClubDiscount(price);
