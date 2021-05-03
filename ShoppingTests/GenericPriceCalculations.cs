@@ -4,19 +4,11 @@ using Xunit;
 
 namespace ShoppingTests
 {
-    public class GenericPriceCalculations
+    public class GenericPriceCalculations : TestBase
     {
-        #region Variables
-        private readonly Shop sh = new Shop();
-        #endregion
-
         #region Init
         public GenericPriceCalculations()
         {
-            sh.RegisterProduct('A', 10);
-            sh.RegisterProduct('B', 20);
-            sh.RegisterProduct('C', 50);
-            sh.RegisterProduct('D', 100);
             sh.RegisterProduct('Q', 4, true); // Legyen 4 Huf / 10g
         }
         #endregion
@@ -64,14 +56,6 @@ namespace ShoppingTests
             return data;
         }
         #endregion Data
-
-        #region Helper Methods
-        private void AssertPrice(double expected, string cart)
-        {
-            uint result = sh.GetPrice(cart);
-            Assert.Equal(expected, result);
-        }
-        #endregion
 
         #region Facts
         [Fact]

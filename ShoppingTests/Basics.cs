@@ -10,24 +10,12 @@ namespace ShoppingTests
     //  https://github.com/moq/moq4
     #endregion
 
-    public class Basics
+    public class Basics : TestBase
     {
-        #region Variables
-        private readonly Shop sh = new Shop();
-        #endregion
-
         #region Init
         public Basics()
         {
             sh.RegisterProduct('Y', 5);
-        }
-        #endregion
-
-        #region Helper Methods
-        private void AssertPrice(double expected, string cart)
-        {
-            uint result = sh.GetPrice(cart);
-            Assert.Equal(expected, result);
         }
         #endregion
 

@@ -4,29 +4,12 @@ using System.Collections.Generic;
 
 namespace ShoppingTests
 {
-    public class AmountDcTests
+    public class AmountDcTests : TestBase
     {
-        #region Variables
-        private readonly Shop sh = new Shop();
-        #endregion
-
         #region Init
         public AmountDcTests()
         {
-            sh.RegisterProduct('A', 10);
-            sh.RegisterProduct('B', 20);
-            sh.RegisterProduct('C', 50);
-            sh.RegisterProduct('D', 100);
-
             sh.RegisterDiscount("B", new AmountDiscount(sh.products['B'], 5, 0.9));
-        }
-        #endregion
-
-        #region Helper Methods
-        private void AssertPrice(double expected, string cart)
-        {
-            uint result = sh.GetPrice(cart);
-            Assert.Equal(expected, result);
         }
         #endregion
 

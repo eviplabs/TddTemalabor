@@ -3,29 +3,12 @@ using Shopping;
 
 namespace ShoppingTests
 {
-    public class CouponTests
+    public class CouponTests : TestBase
     {
-        #region Variables
-        private readonly Shop sh = new Shop();
-        #endregion
-
         #region Init
-        public CouponTests()
-        {
-            sh.RegisterProduct('A', 10);
-            sh.RegisterProduct('B', 20);
-            sh.RegisterProduct('C', 50);
-            sh.RegisterProduct('D', 100);
-        }
+        public CouponTests() { }
         #endregion
 
-        #region Helper Methods
-        private void AssertPrice(double expected, string cart)
-        {
-            uint result = sh.GetPrice(cart);
-            Assert.Equal(expected, result);
-        }
-        #endregion
         [Fact]
         public void RegisterCouponDiscount()
         {

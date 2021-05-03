@@ -4,19 +4,11 @@ using System.Collections.Generic;
 
 namespace ShoppingTests
 {
-    public class CountDcTests
+    public class CountDcTests : TestBase
     {
-        #region Variables
-        private readonly Shop sh = new Shop();
-        #endregion
-
         #region Init
         public CountDcTests()
         {
-            sh.RegisterProduct('A', 10);
-            sh.RegisterProduct('B', 20);
-            sh.RegisterProduct('C', 50);
-            sh.RegisterProduct('D', 100);
             sh.RegisterDiscount("D", new CountDiscount(sh.products['D'], 2, 4)); // default test dc
         }
         #endregion
@@ -94,14 +86,6 @@ namespace ShoppingTests
                 new object[] { 60, "A3B3", (2U, 3U), (2U, 3U)},
             };
             return data;
-        }
-        #endregion
-
-        #region Helper Methods
-        private void AssertPrice(double expected, string cart)
-        {
-            uint result = sh.GetPrice(cart);
-            Assert.Equal(expected, result);
         }
         #endregion
 

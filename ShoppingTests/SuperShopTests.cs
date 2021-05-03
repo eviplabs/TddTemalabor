@@ -3,28 +3,10 @@ using Shopping;
 
 namespace ShoppingTests
 {
-    public class SuperShopTests
+    public class SuperShopTests : TestBase
     {
-        #region Variables
-        private readonly Shop sh = new Shop();
-        #endregion
-
         #region Init
-        public SuperShopTests()
-        {
-            sh.RegisterProduct('A', 10);
-            sh.RegisterProduct('B', 20);
-            sh.RegisterProduct('C', 50);
-            sh.RegisterProduct('D', 100);
-        }
-        #endregion
-
-        #region Helper Methods
-        private void AssertPrice(double expected, string cart)
-        {
-            uint result = sh.GetPrice(cart);
-            Assert.Equal(expected, result);
-        }
+        public SuperShopTests() {}
         #endregion
 
         [Fact]
