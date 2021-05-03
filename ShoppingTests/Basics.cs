@@ -38,12 +38,12 @@ namespace ShoppingTests
         }
 
         [Fact]
-        public void IsPriceInt()
+        public void IsPriceUInt()
         {
             sh.RegisterProduct('A', 10);
             var price = sh.GetPrice("AAA");
             //Ellenörzi, hogy a price objektum integer-e
-            Assert.IsType<int>(price);
+            Assert.IsType<uint>(price);
         }
 
         [Fact]
