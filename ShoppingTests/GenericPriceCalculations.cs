@@ -1,4 +1,5 @@
 ﻿using Shopping;
+using System.Collections.Generic;
 using Xunit;
 
 namespace ShoppingTests
@@ -20,6 +21,50 @@ namespace ShoppingTests
         }
         #endregion
 
+        #region Data
+        public static IEnumerable<object[]> GetBasicCalcData(int numTests)
+        {
+            var data = new List<object[]>
+            {
+                new object[] {120, "AAABBC" },
+                new object[] {180, "ABCD" },
+                new object[] {50, "AAAAA" },
+                new object[] {1800, "AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDD" }
+            };
+            return data;
+        }
+
+        public static IEnumerable<object[]> GetWeightedProductData(int numTests)
+        {
+            var data = new List<object[]>
+            {
+                new object[] { 4, "Q10" },
+                new object[] { 4, "Q14" },
+                new object[] { 8, "Q15" },
+                new object[] { 1000, "D10" },
+                new object[] { 20000, "D200" },
+                new object[] { 580, "Q1200D" },
+                new object[] { 580, "Q1204D" },
+                new object[] { 580, "Q1201D" },
+                new object[] { 584, "Q1205D" },
+                new object[] { 104, "Q12D" },
+                new object[] { 208, "DQ12DQ12" }
+            };
+            return data;
+        }
+        public static IEnumerable<object[]> GetMassProductData(int numTests)
+        {
+            var data = new List<object[]>
+            {
+                new object[] { 380, "AB16C" },
+                new object[] { 1280, "A4B2C20DD" },
+                new object[] { 460, "AABBC2DDD" },
+                new object[] { 1080, "A100ABC1" },
+            };
+            return data;
+        }
+        #endregion Data
+
         #region Helper Methods
         private void AssertPrice(double expected, string cart)
         {
@@ -28,16 +73,7 @@ namespace ShoppingTests
         }
         #endregion
 
-        [Theory]
-        [InlineData(120,"AAABBC")]
-        [InlineData(180,"ABCD")]
-        [InlineData(50,"AAAAA")]
-        [InlineData(1800,"AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDD")]
-        public void PriceCalculationTheory(int expected, string cart)
-        {
-            AssertPrice(expected, cart);
-        }
-
+        #region Facts
         [Fact]
         public void PriceCalculationWithoutPreRegisteredProducts()
         {
@@ -45,32 +81,29 @@ namespace ShoppingTests
             sh.RegisterProduct('E', 60);
             AssertPrice(230, "BGGGEE");
         }
+        #endregion
+
+        #region Theories
+        [Theory]
+        [MemberData(nameof(GetBasicCalcData), parameters: 2)]
+        public void BasicPriceCalculation(int expected, string cart)
+        {
+            AssertPrice(expected, cart);
+        }
 
         [Theory]
-        [InlineData(4, "Q10")]
-        [InlineData(4, "Q14")]
-        [InlineData(8, "Q15")]
-        [InlineData(1000, "D10")]
-        [InlineData(20000, "D200")]
-        [InlineData(580, "Q1200D")] // 1200/10=120; 120*4=480; 480+100=580.
-        [InlineData(580, "Q1204D")]
-        [InlineData(580, "Q1201D")]
-        [InlineData(584, "Q1205D")]
-        [InlineData(104, "Q12D")]
-        [InlineData(208, "DQ12DQ12")]
+        [MemberData(nameof(GetWeightedProductData), parameters: 2)]
         public void PriceByWeight(int expected, string cart)
         {
             AssertPrice(expected, cart);
         }
 
         [Theory]
-        [InlineData(380, "AB16C")]
-        [InlineData(1280, "A4B2C20DD")]
-        [InlineData(460, "AABBC2DDD")]
-        [InlineData(1080, "A100ABC1")]
+        [MemberData(nameof(GetMassProductData), parameters: 2)]
         public void MoreOfTheSameProductByNumber(int expected, string cart)
         {
             AssertPrice(expected, cart);
         }
+        #endregion
     }
 }
