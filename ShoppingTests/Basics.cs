@@ -25,7 +25,7 @@ namespace ShoppingTests
         #region Helper Methods
         private void AssertPrice(double expected, string cart)
         {
-            int result = sh.GetPrice(cart);
+            uint result = sh.GetPrice(cart);
             Assert.Equal(expected, result);
         }
         #endregion
@@ -57,7 +57,6 @@ namespace ShoppingTests
         {
             sh.RegisterProduct('Z', 5);
             sh.RegisterDiscount("Z", new AmountDiscount(sh.products['Z'], 5, 0.9));
-            Assert.Equal(23, sh.GetPrice("ZZZZZ"));
             AssertPrice(23, "ZZZZZ");
         }
         #endregion
