@@ -105,6 +105,7 @@ namespace ShoppingTests
         }
         #endregion
 
+        #region Tests
         [Theory]
         [MemberData(nameof(GetProductDcData), parameters: 4)]
         public void PriceCalcWithDc(uint expected, string cart, uint payedFor, uint value)
@@ -168,5 +169,6 @@ namespace ShoppingTests
             sh.RegisterDiscount("C", new CountDiscount(sh.products['C'], 2, 4));
             AssertPrice(expected, cart);
         }
+        #endregion
     }
 }

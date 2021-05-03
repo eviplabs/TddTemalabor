@@ -17,6 +17,10 @@ namespace ShoppingTests
             sh.RegisterProduct('B', 20);
             sh.RegisterProduct('C', 50);
             sh.RegisterProduct('D', 100);
+
+            sh.RegisterDiscount("AB", new ComboDiscount(GetProductListAB(), 20));
+            sh.RegisterDiscount("AC", new ComboDiscount(GetProductListAC(), 40));
+            sh.RegisterDiscount("ABC", new ComboDiscount(GetProductListABC(), 60));
         }
         #endregion
 
@@ -26,110 +30,131 @@ namespace ShoppingTests
             uint result = sh.GetPrice(cart);
             Assert.Equal(expected, result);
         }
+        private List<Product> GetProductListABC()
+        {
+            List<Product> productList = new List<Product>();
+            productList.Add(sh.products['A']);
+            productList.Add(sh.products['B']);
+            productList.Add(sh.products['C']);
+            return productList;   
+        }
+        private List<Product> GetProductListAB()
+        {
+            List<Product> productList = new List<Product>();
+            productList.Add(sh.products['A']);
+            productList.Add(sh.products['B']);
+            return productList;
+        }
+        private List<Product> GetProductListAC()
+        {
+            List<Product> productList = new List<Product>();
+            productList.Add(sh.products['A']);
+            productList.Add(sh.products['C']);
+            return productList;
+        }
+        private void SpecialXYZComboDcInit(bool membership = false)
+        {
+            sh.RegisterProduct('X', 10);
+            sh.RegisterProduct('Y', 20);
+            sh.RegisterProduct('Z', 50);
+            List<Product> productList = new List<Product>();
+            productList.Add(sh.products['X']);
+            productList.Add(sh.products['Y']);
+            productList.Add(sh.products['Z']);
+            sh.RegisterDiscount("XYZ", new ComboDiscount(productList, 60, membership));
+        }
         #endregion
-        [Fact]
-        public void RegisterComboDiscount()
+
+        #region Data
+        public static IEnumerable<object[]> GetBasicComboDcCalcData(int numTests)
         {
-            List<Product> productList = new List<Product>();
-            productList.Add(sh.products['A']);
-            productList.Add(sh.products['B']);
-            productList.Add(sh.products['C']);
-            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 60));
-            AssertPrice(110, "CAAAABB");
+            var data = new List<object[]>
+            {
+                new object[] { 20, "AB"},
+                new object[] { 40, "AC"},
+                new object[] { 60, "ABC"},
+                new object[] { 30, "A2B"},
+                new object[] { 50, "A2C"},
+                new object[] { 70, "A2BC"},
+            };
+            return data;
+        }
+        public static IEnumerable<object[]> GetMultipleOccurenceData(int numTests)
+        {
+            var data = new List<object[]>
+            {
+                new object[] { 40, "A2B2"},
+                new object[] { 80, "A2C2"},
+                new object[] { 120, "A2B2C2"},
+                new object[] { 50, "A3B2"},
+                new object[] { 90, "A3C2"},
+                new object[] { 130, "A3B2C2"},
+            };
+            return data;
+        }
+        public static IEnumerable<object[]> GetMultipleTypeDcData(int numTests)
+        {
+            var data = new List<object[]>
+            {
+                new object[] { 80, "A2B2C"},
+                new object[] { 100, "A2BC2"},
+                new object[] { 90, "A3B2C"},
+                new object[] { 110, "A3BC2"},
+            };
+            return data;
+        }
+
+        #endregion
+
+        #region Tests
+        [Theory]
+        [MemberData(nameof(GetBasicComboDcCalcData), parameters: 2)]
+        public void BasicComboDcCalculation(uint expected, string cart)
+        {
+            AssertPrice(expected, cart);
         }
 
         [Fact]
-        public void RegisterComboDiscountWithFalseDiscount()
+        public void PriceCalcWithNoValidDc()
         {
-            List<Product> productList = new List<Product>();
-            productList.Add(sh.products['A']);
-            productList.Add(sh.products['B']);
-            productList.Add(sh.products['C']);
-            productList.Add(sh.products['D']);
-            sh.RegisterDiscount("ABCD", new ComboDiscount(productList, 60));
-            AssertPrice(130, "CAAAABB");
+            SpecialXYZComboDcInit();
+            AssertPrice(50, "XXXY");
         }
 
-        [Fact]
-        public void RegisterComboDiscountWithMultipleAppliableDiscounts()
+        [Theory]
+        [MemberData(nameof(GetMultipleOccurenceData), parameters: 2)]
+        public void MultipleOccurencesInComboDc(uint expected, string cart)
         {
-            List<Product> productList = new List<Product>();
-            productList.Add(sh.products['A']);
-            productList.Add(sh.products['B']);
-            productList.Add(sh.products['C']);
-            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 60));
-            AssertPrice(130, "AABBCCA");
+            AssertPrice(expected, cart);
         }
-        [Fact]
-        public void MultipleComboDiscounts()
+
+        [Theory]
+        [MemberData(nameof(GetMultipleTypeDcData), parameters: 2)]
+        public void MultipleTypeComboDiscounts(uint expected, string cart)
         {
-            List<Product> productList1 = new List<Product>();
-            List<Product> productList2 = new List<Product>();
-            List<Product> productList3 = new List<Product>();
-            productList1.Add(sh.products['A']);
-            productList1.Add(sh.products['B']);
-            sh.RegisterDiscount("AB", new ComboDiscount(productList1, 20));
-            productList2.Add(sh.products['A']);
-            productList2.Add(sh.products['B']);
-            productList2.Add(sh.products['C']);
-            sh.RegisterDiscount("ABC", new ComboDiscount(productList2, 20));
-            productList3.Add(sh.products['A']);
-            productList3.Add(sh.products['C']);
-            sh.RegisterDiscount("AC", new ComboDiscount(productList3, 20));
-            AssertPrice(120, "ABCD"); // 180 - 60
+            AssertPrice(expected, cart);
         }
-        [Fact]
-        public void MultipleAppliableComboDiscounts()
+
+        [Theory]
+        [InlineData(54, "XYZv12", "12", true)]
+        [InlineData(80, "XYZ", "12", true)]
+        public void ComboDcWithMemberShip(uint expected, string cart, string userID, bool membershipReq)
         {
-            List<Product> productList1 = new List<Product>();
-            List<Product> productList2 = new List<Product>();
-            List<Product> productList3 = new List<Product>();
-            productList1.Add(sh.products['A']);
-            productList1.Add(sh.products['B']);
-            sh.RegisterDiscount("AB", new ComboDiscount(productList1, 20));
-            productList2.Add(sh.products['A']);
-            productList2.Add(sh.products['B']);
-            productList2.Add(sh.products['C']);
-            sh.RegisterDiscount("ABC", new ComboDiscount(productList2, 20));
-            productList3.Add(sh.products['A']);
-            productList3.Add(sh.products['C']);
-            sh.RegisterDiscount("AC", new ComboDiscount(productList3, 20));
-            AssertPrice(140, "AABBCD"); // 210 - 60 - 10
+            SpecialXYZComboDcInit(membershipReq);
+            sh.RegisterSuperShopCard(userID);
+            AssertPrice(expected, cart);
         }
-        [Fact]
-        public void ComboDiscountWithMemberShip()
-        {
-            List<Product> productList = new List<Product>();
-            productList.Add(sh.products['A']);
-            productList.Add(sh.products['B']);
-            productList.Add(sh.products['C']);
-            sh.RegisterSuperShopCard("1");
-            sh.RegisterDiscount("ABC", new ComboDiscount(productList, 60, true)); // 3. taggal (bool) megadható hogy a kedvezmény csak klubtagoknak jár-e
-            //20+40+100=160 (comboDiscount csak tagoknak)
-            AssertPrice(160, "AABBCC");
-            //(60+60)*0,9  comboDiscount és MemberShipDiscount is
-            AssertPrice(108, "AABBCCv1");
-        }
-        [Fact]
-        public void ToggleDiscountOnlyForClubMembersCombo()
-        {
-            List<Product> productList1 = new List<Product>();
-            productList1.Add(sh.products['A']);
-            productList1.Add(sh.products['B']);
-            sh.RegisterDiscount("AB", new ComboDiscount(productList1, 20, true));
-            sh.RegisterSuperShopCard("1");
-            AssertPrice(18, "ABv1");
-            AssertPrice(30, "AB");
-        }
-        [Fact]
-        public void RegisterComboDiscountWithOnlyOneProduct()
-        //it is the same if we would have lowered/raised the product's price (but should not be used for that reason, beacuse it is still a type of discount)
+
+        [Theory]
+        [InlineData(15, "C")]
+        [InlineData(30, "CC")]
+        public void RegisterComboDiscountWithOnlyOneProduct(uint expected, string cart)
         {
             List<Product> productList = new List<Product>();
             productList.Add(sh.products['C']);
-            sh.RegisterDiscount("C", new ComboDiscount(productList, 60));
-            AssertPrice(60, "C");
-            AssertPrice(120, "CC");
+            sh.RegisterDiscount("C", new ComboDiscount(productList, 15));
+            AssertPrice(expected, cart);
         }
+        #endregion
     }
 }
