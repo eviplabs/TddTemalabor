@@ -111,17 +111,6 @@ namespace ShoppingTests
             AssertPrice(108, "AABBCCv1");
         }
         [Fact]
-        public void ComboDiscountWithMembershipCard()
-        {
-            List<Product> productList = new List<Product>();
-            productList.Add(sh.products['A']);
-            productList.Add(sh.products['B']);
-            productList.Add(sh.products['C']);
-            sh.RegisterSuperShopCard("1");
-            //(60+60)*0,9  comboDiscount és MemberShipDiscount is
-            AssertPrice(144, "AABBCCv1");
-        }
-        [Fact]
         public void ToggleDiscountOnlyForClubMembersCombo()
         {
             List<Product> productList1 = new List<Product>();

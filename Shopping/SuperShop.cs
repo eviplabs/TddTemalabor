@@ -25,9 +25,10 @@ namespace Shopping
                     discount += points;
                     points = 0;
                 }
-
+                //customer only get points when he doesnt pay with his points
+                return discount;
             }
-            points += addPoints(price - discount);
+            points += addPoints(price);
             return discount;
         }
         private double getClubDiscount(double price)
