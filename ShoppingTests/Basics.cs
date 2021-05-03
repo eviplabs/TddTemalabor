@@ -19,6 +19,7 @@ namespace ShoppingTests
         #region Init
         public Basics()
         {
+            sh.RegisterProduct('Y', 5);
         }
         #endregion
 
@@ -40,8 +41,7 @@ namespace ShoppingTests
         [Fact]
         public void IsPriceUInt()
         {
-            sh.RegisterProduct('A', 10);
-            var price = sh.GetPrice("AAA");
+            var price = sh.GetPrice("YY");
             //Ellenörzi, hogy a price objektum integer-e
             Assert.IsType<uint>(price);
         }
@@ -55,9 +55,8 @@ namespace ShoppingTests
         [Fact]
         public void RoundingGetPrice()
         {
-            sh.RegisterProduct('Z', 5);
-            sh.RegisterDiscount("Z", new AmountDiscount(sh.products['Z'], 5, 0.9));
-            AssertPrice(23, "ZZZZZ");
+            sh.RegisterDiscount("Y", new AmountDiscount(sh.products['Y'], 5, 0.9));
+            AssertPrice(23, "YYYYY");
         }
         #endregion
     }
